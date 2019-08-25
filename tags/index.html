@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="Kuky">
 <meta property="og:description" content="不给哔哔还是咋的~ o(´^｀)o">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-25T08:12:49.321Z">
+<meta property="og:updated_time" content="2019-08-25T09:10:58.114Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="标签">
 <meta name="twitter:description" content="不给哔哔还是咋的~ o(´^｀)o">
@@ -281,10 +281,6 @@
 
 
           
-
-  
-
-
 
         </div>
         
@@ -555,6 +551,28 @@
 
 
 
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick,mail';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: 'Just go go',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
 
 
 
