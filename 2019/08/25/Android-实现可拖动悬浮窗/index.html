@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近公司的项目里，需要通过悬浮窗进行控制，悬浮窗根据手势进行拖动。当时同事给的建议用 ViewDragHelper 来实现(原谅没玩过这个东西，网上看了下教程挺牛逼的，算了，还是选择用手势监听做吧)，首先先给大伙看下最终的项目实现效果(模拟器上可能会卡顿，实际的运行效果还是很流畅的)。当然，最后我也不会把公司项目代码分享给大家伙，这里就给大家讲解下实现的思路。   看完效果图，希望你能有点感兴趣，">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 实现可拖动悬浮窗">
+<meta property="og:url" content="http://yoursite.com/2019/08/25/Android-实现可拖动悬浮窗/index.html">
+<meta property="og:site_name" content="KK的小树洞">
+<meta property="og:description" content="最近公司的项目里，需要通过悬浮窗进行控制，悬浮窗根据手势进行拖动。当时同事给的建议用 ViewDragHelper 来实现(原谅没玩过这个东西，网上看了下教程挺牛逼的，算了，还是选择用手势监听做吧)，首先先给大伙看下最终的项目实现效果(模拟器上可能会卡顿，实际的运行效果还是很流畅的)。当然，最后我也不会把公司项目代码分享给大家伙，这里就给大家讲解下实现的思路。   看完效果图，希望你能有点感兴趣，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-c89956cc80ca0f4d.gif?imageMogr2/auto-orient/strip">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-c862f60097582ca2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-8e0b36dcbfa16187.gif?imageMogr2/auto-orient/strip">
+<meta property="og:updated_time" content="2019-08-25T14:57:20.186Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 实现可拖动悬浮窗">
+<meta name="twitter:description" content="最近公司的项目里，需要通过悬浮窗进行控制，悬浮窗根据手势进行拖动。当时同事给的建议用 ViewDragHelper 来实现(原谅没玩过这个东西，网上看了下教程挺牛逼的，算了，还是选择用手势监听做吧)，首先先给大伙看下最终的项目实现效果(模拟器上可能会卡顿，实际的运行效果还是很流畅的)。当然，最后我也不会把公司项目代码分享给大家伙，这里就给大家讲解下实现的思路。   看完效果图，希望你能有点感兴趣，">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-c89956cc80ca0f4d.gif?imageMogr2/auto-orient/strip">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'kuky'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/08/25/Android-实现可拖动悬浮窗/">
+
+
+
+
+
+  <title>Android 实现可拖动悬浮窗 | KK的小树洞</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+	</div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KK的小树洞</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活记录「你」</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>	  
+    </header>
+
+    <main id="main" class="main">	
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/25/Android-实现可拖动悬浮窗/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kuky">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KK的小树洞">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 实现可拖动悬浮窗</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-08-25T22:38:52+08:00">
+                2019-08-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/25/Android-实现可拖动悬浮窗/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/08/25/Android-实现可拖动悬浮窗/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近公司的项目里，需要通过悬浮窗进行控制，悬浮窗根据手势进行拖动。当时同事给的建议用 ViewDragHelper 来实现(原谅没玩过这个东西，网上看了下教程挺牛逼的，算了，还是选择用手势监听做吧)，首先先给大伙看下最终的项目实现效果(模拟器上可能会卡顿，实际的运行效果还是很流畅的)。当然，最后我也不会把公司项目代码分享给大家伙，这里就给大家讲解下实现的思路。</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-c89956cc80ca0f4d.gif?imageMogr2/auto-orient/strip" width="200" height="350" align="center">
+
+<p>看完效果图，希望你能有点感兴趣，然后就开始上代码啦~，首先通过 WindowManager 添加一个指示的 indicatorView(就是侧边红色的条)，用来提示用户通过这边进行拖动悬浮窗，接着在手指在 indicatorView 按下的时候，添加一个空的 RelativeLayout，作为悬浮窗的 rootview，然后往 rootview 添加悬浮窗内容 contentView，通过 layout 方法，改变 contentView 的布局参数，也可以通过 LayoutParam 来设置，实现最终的效果。可能文字表达不够明确，贴一张手绘原理图</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-c862f60097582ca2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" width="300" height="200" align="center">
+
+<p>接下来就是代码一波流了，首先定义一个手势监听回调类，主要用来判断 indicatorView 的滑动的距离以及方向，然后悬浮窗可以根据 indicatorView 的滑动方向进行拖动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">OnFlingListener</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 手指按下</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFingerDown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手指抬起</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFingerUp</span><span class="params">(<span class="keyword">int</span> slideDirection)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手势上滑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollUp</span><span class="params">(<span class="keyword">float</span> scrollY)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手势下滑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollDown</span><span class="params">(<span class="keyword">float</span> scrollY)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手势左滑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollLeft</span><span class="params">(<span class="keyword">float</span> scrollX)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 手势右滑</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollRight</span><span class="params">(<span class="keyword">float</span> scrollX)</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义完手势回调，就需要定义用来监听拖动手势的 indicatorView 啦，其主要作用是当焦点落到 indicatorView 的时候，通过用户的手势来拖动悬浮窗活动，这个可以根据自己的喜好进行编写</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:background</span>=<span class="string">"@drawable/floating_bar_outside"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/touch_view"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"5dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:background</span>=<span class="string">"@color/colorAccent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:clickable</span>=<span class="string">"true"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:focusable</span>=<span class="string">"true"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>方便起见，我这边用 TextView 来作为 indicatorView，做好准备工作就要开始编写实际的操作逻辑啦，首先定义一个内部手势类，用来实现操作逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FloatViewOnGestureListener</span> <span class="keyword">extends</span> <span class="title">GestureDetector</span>.<span class="title">SimpleOnGestureListener</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 回调类</span></span><br><span class="line">        <span class="keyword">private</span> OnFlingListener mFlingListener;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ..... 省略部分无关代码</span></span><br><span class="line"></span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onScroll</span><span class="params">(MotionEvent e1, MotionEvent e2, <span class="keyword">float</span> distanceX, <span class="keyword">float</span> distanceY)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">float</span> x = e2.getX() - e1.getX();</span><br><span class="line">            <span class="keyword">float</span> y = e2.getY() - e1.getY();</span><br><span class="line">            <span class="keyword">float</span> x_abs = Math.abs(x);</span><br><span class="line">            <span class="keyword">float</span> y_abs = Math.abs(y);</span><br><span class="line"></span><br><span class="line">            scrollX = e2.getX();</span><br><span class="line">            scrollY = e2.getY();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// x &gt; y 且 x 滑动距离大于阀值，则是水平滑动，否则是垂直滑动</span></span><br><span class="line">            <span class="keyword">if</span> (x_abs &gt;= y_abs &amp;&amp; x_abs &gt; X_SLOP) &#123;</span><br><span class="line">                <span class="comment">// 如果 x 的滑动距离大于 0 则是右滑，否则为左滑</span></span><br><span class="line">                <span class="keyword">if</span> (x &gt; <span class="number">0</span> &amp;&amp; mFlingListener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mOnFlingListener.onScrollRight(x_abs);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (x &lt; <span class="number">0</span> &amp;&amp; mFlingListener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mOnFlingListener.onScrollLeft(x_abs);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 用来记录抬手前的最后一下是左滑还是右滑，最后通过回调函数传回</span></span><br><span class="line">                mDirection = (scrollX - lastScrollX) &gt;= <span class="number">0</span> ? DIRECTION_RIGHT : DIRECTION_LEFT;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (y_abs &gt;= x_abs &amp;&amp; y_abs &gt; Y_SLOP) &#123;</span><br><span class="line">                <span class="comment">// 如果 y 的滑动距离大于 0 则是下滑， 否则上滑</span></span><br><span class="line">                <span class="keyword">if</span> (y &gt; <span class="number">0</span> &amp;&amp; mFlingListener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mOnFlingListener.onScrollDown(y_abs);</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span> (y &lt; <span class="number">0</span> &amp;&amp; mFlingListener != <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mOnFlingListener.onScrollUp(y_abs);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 用来记录抬手前最后一下是上滑还是下滑</span></span><br><span class="line">                mDirection = (scrollY - lastScrollY &gt;= <span class="number">0</span>) ? DIRECTION_DOWN : DIRECTION_UP;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            lastScrollX = scrollX;</span><br><span class="line">            lastScrollY = scrollY;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">super</span>.onScroll(e1, e2, distanceX, distanceY);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里通过两次手指的位置，来判断当前手指的滑动方向。通过比较 x 轴的移动距离和 y 的移动距离，判断是上下滑动还是左右滑动，然后通过滑动的距离是否大于 0 判断滑动的方向，因为当你的 indicatorView 在右侧的时候，如果初始滑动距离大于 0 的话，根本就是不可能的。最后还需要判断最后一下手指的滑动方向，如果和初始的方向相反，则需要将拖出来的悬浮窗自动回滚到初始状态。</p>
+<p>接着就需要实现对的 indicatorView 做手势监听</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">mTouchView.setOnTouchListener(<span class="keyword">new</span> OnTouchListener() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onTouch</span><span class="params">(View v, MotionEvent event)</span> </span>&#123;</span><br><span class="line">			<span class="keyword">switch</span> (event.getAction()) &#123;</span><br><span class="line">             	<span class="keyword">case</span> MotionEvent.ACTION_DOWN:</span><br><span class="line">                	<span class="comment">// 按下时候震动提醒</span></span><br><span class="line">                    mVibrator.vibrate(<span class="number">50</span>);</span><br><span class="line">                    mGestureDetector.onTouchEvent(event);</span><br><span class="line">                    <span class="keyword">if</span> (mOnFlingListener != <span class="keyword">null</span>)</span><br><span class="line">                    	mOnFlingListener.onFingerDown();</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> MotionEvent.ACTION_MOVE:</span><br><span class="line">                	mGestureDetector.onTouchEvent(event);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> MotionEvent.ACTION_UP:</span><br><span class="line">                	<span class="keyword">if</span> (mOnFlingListener != <span class="keyword">null</span>)</span><br><span class="line">                    	<span class="comment">// 将最后的滑动方向通过回调传出</span></span><br><span class="line">                        mOnFlingListener.onFingerUp(mDirection);</span><br><span class="line">                        <span class="comment">// 抬手的时候注意把 direction 回归初始状态</span></span><br><span class="line">                    mDirection = NO_ACTION;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当手指按下的时候，做下震动，用于提示作用，然后根据不同的手势操作，做相应的回调，当抬手指的时候，记得需要将手势方向设置回初始值，OK，indicatorView 的内容大概就那么多，具体的操作，需要通过悬浮窗 FloatWindow 去实现。在实现逻辑之前，因为整体都在悬浮窗上实现，需要定义悬浮窗内容的一些必要属性，因为 indicatorView 和 rootView 的属性差不多，所以只列出 indicatorView 的属性列表，具体的可以看 demo</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">mParams = <span class="keyword">new</span> WindowManager.LayoutParams();</span><br><span class="line">mParams.packageName = FloatingApplication.getContext().getPackageName();</span><br><span class="line">mParams.width = WindowManager.LayoutParams.WRAP_CONTENT;</span><br><span class="line">mParams.height = WindowManager.LayoutParams.WRAP_CONTENT;</span><br><span class="line"><span class="comment">// 当悬浮窗显示的时候可以获取到焦点</span></span><br><span class="line">mParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL</span><br><span class="line">	| WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR</span><br><span class="line">    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 需要适配 8.0，当 8.0 以上的版本</span></span><br><span class="line"><span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) &#123;</span><br><span class="line">	mParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">	mParams.type = WindowManager.LayoutParams.TYPE_PHONE;</span><br><span class="line">&#125;</span><br><span class="line">mParams.format = PixelFormat.RGBA_8888;</span><br></pre></td></tr></table></figure>
+
+<p>flag 作用主要是让悬浮窗能够获取到焦点，能够消费点击等事件，还需要注意的是，在 8.0 之后的版本，悬浮窗 type 只能使用 <code>TYPE_APPLICATION_OVERLAY</code> 之前的 type 都过时无效了。定义完属性就需要定义 indicatorView ， rootview 以及悬浮窗具体的内容 contentView</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initFloatView</span><span class="params">()</span> </span>&#123;</span><br><span class="line">       mFloatView = <span class="keyword">new</span> FloatView(BaseApplication.getContext(), <span class="keyword">new</span> OnFlingListener() &#123;</span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFingerDown</span><span class="params">()</span> </span>&#123;</span><br><span class="line">               <span class="comment">// 添加 rootview，如果已经存在了，直接根据 params 进行更新布局就行，如果不存在就添加</span></span><br><span class="line">               <span class="keyword">try</span> &#123;</span><br><span class="line">                   mWindowManager.updateViewLayout(mContainer, mContainerParams);</span><br><span class="line">               &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                   e.printStackTrace();</span><br><span class="line">                   mWindowManager.addView(mContainer, mContainerParams);</span><br><span class="line">                   <span class="comment">// 判断悬浮窗是否已经显示的标志位</span></span><br><span class="line">                   isCenterShow = <span class="keyword">true</span>;</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="comment">// 根据布局获取悬浮窗 contentView</span></span><br><span class="line">               mContentView = LayoutInflater.from(mContext).inflate(R.layout.content_view, <span class="keyword">null</span>);</span><br><span class="line">               <span class="comment">// 悬浮窗 contentView 布局属性</span></span><br><span class="line">               RelativeLayout.LayoutParams contentLp = <span class="keyword">new</span> RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);</span><br><span class="line">               mContentView.setLayoutParams(contentLp);</span><br><span class="line">               <span class="comment">// 刚开始添加的时候设置不可见，因为设置了 LayoutParam 是 MATCH_PARENT，等拖动操作再显示即可</span></span><br><span class="line">               mContentView.setVisibility(View.INVISIBLE);</span><br><span class="line">               mContainer.addView(mContentView);</span><br><span class="line">               <span class="comment">// 根据滑动的方向，设置最开始的布局位置</span></span><br><span class="line">               <span class="keyword">switch</span> (mSlideType) &#123;</span><br><span class="line">                   <span class="comment">// 从右往左滑动，悬浮窗内容全部位于屏幕的右侧，所以此时的 left, right 属性都是屏幕的宽度</span></span><br><span class="line">                   <span class="keyword">case</span> SLIDE_RIGHT_TO_LEFT:</span><br><span class="line">                       mContentView.layout(mScreenWidth, <span class="number">0</span>, mScreenWidth, mScreenHeight);</span><br><span class="line">                       <span class="keyword">break</span>;</span><br><span class="line">                   <span class="comment">// ...省略其他方向的，原理类似，具体看 demo...</span></span><br><span class="line">               &#125;</span><br><span class="line">               </span><br><span class="line">               <span class="comment">// 设置 contentView 空白处的点击事件，点击消失，根据具体的滑动方向做不同的动画效果</span></span><br><span class="line">               mContentView.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</span><br><span class="line">                   <span class="meta">@Override</span></span><br><span class="line">                   <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</span><br><span class="line">                       <span class="keyword">switch</span> (mSlideType) &#123;</span><br><span class="line">                           <span class="keyword">case</span> SLIDE_RIGHT_TO_LEFT:</span><br><span class="line">                               rightInSmoothToRight();</span><br><span class="line">                               <span class="keyword">break</span>;</span><br><span class="line">                           <span class="comment">// ...省略其他方向的，原理类似，具体看 demo...</span></span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFingerUp</span><span class="params">(<span class="keyword">int</span> direction)</span> </span>&#123;</span><br><span class="line">               <span class="comment">// 当手指抬起来的时候，根据最后一下手势，即 direction 返回的值，判断滑动的方向，选择 contentView 是否显示出来，还是回退不显示，然后做不同的动画</span></span><br><span class="line">               <span class="keyword">switch</span> (mSlideType) &#123;</span><br><span class="line">                    <span class="comment">// 右 -&gt; 左</span></span><br><span class="line">                   <span class="keyword">case</span> SLIDE_RIGHT_TO_LEFT:</span><br><span class="line">                       <span class="keyword">if</span> (direction == FloatView.DIRECTION_LEFT) &#123;</span><br><span class="line">                           <span class="comment">// 右侧进入，滑到左侧展开悬浮窗内容的动画</span></span><br><span class="line">                           rightInSmoothToLeft();</span><br><span class="line">                       &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                           <span class="comment">// 右侧进入，滑到右侧回到初始状态的动画</span></span><br><span class="line">                           rightInSmoothToRight();</span><br><span class="line">                       &#125;</span><br><span class="line">                       <span class="keyword">break</span>;</span><br><span class="line">                   <span class="comment">// ...省略其他方向的，原理类似，具体看 demo...</span></span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="meta">@Override</span></span><br><span class="line">           <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onScrollLeft</span><span class="params">(<span class="keyword">float</span> scrollX)</span> </span>&#123;</span><br><span class="line">               <span class="comment">// 从右侧滑到左侧，根据手势滑动的距离，不断改变 left 的属性值</span></span><br><span class="line">               <span class="keyword">if</span> (mSlideType == SLIDE_RIGHT_TO_LEFT) &#123;</span><br><span class="line">                   mContentView.layout(mScreenWidth - (<span class="keyword">int</span>) scrollX, <span class="number">0</span>, mScreenWidth, mScreenHeight);</span><br><span class="line">                   mContentView.setVisibility(View.VISIBLE);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里代码会比较多，适当的分析下，首先，当手指按下的时候，需要先把 rootview 放到 windowManager 中，因为是透明的，所以看上去就是桌面的内容，然后需要去取得 contentView 并放到 rootview 上，因为一开始不能显示 contentView，所以设置 contentView 的不可见，然后，根据 indicatorView 的位置，设置 contentView 的位置属性，例如 indicatorView 在屏幕的右侧，那么 contentView 也必须在屏幕的右侧，当拖动 indicatorView 的时候再慢慢的显示 contentView 就实现了拖动效果，所以 contentView 一开始 layout 的位置就是 <code>(mScreenWidth, 0, mScreenWidth, mScreenHeight)</code>，其他的方向同理。然后根据手势的滑动方向和距离，通过动画不断去改变 contentView 的 layout 属性，并将 contentView 从不可见设置为可见，给用户的感觉就有将悬浮窗一点点拖出来的效果了。等到悬浮窗完全展示的时候，点击空白的地方，悬浮窗又需要从当前的位置回滚到初始的位置，其原理和拖出来的原理是一样的。通过如上代码可以发现，contentView 的 layout 属性变化都是通过动画来实现的，这边我采用属性动画，来不断改变滑动的距离来实现悬浮窗显示和隐藏的效果，也就是就是上面代码中的 <code>rightInSmoothToLeft</code> 和 <code>rightInSmoothToRight</code>动画的实现，不多解释，直接上代码和注释</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 右侧滑进，滑到页面左侧，进入动画</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rightInSmoothToLeft</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> posX = mScreenWidth - mContentView.getWidth();</span><br><span class="line">    <span class="comment">// 通过属性动画做最后的效果，右侧滑进到左侧，contentView 的页面从右侧开始向左侧滑动显示，那么 right 始终保持是屏幕的宽度不变，改变的是 left 属性，</span></span><br><span class="line">    <span class="comment">//从屏幕宽的值一直改变到 0，那属性动画的间隔就出来了，时间设置整体的滑动为 300 ms，那么剩下的距离需要的滑动时间就是 300 * posX / mScreenWidth</span></span><br><span class="line">    ValueAnimator slideLeftAnim = ValueAnimator.ofInt(posX, <span class="number">0</span>).setDuration(<span class="number">300</span> * posX / mScreenWidth);</span><br><span class="line">    slideLeftAnim.setInterpolator(<span class="keyword">new</span> AccelerateDecelerateInterpolator());</span><br><span class="line">    slideLeftAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">    	<span class="meta">@Override</span></span><br><span class="line">    	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">            <span class="comment">// 根据变化的值，重新设置 contentView 的布局</span></span><br><span class="line">        	<span class="keyword">int</span> pos = (<span class="keyword">int</span>) animation.getAnimatedValue();</span><br><span class="line">            mContentView.layout(pos, <span class="number">0</span>, mScreenWidth, mScreenHeight);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    slideLeftAnim.start();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment">  * 右侧滑进，滑到页面右侧，退出动画</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">rightInSmoothToRight</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">int</span> posX = mScreenWidth - mContentView.getWidth();</span><br><span class="line">      <span class="comment">// 同理，退出的动画就是 contentView 从当前的 left 的值一直变换到屏幕宽的值，也可以得到相应动画</span></span><br><span class="line">      ValueAnimator slideRightAnim = ValueAnimator.ofInt(posX, mScreenWidth).setDuration(<span class="number">300</span> * (mScreenWidth - posX) / mScreenWidth);</span><br><span class="line">      slideRightAnim.setInterpolator(<span class="keyword">new</span> AccelerateDecelerateInterpolator());</span><br><span class="line">      slideRightAnim.addUpdateListener(<span class="keyword">new</span> ValueAnimator.AnimatorUpdateListener() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> </span>&#123;</span><br><span class="line">           	 <span class="comment">// 根据变化的值，重新设置 contentView 的布局</span></span><br><span class="line">              <span class="keyword">int</span> pos = (<span class="keyword">int</span>) animation.getAnimatedValue();</span><br><span class="line">              mContentView.layout(pos, <span class="number">0</span>, mScreenWidth, mScreenHeight);</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      slideRightAnim.addListener(<span class="keyword">new</span> AnimatorListenerAdapter() &#123;</span><br><span class="line">          <span class="meta">@Override</span></span><br><span class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAnimationEnd</span><span class="params">(Animator animation)</span> </span>&#123;</span><br><span class="line">              <span class="keyword">super</span>.onAnimationEnd(animation);</span><br><span class="line">              <span class="comment">// 退出动画结束的时候，需要把 rootview 从 WindowManager 移除</span></span><br><span class="line">              dismissContentView();</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;);</span><br><span class="line">      slideRightAnim.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到现在为止，我们已经搞定所有的逻辑，就差将 indicatorView 显示到视图上就大功告成了，通过一个 show 方法将显示的逻辑放到外部的 Activity 或者 Service 调用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 显示 indicatorView</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        mWindowManager.updateViewLayout(mFloatView, mParams);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">        mWindowManager.addView(mFloatView, mParams);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在调用 show 方法之前，如果版本大于 23 需要检测悬浮窗权限才行，检测的方法很简单</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">hasOverlayPermission</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.M || Settings.canDrawOverlays(context);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有同意悬浮窗权限，则需要引导用户打开，我这边通过一个 dialog 实现引导</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">overlayPermissionRequest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        mOverlayAskDialog = <span class="keyword">new</span> AlertDialog.Builder(MainActivity.<span class="keyword">this</span>)</span><br><span class="line">                .setTitle(<span class="string">"Overlay Permission Request"</span>)</span><br><span class="line">                .setMessage(<span class="string">"Need Overlay Permission"</span>)</span><br><span class="line">                .setPositiveButton(<span class="string">"Yes"</span>, <span class="keyword">new</span> DialogInterface.OnClickListener() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(DialogInterface dialog, <span class="keyword">int</span> which)</span> </span>&#123;</span><br><span class="line">                        <span class="keyword">if</span> (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.M) &#123;</span><br><span class="line">                            Intent intent = <span class="keyword">new</span> Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(<span class="string">"package:"</span> + getPackageName()));</span><br><span class="line">                            startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST);</span><br><span class="line">                        &#125;</span><br><span class="line">                        mOverlayAskDialog.dismiss();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;)</span><br><span class="line">                .setCancelable(<span class="keyword">false</span>)</span><br><span class="line">                .create();</span><br><span class="line">        mOverlayAskDialog.show();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>当跳转权限页面的时候最好用 <code>startActivityForResult</code> 方法，当用户从权限设置页面回来的时候，通过 <code>onActivityResult</code> 方法再去检测一次是否真正同意了权限，如果还是未同意，那就再次引导用户去同意权限。这里附上 demo 的效果，虽然和实际项目的效果还是有差别，但是核心思想在这了</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-8e0b36dcbfa16187.gif?imageMogr2/auto-orient/strip" width="200" height="350" align="center">
+
+<p>当然，源码是不可少的，不然就是耍流氓！！！<a href="https://github.com/kukyxs/AndroidCodes/tree/master/floatint-view" target="_blank" rel="noopener">点这点这点这</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/25/Flutter-入门指北-01/" rel="prev" title="Flutter 入门指北(01)">
+                Flutter 入门指北(01) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="kuky">
+            
+              <p class="site-author-name" itemprop="name">kuky</p>
+              <p class="site-description motion-element" itemprop="description">不给哔哔还是咋的~ o(´^｀)o</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kukyxs" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:kukyxingshi@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kuky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+	
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: '你猜有没有人会回复评论呢~╭(╯^╰)╮ -- 来自博主的「挑衅」',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
