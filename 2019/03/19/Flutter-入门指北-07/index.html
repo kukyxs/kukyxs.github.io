@@ -94,7 +94,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-70145635ae27bf9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-2522ab8b726c0bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-3752cd0adad5ac5a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:56:22.364Z">
+<meta property="og:updated_time" content="2019-08-28T13:16:43.157Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(07) -- 内容太多怎么办，列表来帮你">
 <meta name="twitter:description" content="前面的小节基本上讲完了常用的部件和容器部件，也可以完成很多的界面，但是又一个问题，假如我们要显示一段文字，比如将 一段又臭又长的文字 在界面上显示 1000 次，不难完成吧 12// ..省略一些无关代码body: Text(&apos;一段又臭又长的文字&apos; * 1000, softWrap: true)  很简单，运行到手机…「诶诶诶，**，怎么只显示了一部分，剩下的怎么画不下去」 日常开发中，会遇到很多">
@@ -408,8 +408,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">body: ListView.builder(</span><br><span class="line">    itemBuilder: (_, index) =&gt; Center(child: Text(letters[index], style: TextStyle(color: Colors.green))),</span><br><span class="line">    itemExtent: <span class="number">40.0</span>,</span><br><span class="line">    itemCount: letters.length),</span><br></pre></td></tr></table></figure>
 
 <p>相对比较简单，代码也比较少…就冲这点，我也愿意用这个方法</p>
-<p>#####ListView.separated</p>
-<p>如果需要在每个 <code>item</code> 之间添加分割线，那么通过以上的方式实现就比较困难了，所以 <code>Flutter</code> 提供了 <code>separated</code> 方法用来快速构建带有分割线的 <code>ListView</code></p>
+<h5 id="ListView-separated"><a href="#ListView-separated" class="headerlink" title="ListView.separated"></a>ListView.separated</h5><p>如果需要在每个 <code>item</code> 之间添加分割线，那么通过以上的方式实现就比较困难了，所以 <code>Flutter</code> 提供了 <code>separated</code> 方法用来快速构建带有分割线的 <code>ListView</code></p>
 <p>加入我们的 <code>item</code> 之间的分割线需要如下样式：奇数位和偶数位之间用黑色分割线，偶数位和奇数位之间用红色分割线</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要分割线的时候才使用，不能指定 item 的高度</span></span><br><span class="line">body: ListView.separated(</span><br><span class="line">	itemBuilder: (_, index) =&gt; Padding(</span><br><span class="line">    	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">20.0</span>),</span><br><span class="line">        child: Center(child: Text(letters[index], style: TextStyle(color: Colors.blue))),</span><br><span class="line">      ),</span><br><span class="line">    <span class="comment">// 这里用来定义分割线</span></span><br><span class="line">    separatorBuilder: (_, index) =&gt; Divider(height: <span class="number">1.0</span>, color: index % <span class="number">2</span> == <span class="number">0</span> ? Colors.black : Colors.red),</span><br><span class="line">    itemCount: letters.length),</span><br></pre></td></tr></table></figure>
 
@@ -505,6 +504,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -693,7 +721,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#SingleChildScrollView"><span class="nav-number">1.</span> <span class="nav-text">SingleChildScrollView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView"><span class="nav-number">2.</span> <span class="nav-text">ListView</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-children"><span class="nav-number">2.1.</span> <span class="nav-text">ListView children</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-custom"><span class="nav-number">2.2.</span> <span class="nav-text">ListView.custom</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-builder"><span class="nav-number">2.3.</span> <span class="nav-text">ListView.builder</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ExpansionTile"><span class="nav-number">3.</span> <span class="nav-text">ExpansionTile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GridView"><span class="nav-number">4.</span> <span class="nav-text">GridView</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-1"><span class="nav-number">4.1.</span> <span class="nav-text">GridView</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-count-GridView-extent"><span class="nav-number">4.2.</span> <span class="nav-text">GridView.count/GridView.extent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-custom"><span class="nav-number">4.3.</span> <span class="nav-text">GridView.custom</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-builder"><span class="nav-number">4.4.</span> <span class="nav-text">GridView.builder</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CustomScrollView"><span class="nav-number">5.</span> <span class="nav-text">CustomScrollView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ScrollController"><span class="nav-number">6.</span> <span class="nav-text">ScrollController</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#SingleChildScrollView"><span class="nav-number">1.</span> <span class="nav-text">SingleChildScrollView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ListView"><span class="nav-number">2.</span> <span class="nav-text">ListView</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-children"><span class="nav-number">2.1.</span> <span class="nav-text">ListView children</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-custom"><span class="nav-number">2.2.</span> <span class="nav-text">ListView.custom</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-builder"><span class="nav-number">2.3.</span> <span class="nav-text">ListView.builder</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#ListView-separated"><span class="nav-number">2.4.</span> <span class="nav-text">ListView.separated</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ExpansionTile"><span class="nav-number">3.</span> <span class="nav-text">ExpansionTile</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GridView"><span class="nav-number">4.</span> <span class="nav-text">GridView</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-1"><span class="nav-number">4.1.</span> <span class="nav-text">GridView</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-count-GridView-extent"><span class="nav-number">4.2.</span> <span class="nav-text">GridView.count/GridView.extent</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-custom"><span class="nav-number">4.3.</span> <span class="nav-text">GridView.custom</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#GridView-builder"><span class="nav-number">4.4.</span> <span class="nav-text">GridView.builder</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CustomScrollView"><span class="nav-number">5.</span> <span class="nav-text">CustomScrollView</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ScrollController"><span class="nav-number">6.</span> <span class="nav-text">ScrollController</span></a></li></ol></div>
             
 
           </div>

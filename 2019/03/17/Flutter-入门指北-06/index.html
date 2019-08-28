@@ -93,7 +93,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d32890e60fa05ac0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/602/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-f57b9e4e8f220cd5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/573/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-0f8a0cf16871e5b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:55:58.702Z">
+<meta property="og:updated_time" content="2019-08-28T13:19:12.162Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(06) -- 了解 Flutter 的界面交互">
 <meta name="twitter:description" content="上一节撸了个界面，虽然比较简单，但是把前面讲的知识串联了下，但是界面之间的跳转一直没说，这节就讲下 Flutter 中的「路由」来管理界面。 NavigatorFlutter 通过 Navigator  来进行页面之间的跳转，分为 push 系列和 pop 系列操作，带 push 方法为入栈操作，带 pop 方法为出栈操作。Navigator 的 push 方法分两类，一类是带 Name 的，需要">
@@ -415,8 +415,7 @@
 
 <p>点击跳转 <code>CPage</code> 以后，发现返回按钮又回来了…就这么回来了…只是修改了一个参数，点击返回按钮，又回到了 <code>APage</code>，你可以在 <code>APage</code> 跳转 <code>BPage</code> 中加入<code>DPage</code> <code>EPage</code> 等等更多的界面，只要保证 <code>BPage</code> 跳转 <code>CPage</code> 的方式不变，点击 <code>CPage</code> 的返回按钮，又回到 <code>APage</code> 了，所以…堆栈的变化图如下</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/2888797-d32890e60fa05ac0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/602/format/webp" alt="Navigator_pushAndRemoveUnit2.png"></p>
-<p>######SUMMARY</p>
-<p>为什么会这样变化呢，还记得在 <code>MaterialApp</code> 中注册的 <code>router</code> 么，<code>APage</code> 的 <code>name</code> 对应的为 <code>&#39;/&#39;</code>，也就是说，该方法会把堆栈中在 <code>ModalRoute.withName</code> 所对应的 page 上的所有都 pop 出堆栈，如果把参数换成 <code>/page_b</code>，然后在跳转 <code>CPage</code> 之前加入更多的界面，点击 <code>CPage</code> 的返回按钮，就会回到 <code>BPage</code></p>
+<h6 id="SUMMARY"><a href="#SUMMARY" class="headerlink" title="SUMMARY"></a>SUMMARY</h6><p>为什么会这样变化呢，还记得在 <code>MaterialApp</code> 中注册的 <code>router</code> 么，<code>APage</code> 的 <code>name</code> 对应的为 <code>&#39;/&#39;</code>，也就是说，该方法会把堆栈中在 <code>ModalRoute.withName</code> 所对应的 page 上的所有都 pop 出堆栈，如果把参数换成 <code>/page_b</code>，然后在跳转 <code>CPage</code> 之前加入更多的界面，点击 <code>CPage</code> 的返回按钮，就会回到 <code>BPage</code></p>
 <h6 id="QUESTION"><a href="#QUESTION" class="headerlink" title="QUESTION"></a>QUESTION</h6><p>这边再提个小问题，有页面 A，B，C，D，其路由的 name 分别为 ‘/‘，’page_b’，’page_c’，’page_d’，启动顺序为 A -&gt; B -&gt; C -&gt; C -&gt; D，那么在 D 页面使用 </p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamedAndRemoveUntil(context, <span class="string">'/page_c'</span>, ModalRoute.withName(<span class="string">'/page_c'</span>));</span><br></pre></td></tr></table></figure>
 
@@ -431,8 +430,7 @@
 
 <p>点击返回按钮，界面跳过 <code>BPage</code> 回到了 <code>APage</code>，解释同 <code>pushAndRemoveUntil</code> 那么堆栈的变化也显而易见咯</p>
 <p><img src="https://upload-images.jianshu.io/upload_images/2888797-0f8a0cf16871e5b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp" alt="Navigator_popUntil.png"></p>
-<h4 id="Navigator-传值"><a href="#Navigator-传值" class="headerlink" title="Navigator 传值"></a>Navigator 传值</h4><p>######CASE 1 传值给下个界面</p>
-<p>修改下 <code>BPage</code> 和 <code>APage</code> 的按钮点击事件</p>
+<h4 id="Navigator-传值"><a href="#Navigator-传值" class="headerlink" title="Navigator 传值"></a>Navigator 传值</h4><h6 id="CASE-1-传值给下个界面"><a href="#CASE-1-传值给下个界面" class="headerlink" title="CASE 1 传值给下个界面"></a>CASE 1 传值给下个界面</h6><p>修改下 <code>BPage</code> 和 <code>APage</code> 的按钮点击事件</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> message;</span><br><span class="line"></span><br><span class="line">  BPage(&#123;Key key, <span class="meta">@required</span> <span class="keyword">this</span>.message&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">'passed value: <span class="subst">$message</span>'</span>);</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      <span class="comment">// 省略相同代码</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// APage 跳转事件</span></span><br><span class="line">Navigator.push(context, MaterialPageRoute(builder: </span><br><span class="line">                                          (_) =&gt; BPage(message: <span class="string">'Message From Page A'</span>)));</span><br></pre></td></tr></table></figure>
@@ -440,8 +438,7 @@
 <p>点击 <code>APage</code> 可以查看控制台有输出 </p>
 <p><code>2019-03-17 00:04:06.854 12868-12888/com.kuky.demo.flutterartsdemosapp I/flutter: passed value: Message From Page A</code> </p>
 <p>也就是成功把值传递过来了。<strong>但是，需要传递参数的话，之前在 <code>MaterialApp</code> 下注册的路由就需要去除了</strong>。</p>
-<p>######CASE 2 传值给上个界面</p>
-<p>这边可以查看下 <code>pop</code> 方法</p>
+<h6 id="CASE-2-传值给上个界面"><a href="#CASE-2-传值给上个界面" class="headerlink" title="CASE 2 传值给上个界面"></a>CASE 2 传值给上个界面</h6><p>这边可以查看下 <code>pop</code> 方法</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@optionalTypeArgs</span></span><br><span class="line">  <span class="comment">// pop 可以传入一个可选参数 result，这个 result 也就是回传给上个页面的参数值了</span></span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">bool</span> pop&lt;T <span class="keyword">extends</span> <span class="built_in">Object</span>&gt;(BuildContext context, [ T result ]) &#123;</span><br><span class="line">    <span class="keyword">return</span> Navigator.of(context).pop&lt;T&gt;(result);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
 <p>既然知道 <code>pop</code> 如何传递值给上个界面，那么如何在上个界面接收这个参数呢，还是看下 <code>push</code> 方法</p>
@@ -492,6 +489,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -680,7 +706,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator"><span class="nav-number">1.</span> <span class="nav-text">Navigator</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#push-pushNamed-方式跳转"><span class="nav-number">1.1.</span> <span class="nav-text">push / pushNamed 方式跳转</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pushReplacement-pushReplacementNamed-popAndPushNamed"><span class="nav-number">1.2.</span> <span class="nav-text">pushReplacement / pushReplacementNamed / popAndPushNamed</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pushAndRemoveUntil-pushNamedAndRemoveUntil"><span class="nav-number">1.3.</span> <span class="nav-text">pushAndRemoveUntil / pushNamedAndRemoveUntil</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">CASE 1</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">CASE 2</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#QUESTION"><span class="nav-number">1.3.3.</span> <span class="nav-text">QUESTION</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pop"><span class="nav-number">1.4.</span> <span class="nav-text">pop</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#popUntil"><span class="nav-number">1.5.</span> <span class="nav-text">popUntil</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator-传值"><span class="nav-number">2.</span> <span class="nav-text">Navigator 传值</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-3-通过系统返回按钮传值"><span class="nav-number">2.0.1.</span> <span class="nav-text">CASE 3 通过系统返回按钮传值</span></a></li></ol></li></ol><li class="nav-item nav-level-4"><a class="nav-link" href="#路由切换动画"><span class="nav-number">3.</span> <span class="nav-text">路由切换动画</span></a></li></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator"><span class="nav-number">1.</span> <span class="nav-text">Navigator</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#push-pushNamed-方式跳转"><span class="nav-number">1.1.</span> <span class="nav-text">push / pushNamed 方式跳转</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pushReplacement-pushReplacementNamed-popAndPushNamed"><span class="nav-number">1.2.</span> <span class="nav-text">pushReplacement / pushReplacementNamed / popAndPushNamed</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pushAndRemoveUntil-pushNamedAndRemoveUntil"><span class="nav-number">1.3.</span> <span class="nav-text">pushAndRemoveUntil / pushNamedAndRemoveUntil</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-1"><span class="nav-number">1.3.1.</span> <span class="nav-text">CASE 1</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">CASE 2</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#SUMMARY"><span class="nav-number">1.3.3.</span> <span class="nav-text">SUMMARY</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#QUESTION"><span class="nav-number">1.3.4.</span> <span class="nav-text">QUESTION</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#pop"><span class="nav-number">1.4.</span> <span class="nav-text">pop</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#popUntil"><span class="nav-number">1.5.</span> <span class="nav-text">popUntil</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Navigator-传值"><span class="nav-number">2.</span> <span class="nav-text">Navigator 传值</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-1-传值给下个界面"><span class="nav-number">2.0.1.</span> <span class="nav-text">CASE 1 传值给下个界面</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-2-传值给上个界面"><span class="nav-number">2.0.2.</span> <span class="nav-text">CASE 2 传值给上个界面</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#CASE-3-通过系统返回按钮传值"><span class="nav-number">2.0.3.</span> <span class="nav-text">CASE 3 通过系统返回按钮传值</span></a></li></ol></li></ol><li class="nav-item nav-level-4"><a class="nav-link" href="#路由切换动画"><span class="nav-number">3.</span> <span class="nav-text">路由切换动画</span></a></li></div>
             
 
           </div>

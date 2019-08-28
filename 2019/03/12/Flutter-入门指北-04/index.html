@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-12843e7d40e059cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/426/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-e76f9e446c3c33d3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/343/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-48f42623e06e7043.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/343/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:55:06.765Z">
+<meta property="og:updated_time" content="2019-08-28T13:21:29.333Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(04) -- 接触 Flutter 常用布局">
 <meta name="twitter:description" content="上节填完了 Scaffold 留下的坑，这节继续填坑，之前留下关于 Layout 的坑，又是一堆部件袭来 Container为了让我们的界面更容易被扩展，通常会在最外层包裹一层 Container，其构造函数也不是很难理解 1234567891011121314151617181920212223Container(&amp;#123;    Key key,    this.alignment, //">
@@ -386,8 +386,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">child: Column(</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Text(<span class="string">'Container Text'</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>)),</span><br><span class="line">            Padding(</span><br><span class="line">                <span class="comment">// 需要传入一个间隔值，`Flutter` 提供了很多 EdgeInsets 来设置间隔，</span></span><br><span class="line">                <span class="comment">// 参数也很明确，可以一一尝试</span></span><br><span class="line">                padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">12.0</span>),</span><br><span class="line">                <span class="comment">// 传入需要间隔的部件</span></span><br><span class="line">                child: Text(<span class="string">'Container Text'</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>)))</span><br><span class="line">          ],</span><br><span class="line">        ),</span><br></pre></td></tr></table></figure>
 
 <p>效果就不展示了，接下来就要开始我的填坑之旅了….</p>
-<p>####Flex，Row，Column</p>
-<p>写 <code>Android</code> 的小伙伴应该比较常用 <code>LinearLayout</code>，在 <code>Flutter</code> 中用两个部件，<code>Row</code> <code>Column</code>来代替 <code>Android</code> 中的 <code>LinearLayout</code>，其中 <code>Row</code> 是横向布局，<code>Column</code> 是垂直布局，因为 <code>Row</code> 和 <code>Column</code> 都是继承于 <code>Flex</code> 部件，<code>Flex</code> 比他们多了 <code>direction</code> 属性用来指定方向，所以主要拿 <code>Column</code> 来讲解，<code>Flex</code> 、<code>Row</code> 用法相同</p>
+<h4 id="Flex，Row，Column"><a href="#Flex，Row，Column" class="headerlink" title="Flex，Row，Column"></a>Flex，Row，Column</h4><p>写 <code>Android</code> 的小伙伴应该比较常用 <code>LinearLayout</code>，在 <code>Flutter</code> 中用两个部件，<code>Row</code> <code>Column</code>来代替 <code>Android</code> 中的 <code>LinearLayout</code>，其中 <code>Row</code> 是横向布局，<code>Column</code> 是垂直布局，因为 <code>Row</code> 和 <code>Column</code> 都是继承于 <code>Flex</code> 部件，<code>Flex</code> 比他们多了 <code>direction</code> 属性用来指定方向，所以主要拿 <code>Column</code> 来讲解，<code>Flex</code> 、<code>Row</code> 用法相同</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Column(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="comment">// 对齐方式，对于 `Column` start 为顶部，对于 `Row` 需要分语言，和语言同向</span></span><br><span class="line">    <span class="comment">// 3 种比较特殊的对齐方式，前端的小伙伴会了解，</span></span><br><span class="line">    <span class="comment">// spaceAround 两个部件之间的间隔是部件和上层容器间隔的两倍</span></span><br><span class="line">    <span class="comment">// spaceBetween 两侧部件同上层容器间隔为 0，部件之间的间隔相等</span></span><br><span class="line">    <span class="comment">// spaceEvenly 部件之间的间隔同两侧部件与上层容器间隔</span></span><br><span class="line">    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.start, </span><br><span class="line">    MainAxisSize mainAxisSize = MainAxisSize.max, <span class="comment">// 主轴的大小</span></span><br><span class="line">    CrossAxisAlignment crossAxisAlignment = CrossAxisAlignment.center, <span class="comment">// 副轴对齐方式</span></span><br><span class="line">    TextDirection textDirection, <span class="comment">// 文字方向，决定 start</span></span><br><span class="line">    VerticalDirection verticalDirection = VerticalDirection.down, <span class="comment">// 垂直方向</span></span><br><span class="line">    TextBaseline textBaseline,</span><br><span class="line">    <span class="built_in">List</span>&lt;Widget&gt; children = <span class="keyword">const</span> &lt;Widget&gt;[], <span class="comment">// 内部子部件</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
 
 <p><code>Row</code> 和 <code>Column</code> 都有主轴和副轴，如何区分呢，<strong>布局平行方向为主轴，垂直方向为副轴</strong>，我们把 <code>Container</code> 的 <code>child</code> 修改成 <code>Column</code>，然后把 <code>Text</code> 放到 <code>Column</code> 中，多放几个，然后自己设置 <code>mainAxisAlignment</code> 属性，查看布局的变化</p>
@@ -441,6 +440,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -629,7 +657,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Container"><span class="nav-number">1.</span> <span class="nav-text">Container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wrap"><span class="nav-number">2.</span> <span class="nav-text">Wrap</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Container"><span class="nav-number">1.</span> <span class="nav-text">Container</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Flex，Row，Column"><span class="nav-number">2.</span> <span class="nav-text">Flex，Row，Column</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Wrap"><span class="nav-number">3.</span> <span class="nav-text">Wrap</span></a></li></ol></div>
             
 
           </div>

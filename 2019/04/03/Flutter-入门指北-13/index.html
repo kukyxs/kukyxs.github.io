@@ -91,8 +91,8 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-5c525b5b9f895925.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-78f3123a4d361673.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/631/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-ccc8ebc5f5870438.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-cbe4a21cc6b3b828.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/336/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:58:41.616Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-cbe4a21cc6b3b828.gif?imageMogr2/auto-orient/strip|imageView2/2/w/336/format/webp">
+<meta property="og:updated_time" content="2019-08-28T12:56:09.270Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(13) -- 如何调用 Api">
 <meta name="twitter:description" content="前面讲完了常用的部件，BLoC 模式，数据持久化等常用的，今天再介绍个重头戏 —— 网络请求 HttpClientHttpClient 是 dart 自带的网络请求方式，在 dart:io 包下。使用 HttpClient 作为请求分以下几个步骤  创建 HttpClient 实例 1HttpClient client = HttpClient();  打开连接，并设置一些头参数，请求参数等 12">
@@ -424,7 +424,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  Application.http = HttpUtils(<span class="string">'https://randomuser.me'</span>);</span><br><span class="line">  </span><br><span class="line">  runApp(DemoApp());</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 透明状态栏</span></span><br><span class="line">  <span class="keyword">if</span> (Platform.isAndroid) &#123;</span><br><span class="line">      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: Colors.transparent));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>看下最后的实现效果吧，刚进入没有数据则通过转圈圈提示，加载完数据后，点击头像更换下个</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-cbe4a21cc6b3b828.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/336/format/webp" width="200" height="350" align="center">
+<img src="https://upload-images.jianshu.io/upload_images/2888797-cbe4a21cc6b3b828.gif?imageMogr2/auto-orient/strip|imageView2/2/w/336/format/webp" width="200" height="350" align="center">
 
 <p>实现 <code>BLoC</code> 需要有一个管理类</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserBloc</span> <span class="keyword">extends</span> <span class="title">BaseBloc</span> </span>&#123;</span><br><span class="line">  RandomUserModel _user;</span><br><span class="line"></span><br><span class="line">  RandomUserModel <span class="keyword">get</span> user =&gt; _user;</span><br><span class="line"></span><br><span class="line">  BehaviorSubject&lt;RandomUserModel&gt; _controller = BehaviorSubject();</span><br><span class="line"></span><br><span class="line">  Observable&lt;RandomUserModel&gt; <span class="keyword">get</span> stream =&gt; Observable(_controller.stream);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 网络请求获取新的数据，并更新</span></span><br><span class="line">  updateUserInfo() &#123;</span><br><span class="line">    Application.http.getRequest(<span class="string">'/api'</span>).then((response) &#123;</span><br><span class="line">      <span class="comment">// RandomUserModel 就是接口返回的 json 转成的 model 类</span></span><br><span class="line">      RandomUserModel model = RandomUserModel.fromMap(response.data);</span><br><span class="line">      _user = model;</span><br><span class="line">      <span class="comment">// add 到 controller 通知修改</span></span><br><span class="line">      _controller.add(model);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    _controller?.close(); <span class="comment">// 及时销毁</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -453,6 +453,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     

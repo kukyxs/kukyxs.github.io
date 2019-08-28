@@ -92,7 +92,7 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-ea541a1a1b880d2e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-12bdb77ffa822d0c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:56:45.637Z">
+<meta property="og:updated_time" content="2019-08-28T13:14:46.926Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族">
 <meta name="twitter:description" content="上节最后留了个坑到这节来解决，因为涉及部件比较多，所以留到这边来继续讲，不然写太多了怕小伙伴看不下去 在上节最后，给小伙伴们展示了 SliveGrid 和 SliverFixedExtentList 的用法，基本上和 GridView 和 ListView 的用法差不多，所以这边就不多讲这两个部件了。 SliverAppBar相信很多 Android 开发的小伙伴会用到 MaterialDesig">
@@ -392,8 +392,7 @@
 <img src="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center">
 
 <p>以上的效果图把 <code>SliverFillRemaining</code> 换成列表 <code>SliverFixedExtentList</code> 效果可能会更加明显，这边给小伙伴自己替换测试吧。</p>
-<p>####SliverFillViewport</p>
-<p>这边提到了 <code>SliverFillRemaining</code> 用来填充视图，那么顺带提下 <code>SliverFillViewport</code> 这个部件</p>
+<h4 id="SliverFillViewport"><a href="#SliverFillViewport" class="headerlink" title="SliverFillViewport"></a>SliverFillViewport</h4><p>这边提到了 <code>SliverFillRemaining</code> 用来填充视图，那么顺带提下 <code>SliverFillViewport</code> 这个部件</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverFillViewport(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> SliverChildDelegate delegate, <span class="comment">// 这个 delegate 同 SliverGrid </span></span><br><span class="line">    <span class="keyword">this</span>.viewportFraction = <span class="number">1.0</span>, <span class="comment">// 同屏幕的比例值，1.0 为一个屏幕大小</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
 
 <p>如果一个滑动列表，每个 <code>item</code> 需要占满一个屏幕或者更大，可以使用该部件生成列表，但是如果 <code>item</code> 的高度小于一个屏幕高度，那就不太推荐了，在首尾会用空白 <code>item</code> 来把未填满的补上，就是首尾都会留空白。我们使用 <code>SliverFillViewport</code> 对 <code>SliverFillRemaning</code> 进行替换</p>
@@ -483,6 +482,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
@@ -671,7 +699,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverAppBar"><span class="nav-number">1.</span> <span class="nav-text">SliverAppBar</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverToBoxAdapter"><span class="nav-number">2.</span> <span class="nav-text">SliverToBoxAdapter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverPadding"><span class="nav-number">3.</span> <span class="nav-text">SliverPadding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverPersistentHeader"><span class="nav-number">4.</span> <span class="nav-text">SliverPersistentHeader</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SliverPersistentHeaderDelegate"><span class="nav-number">4.1.</span> <span class="nav-text">SliverPersistentHeaderDelegate</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NestedScrollView"><span class="nav-number">5.</span> <span class="nav-text">NestedScrollView</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverAppBar"><span class="nav-number">1.</span> <span class="nav-text">SliverAppBar</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverFillViewport"><span class="nav-number">2.</span> <span class="nav-text">SliverFillViewport</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverToBoxAdapter"><span class="nav-number">3.</span> <span class="nav-text">SliverToBoxAdapter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverPadding"><span class="nav-number">4.</span> <span class="nav-text">SliverPadding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SliverPersistentHeader"><span class="nav-number">5.</span> <span class="nav-text">SliverPersistentHeader</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#SliverPersistentHeaderDelegate"><span class="nav-number">5.1.</span> <span class="nav-text">SliverPersistentHeaderDelegate</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NestedScrollView"><span class="nav-number">6.</span> <span class="nav-text">NestedScrollView</span></a></li></ol></div>
             
 
           </div>

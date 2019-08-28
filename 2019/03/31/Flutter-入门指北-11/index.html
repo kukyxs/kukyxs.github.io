@@ -89,9 +89,9 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-3641b9a55b726054.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/846/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-8d58d857885dba7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/839/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-8d58d857885dba7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/839/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-31cb9b8c3a99abaf.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:57:55.730Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-3d653953fce1f448.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/809/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-31cb9b8c3a99abaf.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:updated_time" content="2019-08-28T13:07:47.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(11) -- 如何实现状态管理，BLoC 一展身手">
 <meta name="twitter:description" content="讲了那么多的部件，这节我打算来点不太一样的，可能会没有部件那么好理解，也许是我理解不够透彻，所以写的会不够明白，总之系好安全带，我们要准备开车了。 Stream在 dart 部分记得分享过 Stream 的文章链接，但是我知道你们肯定没几个愿意看的，所以这里再提下。还是得从源码开始…因为源码的注释比较长，就不贴注释了，可以自己看，我这边就提取一些关键信息。 Stream 是 Dart 提供的一种数">
@@ -401,7 +401,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">_subscription = _controller.stream</span><br><span class="line">    .where((value) =&gt; value &gt; <span class="number">10</span>)</span><br><span class="line">    .take(<span class="number">5</span>)</span><br><span class="line">    .listen((data) =&gt; <span class="built_in">print</span>(<span class="string">'Listen: <span class="subst">$data</span>'</span>));</span><br><span class="line"></span><br><span class="line"><span class="built_in">List</span>.generate(<span class="number">20</span>, (index) =&gt; _sink.add(index));</span><br></pre></td></tr></table></figure>
 
 <p>那么打印出来的数据如下图</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-8d58d857885dba7e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/839/format/webp" alt="stream3.png"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-3d653953fce1f448.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/809/format/webp" alt="stream3.png"></p>
 <p>除了 <code>where</code>，<code>take</code> 还有很多 <code>Transformer</code>， 例如 <code>map</code>，<code>skip</code> 等等，小伙伴们可以自行研究。了解了 <code>Stream</code> 的基本属性后，就可以继续往下了~</p>
 <p>####StreamBuilder</p>
 <p>前面提到了 stream 通过 <code>listen</code> 进行监听数据的变化，<code>Flutter</code> 就为我们提供了这么个部件 <code>StreamBuilder</code> 专门用于监听 stream 的变化，然后自动刷新重建。接着来看下源码</p>
@@ -414,7 +414,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_StreamHomeState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">StreamHome</span>&gt; </span>&#123;</span><br><span class="line">  <span class="comment">// 定义一个全局的 `StreamController`</span></span><br><span class="line">  StreamController&lt;<span class="built_in">int</span>&gt; _controller = StreamController.broadcast();</span><br><span class="line">  <span class="comment">// `sink` 用于传入新的数据</span></span><br><span class="line">  Sink&lt;<span class="built_in">int</span>&gt; _sink;</span><br><span class="line">  <span class="built_in">int</span> _counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _sink = _controller.sink;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">    <span class="comment">// 需要销毁资源</span></span><br><span class="line">    _sink.close();</span><br><span class="line">    _controller.close();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      body: SafeArea(</span><br><span class="line">          child: Container(</span><br><span class="line">        alignment: Alignment.center,</span><br><span class="line">        child: StreamBuilder(</span><br><span class="line">          builder: (_, snapshot) =&gt; Text(<span class="string">'<span class="subst">$&#123;snapshot.data&#125;</span>'</span>, style: TextStyle(fontSize: <span class="number">24.0</span>)),</span><br><span class="line">          stream: _controller.stream, <span class="comment">// stream 在 StreamBuilder 销毁的时候会自动销毁</span></span><br><span class="line">          initialData: _counter,</span><br><span class="line">        ),</span><br><span class="line">      )),</span><br><span class="line">      <span class="comment">// 通过 `sink` 传入新的数据，去通知 `stream` 更新到 builder 中</span></span><br><span class="line">      floatingActionButton: FloatingActionButton(</span><br><span class="line">        onPressed: () =&gt; _sink.add(_counter++),</span><br><span class="line">        child: Icon(Icons.add),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>那么当点击按钮的时候，就会刷新界面上的值，通过上面的源码分析，<code>StreamBuilder</code> 也是通过 <code>setState</code> 方法进行刷新，那么两种方法孰优孰劣呢，当然是通过 <code>Stream</code> 啦，这不是废话吗。<strong>因为通过调用 <code>setState</code> 刷新的话，会把整个界面都进行重构，但是通过 <code>StreamBuilder</code> 的话，只刷新其 <code>builder</code>，这样效率就更高了</strong>，最后看小效果吧，所谓有图有真相嘛</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-31cb9b8c3a99abaf.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center">
+<img src="https://upload-images.jianshu.io/upload_images/2888797-31cb9b8c3a99abaf.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center">
 
 <p>这一步，我们摒弃了 <code>setState</code> 方法，那么下一步，我们试试把 <code>StatefulWidget</code> 替换成 <code>StatelessWidget</code> 吧，而且<strong>官方也推荐使用 <code>StatelessWidget</code> 替换 <code>StatefulWidget</code></strong>，这里就需要提下 <code>BLoC</code> 模式了。</p>
 <h4 id="BLoC"><a href="#BLoC" class="headerlink" title="BLoC"></a>BLoC</h4><p>说实话，现在 Google 下 「flutter bloc」能搜到很多文章，基本上都是通过 <code>InheritedWidget</code> 来实现的，例如这篇<a href="https://juejin.im/post/5bb6f344f265da0aa664d68a" target="_blank" rel="noopener">Flutter | 状态管理探索篇——BLoC(三)</a>，但是 <code>InheritedWidget</code> 没有提供 <code>dispose</code> 方法，那么就会存在 <code>StreamController</code> 不能及时销毁等问题，所以，参考了一篇国外的文章，<a href="https://www.didierboelens.com/2018/08/reactive-programming---streams---bloc/" target="_blank" rel="noopener">Reactive Programming - Streams - BLoC</a> 这里通过使用 <code>StatefulWidget</code> 来实现，当该部件销毁的时候，可以在其 <code>dispose</code> 方法中及时销毁 <code>StreamController</code>，这里我还是先当个搬运工，搬下大佬为我们实现好的基类</p>
@@ -514,6 +514,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     

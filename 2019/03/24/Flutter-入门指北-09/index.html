@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="KK的小树洞">
 <meta property="og:description" content="前面的小节把常用的一些部件都介绍了，这节介绍下 Flutter 中的一些操作提示。Flutter 中的操作提示主要有这么几种 SnackBar、BottomSheet、Dialog，因为 Dialog 样式比较多，放最后讲好了 SnackBarSnackBar 的源码相对简单 12345678const SnackBar(&amp;#123;    Key key,    @required this.c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-70e344e56f98f683.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-51e8092d6a0e879b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-dd8dc81b43e02e44.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
@@ -97,11 +97,11 @@
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-6fe46f000ccd7336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/453/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-b90b21ff3cca2241.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-fe488a85d5276b4c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:updated_time" content="2019-08-27T01:57:03.747Z">
+<meta property="og:updated_time" content="2019-08-28T13:13:05.947Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Flutter Guide(09) -- 了解 Flutter 的友好提示">
 <meta name="twitter:description" content="前面的小节把常用的一些部件都介绍了，这节介绍下 Flutter 中的一些操作提示。Flutter 中的操作提示主要有这么几种 SnackBar、BottomSheet、Dialog，因为 Dialog 样式比较多，放最后讲好了 SnackBarSnackBar 的源码相对简单 12345678const SnackBar(&amp;#123;    Key key,    @required this.c">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
 
 
 
@@ -386,7 +386,7 @@
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_PromptDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">PromptDemoPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自增操作</span></span><br><span class="line">  increase() &#123;</span><br><span class="line">    setState(() =&gt; count++);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自减操作</span></span><br><span class="line">  decrease() &#123;</span><br><span class="line">    setState(() =&gt; count--);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _changeValue(BuildContext context) &#123;</span><br><span class="line">    increase();</span><br><span class="line">    Scaffold.of(context).showSnackBar(SnackBar(</span><br><span class="line">        content: Text(<span class="string">'当前值已修改'</span>),</span><br><span class="line">        action: SnackBarAction(label: <span class="string">'撤销'</span>, onPressed: decrease),</span><br><span class="line">        duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">2000</span>)));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">'Prompt Demo'</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Column(children: &lt;Widget&gt;[</span><br><span class="line">        Text(<span class="string">'当前值：<span class="subst">$count</span>'</span>, style: TextStyle(fontSize: <span class="number">20.0</span>)),</span><br><span class="line">        Expanded(</span><br><span class="line">            <span class="comment">// 为了方便拓展，我这边提取了 `snackBar` 的方法，并把按钮放在列表</span></span><br><span class="line">            child: ListView(padding: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>, vertical: <span class="number">8.0</span>), children: &lt;Widget&gt;[</span><br><span class="line">          <span class="comment">// SnackBar 需要提供一个包含 context，但是 context 不能是 Scaffold 节点下的 context，所以需要通过 Builder 包裹一层</span></span><br><span class="line">          Builder(builder: (context) =&gt; RaisedButton(onPressed: () =&gt; _changeValue(context), child: Text(<span class="string">'修改当前值'</span>))),</span><br><span class="line">        ]))</span><br><span class="line">      ]),</span><br><span class="line">      <span class="comment">// 当 SnackBar 弹出时，fab 会上移一段距离</span></span><br><span class="line">      floatingActionButton: Builder(</span><br><span class="line">          builder: (context) =&gt; FloatingActionButton(onPressed: () =&gt; _changeValue(context), child: Icon(Icons.send))),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看下最后的效果图，请注意看 <code>fab</code> 和值的变化：</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center">
+<img src="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center">
 
 <h4 id="BottomSheet"><a href="#BottomSheet" class="headerlink" title="BottomSheet"></a>BottomSheet</h4><p><code>BottomSheet</code> 看命名就知道是从底部弹出的菜单，展示 <code>BottomSheet</code> 有两种方式，分别是 <code>showBottomSheet</code> 和 <code>showModalBottomSheet</code>，两种方式只有在展示类型上的差别，方法调用无差，而且 <code>showBottomSheet</code> 和 <code>fab</code> 有组合动画，<code>showModalBottomSheet</code> 则没有，看下实际的例子吧。在 <code>ListView</code> 中增加一个 <code>BottomSheet</code> 的按钮，因为 <code>BottomSheet</code> 需要的 <code>context</code> 也不能是 <code>Scaffold</code> 下的 <code>context</code>，所以需要通过 <code>Builder</code> 进行包裹一层，然后增加 <code>_showBottomSheet</code> 的方法</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">_showBottomSheet(BuildContext context) &#123;</span><br><span class="line">   showBottomSheet(</span><br><span class="line">     context: context,</span><br><span class="line">     builder: (context) =&gt; ListView(</span><br><span class="line">             <span class="comment">// 生成一个列表选择器</span></span><br><span class="line">             children: <span class="built_in">List</span>.generate(</span><br><span class="line">           <span class="number">20</span>,</span><br><span class="line">           (index) =&gt; InkWell(</span><br><span class="line">               child: Container(alignment: Alignment.center, height: <span class="number">60.0</span>, child: Text(<span class="string">'Item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>'</span>)),</span><br><span class="line">               onTap: () &#123;</span><br><span class="line">                 <span class="built_in">print</span>(<span class="string">'tapped item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>'</span>);</span><br><span class="line">                 Navigator.pop(context);</span><br><span class="line">               &#125;),</span><br><span class="line">         )),</span><br><span class="line">   );</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
@@ -470,6 +470,35 @@
 
     
 
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
     
 
     
