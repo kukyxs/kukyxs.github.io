@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JNI,C++,Kotlin,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="JNI 作为 Java/Kotlin(原生端) 同 C/C++ 端交互的工具，是学习 ffmpeg 的一个前提，这边做一个学习过程中的记录。通过 Android Studio 可以快速创建一个 JNI 项目(创建时候选择 Native C++ 即可，会自动配置 CMakeList 等文件)，该文基于 AS 3.5  loadLiabrysrc 文件夹下相比一般的 AS 项目多了 cpp 文件夹，该">
+<meta name="keywords" content="JNI,C++,Kotlin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识 JNI">
+<meta property="og:url" content="http://yoursite.com/2019/09/09/初识-JNI/index.html">
+<meta property="og:site_name" content="KK的小树洞">
+<meta property="og:description" content="JNI 作为 Java/Kotlin(原生端) 同 C/C++ 端交互的工具，是学习 ffmpeg 的一个前提，这边做一个学习过程中的记录。通过 Android Studio 可以快速创建一个 JNI 项目(创建时候选择 Native C++ 即可，会自动配置 CMakeList 等文件)，该文基于 AS 3.5  loadLiabrysrc 文件夹下相比一般的 AS 项目多了 cpp 文件夹，该">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-09T16:07:26.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识 JNI">
+<meta name="twitter:description" content="JNI 作为 Java/Kotlin(原生端) 同 C/C++ 端交互的工具，是学习 ffmpeg 的一个前提，这边做一个学习过程中的记录。通过 Android Studio 可以快速创建一个 JNI 项目(创建时候选择 Native C++ 即可，会自动配置 CMakeList 等文件)，该文基于 AS 3.5  loadLiabrysrc 文件夹下相比一般的 AS 项目多了 cpp 文件夹，该">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'kuky'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/09/09/初识-JNI/">
+
+
+
+
+
+  <title>初识 JNI | KK的小树洞</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+	</div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KK的小树洞</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活记录「你」</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>	  
+    </header>
+
+    <main id="main" class="main">	
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/09/初识-JNI/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kuky">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KK的小树洞">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初识 JNI</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-09T15:10:24+08:00">
+                2019-09-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Kotlin/" itemprop="url" rel="index">
+                    <span itemprop="name">Kotlin</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/09/09/初识-JNI/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/09/09/初识-JNI/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>JNI</code> 作为 <code>Java/Kotlin</code>(原生端) 同 <code>C/C++</code> 端交互的工具，是学习 <code>ffmpeg</code> 的一个前提，这边做一个学习过程中的记录。通过 <code>Android Studio</code> 可以快速创建一个 <code>JNI</code> 项目(创建时候选择 <code>Native C++</code> 即可，会自动配置 <code>CMakeList</code> 等文件)，该文基于 <code>AS 3.5</code> </p>
+<h4 id="loadLiabry"><a href="#loadLiabry" class="headerlink" title="loadLiabry"></a>loadLiabry</h4><p><code>src</code> 文件夹下相比一般的 <code>AS</code> 项目多了 <code>cpp</code> 文件夹，该文件夹下有一个 <code>.cpp</code> 文件和 <code>CMakeLists.txt</code> 文件，<code>.cpp</code> 文件用来写 <code>native</code> 端实现的方法，<code>CMakeLists</code> 用来做些 <code>cpp</code> 的配置，目前可以忽略</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">│  AndroidManifest.xml</span><br><span class="line">├─cpp</span><br><span class="line">│      native-lib.cpp</span><br><span class="line">│      CMakeLists.txt</span><br><span class="line">├─java</span><br><span class="line">│</span><br><span class="line">├─res</span><br></pre></td></tr></table></figure>
+
+<p>接着在 <code>MainActivity</code> 中有这么一行代码</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">       <span class="keyword">init</span> &#123;</span><br><span class="line">           System.loadLibrary(<span class="string">"native-lib"</span>)</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>loadLibrary</code> 方法，加载编译的链接 <code>so</code> 库，<code>so</code> 库的源码就是前面提到的 <code>native-lib.cpp</code> 文件了</p>
+<h4 id="原生调用-cpp-方法"><a href="#原生调用-cpp-方法" class="headerlink" title="原生调用 cpp 方法"></a>原生调用 cpp 方法</h4><p>那么在 <code>Kotlin</code> 中如何调用 <code>cpp</code> 的方法呢，可以看到 <code>MainActivity</code> 中有一个使用 <code>external</code> 修饰的方法(如果是 <code>java</code> 则使用 <code>native</code> 关键词修饰)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">stringFromJNI</span><span class="params">()</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>通过该方法，会去调用 <code>cpp</code> 层的 <code>native</code> 方法，可以看下 <code>native-lib.cpp</code> 文件，内部定义了一个方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_xxx_MainActivity_stringFromJNI(JNIEnv *env, jobject<span class="comment">/*this*/</span>) &#123;</span><br><span class="line">	<span class="built_in">std</span>:<span class="built_in">string</span> hello = <span class="string">"Hello from c++"</span>;</span><br><span class="line">	<span class="keyword">return</span> env-&gt;NewStringUTF(hello.c_str());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到该方法的命名方式为 <code>Java_包名_类名_方法名</code>(包名的 <code>.</code> 替换成 <code>_</code> 即可)，通过这种命名方式来查找 <code>Kotlin</code> 层的调用方法，该方法中 <code>extern &quot;C&quot;</code> 的作用是让 <code>C++</code> 支持 <code>C</code> 的方法，<code>JNIEXPORT xxx JNICALL</code> 代表这是一个 <code>JNI</code> 方法，<code>xxx</code> 表示返回的方法类型，在 <code>JNI</code> 中，都有 <code>Kotlin</code> 对应的数据类型</p>
+<h4 id="JNI-数据类型"><a href="#JNI-数据类型" class="headerlink" title="JNI 数据类型"></a>JNI 数据类型</h4><p><code>JNI</code> 对应 <code>Java</code> 的数据类型如下，也可以直接查看 <code>jni.h</code> 头文件</p>
+<table>
+<thead>
+<tr>
+<th align="center">JNI类型</th>
+<th align="center">Java类型</th>
+<th align="center">类型描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">jboolean</td>
+<td align="center">boolean</td>
+<td align="center">无符号8位</td>
+</tr>
+<tr>
+<td align="center">jbyte</td>
+<td align="center">byte</td>
+<td align="center">无符号8位</td>
+</tr>
+<tr>
+<td align="center">jchar</td>
+<td align="center">char</td>
+<td align="center">无符号16位</td>
+</tr>
+<tr>
+<td align="center">jshort</td>
+<td align="center">short</td>
+<td align="center">有符号16位</td>
+</tr>
+<tr>
+<td align="center">jint</td>
+<td align="center">int</td>
+<td align="center">有符号32位</td>
+</tr>
+<tr>
+<td align="center">jlong</td>
+<td align="center">long</td>
+<td align="center">有符号64位</td>
+</tr>
+<tr>
+<td align="center">jfloat</td>
+<td align="center">float</td>
+<td align="center">有符号32位</td>
+</tr>
+<tr>
+<td align="center">jdouble</td>
+<td align="center">double</td>
+<td align="center">有符号64位</td>
+</tr>
+</tbody></table>
+<p>因为 <code>String</code> 不属于基本类型，所以不定义在这，需要返回 <code>jsrting</code> 类型，只能通过 <code>char *</code> 进行相应的转换，所以上述的函数中，使用 <code>env-&gt;NewStringUTF(hello.c_str())</code> 方法，生成 <code>jstring</code> 并返回，然后在 <code>Kotlin</code> 层通过调用 <code>stringFromJNI</code> 方法就可以将 <code>native</code> 层返回的字符串显示出来，<code>JNI</code> 的基本使用就这么多啦，接着通过一些使用，熟悉一些方法，比如实现字符串的拼接</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">stringCat</span><span class="params">(a: <span class="type">String</span>, b: <span class="type">String</span>)</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>回到 <code>c++</code> 层做具体的实现，前面提到因为在 <code>C++</code> 中字符串拼接不能直接通过 <code>jstring</code> 相加实现，需要通过 <code>char *</code>  进行拼接，所以就需要封装一个 <code>jstring2Char</code> 的方法进行转换</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">char</span> *<span class="title">jstring2Char</span><span class="params">(JNIEnv *env, jstring jstr)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span> *rtn = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    jclass clazz = env-&gt;FindClass(<span class="string">"java/lang/String"</span>);</span><br><span class="line">    jstring strenCode = env-&gt;NewStringUTF(<span class="string">"UTF-8"</span>);</span><br><span class="line">    jmethodID mid = env-&gt;GetMethodID(clazz, <span class="string">"getBytes"</span>, <span class="string">"(Ljava/lang/String;)[B"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> barr = (jbyteArray) (env-&gt;CallObjectMethod(jstr, mid, strenCode));</span><br><span class="line">    jsize alen = env-&gt;GetArrayLength(barr);</span><br><span class="line">    jbyte *ba = env-&gt;GetByteArrayElements(barr, JNI_FALSE);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (alen &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// malloc(bytes) 方法分配 bytes 字节，并返回这块内存的指针，</span></span><br><span class="line">        <span class="comment">// malloc 分配的内存记得使用 free 进行释放，否则会内存泄漏</span></span><br><span class="line">        rtn = <span class="keyword">static_cast</span>&lt;<span class="keyword">char</span> *&gt;(<span class="built_in">malloc</span>(<span class="keyword">static_cast</span>&lt;<span class="keyword">size_t</span>&gt;(alen + <span class="number">1</span>)));</span><br><span class="line">        <span class="comment">// memcpy(void*dest, const void *src, size_t n)</span></span><br><span class="line">        <span class="comment">// 由 src 指向地址为起始地址的连续 n 个字节的数据复制到以 destin 指向地址为起始地址的空间内</span></span><br><span class="line">        <span class="built_in">memcpy</span>(rtn, ba, <span class="keyword">static_cast</span>&lt;<span class="keyword">size_t</span>&gt;(alen));</span><br><span class="line">        rtn[alen] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    env-&gt;ReleaseByteArrayElements(barr, ba, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> rtn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义完转换方法，直接调用即可，记得释放内存</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_xxx_MainActivity_stringCat(JNIEnv *env, jobject, jstring a, jstring b)&#123;</span><br><span class="line">	<span class="keyword">char</span> *first = jstring2Char(env, a);</span><br><span class="line">	<span class="keyword">char</span> *second = jstring2Char(env, b);</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">strcat</span>(first, second);</span><br><span class="line">	<span class="built_in">free</span>(first);</span><br><span class="line">	<span class="built_in">free</span>(second);</span><br><span class="line">	<span class="keyword">return</span> env-&gt;NewStringUTF(first);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="C-调用-Kotlin-方法"><a href="#C-调用-Kotlin-方法" class="headerlink" title="C++ 调用 Kotlin 方法"></a>C++ 调用 Kotlin 方法</h4><p>前面介绍了如何在 <code>Kotlin</code> 中调用 <code>native</code> 方法，当然，在 <code>c++</code> 层也可以调用 <code>Kotlin</code> 层的方法。假设在 <code>MainActivity</code> 中有一个 <code>callMe(message: String)</code> 和 <code>call(message:String)</code> 方法，在调用 <code>call</code> 的时候，同时内部调用 <code>callMe</code> 方法，当然直接调用很简单，这边通过 <code>JNI</code> 来实现</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">callMe</span><span class="params">(message: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    Log.e(TAG, message) <span class="comment">// 只做简单的打印</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">call</span><span class="params">(message: <span class="type">String</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>native</code> 实现 <code>call</code> 方法上面已经介绍了，接下来介绍在 <code>JNI</code> 内部调用 <code>callMe</code> 方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> JNIEXPORT <span class="keyword">void</span> JNICALL</span><br><span class="line">Java_com_xxx_MainActivity_call(JNIEnv *env, jobject instance, jstring msg)&#123;</span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">char</span> *methodName = <span class="string">"callMe"</span>; <span class="comment">// 指定需要调用的方法名</span></span><br><span class="line">	jclass clazz = env-&gt;FindClass(<span class="string">"com.xxx.MainActivity"</span>); <span class="comment">//查找对应的类，指定对应的包名和类</span></span><br><span class="line">	<span class="comment">// 根据所在类和方法名查找方法的 ID，最后一个参数为方法的签名，稍后做解释</span></span><br><span class="line">	jmethodID mid = env-&gt;GetMethodId(clazz, methodName, <span class="string">"(Ljava/lang/String;)V"</span>); </span><br><span class="line">	env-&gt;CallVoidMethod(instance, mid, msg); <span class="comment">// 根据返回的类型，调用方法，传入相应参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>Kotlin</code> 层调用 <code>call</code> 方法的时候，就会通过 <code>JNI</code> 调用 <code>callMe</code> 方法，执行 <code>callMe</code> 的内部逻辑。在上面提到了「签名」这个东西，这边列出签名的表示方法</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>签名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td><strong>Z</strong></td>
+</tr>
+<tr>
+<td>byte</td>
+<td>B</td>
+</tr>
+<tr>
+<td>char</td>
+<td>C</td>
+</tr>
+<tr>
+<td>short</td>
+<td>S</td>
+</tr>
+<tr>
+<td>int</td>
+<td>I</td>
+</tr>
+<tr>
+<td>long</td>
+<td><strong>J</strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td>F</td>
+</tr>
+<tr>
+<td>double</td>
+<td>D</td>
+</tr>
+<tr>
+<td>void</td>
+<td>V</td>
+</tr>
+<tr>
+<td>数组</td>
+<td>[</td>
+</tr>
+<tr>
+<td>String/Object</td>
+<td>Ljava/lang/String;  Ljava/lang/Object;</td>
+</tr>
+<tr>
+<td>普通类(com.example.className)</td>
+<td><strong>Lcom/example/className;</strong></td>
+</tr>
+</tbody></table>
+<p>所以方法的签名的规则就是根据传入的参数类型和返回的类型，替换成相应的签名即可，例如：<code>call(Student s, int a): String</code> 方法的签名为 <code>(Lcom/xxx/Student;I)Ljava/lang/String;</code> </p>
+<h4 id="C-获取-Kotlin-的内部参数"><a href="#C-获取-Kotlin-的内部参数" class="headerlink" title="C++ 获取 Kotlin 的内部参数"></a>C++ 获取 Kotlin 的内部参数</h4><p>假设我们在 <code>MainActivity</code> 有个私有参数 <code>name</code>，如果外部有个类需要获取这个参数，可以通过 <code>MainActivty</code> 内部的共有方法来获取，假如没有这个共有方法该咋办呢，当然我们可以通过 <code>JNI</code> 来获取</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_xxx_MainActivity_getField(JNIEnv *env, jobjcet instance)&#123;</span><br><span class="line">	jclass clazz = env-&gt;FindClass(<span class="string">"com.xxx.MainActivity"</span>); <span class="comment">// 根据类的包名来查找相应的类</span></span><br><span class="line">	<span class="comment">// 根据类和参数名来获取该参数，第三个参数为参数的签名，即类型在 JNI 对应的签名</span></span><br><span class="line">	jfieldID fid = env-&gt;GetFieldID(clazz, <span class="string">"name"</span>, <span class="string">"Ljava/lang/String;"</span>);</span><br><span class="line">	<span class="comment">// 因为 String 不是基本类型，所以只能通过 GetObjectField 进行获取，然后进行强转</span></span><br><span class="line">	<span class="comment">// 如果是 int 等基本类型，提供了 GetIntField 等获取方法，auto 为可自行根据结果判断类型</span></span><br><span class="line">	<span class="keyword">auto</span> name = (jstring)(env-&gt;GetObjectField(instance, fid));</span><br><span class="line">	<span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当在外部通过 <code>getField</code> 方法即可获取到该私有属性，这个例子仅为例子而已…</p>
+<h4 id="C-获取普通类的参数信息"><a href="#C-获取普通类的参数信息" class="headerlink" title="C++ 获取普通类的参数信息"></a>C++ 获取普通类的参数信息</h4><p>假设我们有一个类，例如 <code>Student</code> 里面有一些名字，年龄等属性，然后通过 <code>JNI</code> 将这些属性转成 <code>String</code> 返回，那么就需要涉及到获取参数的字段信息了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个普通类 Student</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>(<span class="keyword">val</span> firstName: String, <span class="keyword">val</span> lastName: String, <span class="keyword">val</span> age: <span class="built_in">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 MAinActivity 定义一个转换的方法</span></span><br><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">printStudent</span><span class="params">(Student student)</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>那么在 <code>C++</code> 层就需要将 <code>student</code> 内部的信息都获取出来，并拼接到字符串，然后返回</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> JNIEXPORT jstring JNICALL</span><br><span class="line">Java_com_xxx_MainActivity_printStudent(JNIEnv *env, jobject, jobject student)&#123;</span><br><span class="line">	jcalss clazz = env-&gt;GetObjectClass(student); <span class="comment">// 获取传入参数对应的类</span></span><br><span class="line">	<span class="comment">// 通过参数名和签名，去对应的 class 获取相应的 FieldID，</span></span><br><span class="line">	<span class="comment">// 然后根据 FiedlID 通过 GetObjectField 方法获取对应的属性</span></span><br><span class="line">	<span class="keyword">auto</span> firstName = (jstring)(env-&gt;GetObjectField(student, env-&gt;GetFieldID(clazz, <span class="string">"firstName"</span>, <span class="string">"Ljava/lang/String;"</span>)));</span><br><span class="line">	<span class="keyword">auto</span> lastName = (jstring)(env-&gt;GetObjectField(student, env-&gt;GetFieldID(clazz, <span class="string">"lastName"</span>, <span class="string">"Ljava/lang/String;"</span>)));</span><br><span class="line">	<span class="comment">// int 为基本类型，可直接通过获取对应类型属性的方法获取</span></span><br><span class="line">	<span class="keyword">auto</span> age = env-&gt;GetIntField(student, env-&gt;GetFieldID(clazz, <span class="string">"age"</span>, <span class="string">"I"</span>));</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">char</span> *cFirstName = jstring2Char(firstName);</span><br><span class="line">	<span class="keyword">char</span> *cLastName = jstring2Char(lastName);</span><br><span class="line">	<span class="built_in">std</span>::<span class="built_in">string</span> cAge = <span class="built_in">std</span>::to_string(age);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, <span class="string">" "</span>);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, cLastName);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName,  <span class="string">" is "</span>);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, cAge.c_str());</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, <span class="string">" years old"</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">free</span>(cFirstName);</span><br><span class="line">	<span class="built_in">free</span>(cLastName);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> env-&gt;NewStringUTF(cFirstName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当外部调用 <code>printStudent</code> 方法的时候就会将 <code>student</code> 的属性打印出来</p>
+<h4 id="动态注册"><a href="#动态注册" class="headerlink" title="动态注册"></a>动态注册</h4><p>在前面的 <code>JNI</code> 方法中，每个方法都需要写很长的一段类名，非常容易出错，那么能不能省略包名呢，当然是可以，通过动态注册就可以让这个麻烦的方法名变得简略</p>
+<p>动态注册，需要指定一个方法列表，用来存放同个包名下的方法，存放的方式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; Kotlin 层方法名， 方法前面， JNI 函数指针&#125; <span class="comment">// 函数指针固定为 ```(void *) JNI 方法名</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">例如我们前面提到的方法，放到一个列表中</span><br><span class="line"></span><br><span class="line">```c++</span><br><span class="line">static JNINativeMethod jniMethods[] = &#123;</span><br><span class="line">    &#123;&quot;stringFromJNI&quot;, &quot;()Ljava/lang/String;&quot;, (void *) stringFromJNI&#125;,</span><br><span class="line">    &#123;&quot;stringCat&quot;, &quot;(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;&quot;, (void *) stringCat&#125;,</span><br><span class="line">    &#123;&quot;call&quot;, &quot;(Ljava/lang/String;)V&quot;, (void *) call&#125;,</span><br><span class="line">    &#123;&quot;getField&quot;, &quot;()Ljava/lang/String;&quot;, (void *) getField&#125;,</span><br><span class="line">    &#123;&quot;printStudent&quot;, &quot;(Lcom/xxx/Student;)Ljava/lang/String;&quot;, (void *) printStudent&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>接着就是需要注册这些方法了，封装一个通用的方法，注册成功返回 <code>JNI_TRUE</code> 否则 <code>JNI_FALSE</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">registerNativeMethods</span><span class="params">(JNIEnv *env, <span class="keyword">const</span> <span class="keyword">char</span> *className, </span></span></span><br><span class="line"><span class="function"><span class="params">                                 JNINativeMethod *getMethods, <span class="keyword">int</span> sumNum)</span></span>&#123;</span><br><span class="line">    jclass clazz = env-&gt;FindClass(className); <span class="comment">// 根据类名去查找相应类，包含 JNINativeMethod 列表所有方法</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="literal">nullptr</span>) <span class="keyword">return</span> JNI_FALSE; <span class="comment">// 未找到 class 则认为注册失败</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据所有的方法名和数量进行注册，如果结果返回小于 0 则认为注册失败</span></span><br><span class="line">    <span class="keyword">if</span> (env-&gt;RegisterNatives(clazz, getMethods, methodSum) &lt; <span class="number">0</span>) <span class="keyword">return</span> JNI_FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> JNI_TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着就需要实现 <code>JNI_OnLoad</code> 方法(定义在 <code>jni.h</code> 头文件中)，对上述的方法进行注册，该方法会返回一个版本号</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint JNICALL <span class="title">JNI_OnLoad</span><span class="params">(JavaVM *vm, <span class="keyword">void</span> *reversed)</span> </span>&#123;</span><br><span class="line">    JNIEnv *env = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测环境失败返回 -1</span></span><br><span class="line">    <span class="keyword">if</span> (vm-&gt;GetEnv((<span class="keyword">void</span> **) &amp;env, JNI_VERSION_1_6) != JNI_OK) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    assert(env != <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册失败返回 -1</span></span><br><span class="line">    <span class="keyword">if</span> (!registerNativeMethods(</span><br><span class="line">            env, jniClazz, jniMethods, <span class="keyword">sizeof</span>(jniMethods) / <span class="keyword">sizeof</span>(jniMethods[<span class="number">0</span>]))) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> JNI_VERSION_1_6;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样几步就完成了 <code>JNI</code> 方法的动态注册，只需要全局定义 <code>className</code> 即可，不需要每次都在方法声明完整包路径</p>
+<h4 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h4><p>在 <code>C++</code> 中，非常重要的一步就是内存释放，否则就会造成内存泄漏，分分钟给你炸开</p>
+<h5 id="哪些需要手动释放"><a href="#哪些需要手动释放" class="headerlink" title="哪些需要手动释放"></a>哪些需要手动释放</h5><ul>
+<li>不需要手动释放(基本类型)：jint，jlong 等等</li>
+<li>需要手动释放(引用类型，数组家族)：jstring，jobject ，jobjectArray，jintArray ，jclass ，jmethodID</li>
+</ul>
+<h5 id="释放方法（该部分参考自《JNI手动释放内存》）"><a href="#释放方法（该部分参考自《JNI手动释放内存》）" class="headerlink" title="释放方法（该部分参考自《JNI手动释放内存》）"></a>释放方法（该部分参考自《<a href="https://blog.csdn.net/c1481118216/article/details/77727573" target="_blank" rel="noopener">JNI手动释放内存</a>》）</h5><ul>
+<li><h6 id="jstring-amp-char"><a href="#jstring-amp-char" class="headerlink" title="jstring &amp; char *"></a>jstring &amp; char *</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 jstring 和 char*</span></span><br><span class="line">jstring jstr = (jstring)(jniEnv-&gt;CallObjectMethod(jniEnv, mPerson, getName));</span><br><span class="line"><span class="keyword">char</span>* cstr = (<span class="keyword">char</span>*) jniEnv-&gt;GetStringUTFChars(jniEnv,jstr, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">jniEnv-&gt;ReleaseStringUTFChars(jniEnv, jstr, cstr);</span><br><span class="line">jniEnv-&gt;DeleteLocalRef(jniEnv, jstr);jbyteArray audioArray = jnienv-&gt;NewByteArray(frameSize);</span><br><span class="line"> </span><br><span class="line">jnienv-&gt;DeleteLocalRef(audioArray)</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="jobject，jobjectArray，jclass-，jmethodID-等引用类型"><a href="#jobject，jobjectArray，jclass-，jmethodID-等引用类型" class="headerlink" title="jobject，jobjectArray，jclass ，jmethodID 等引用类型"></a>jobject，jobjectArray，jclass ，jmethodID 等引用类型</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jniEnv-&gt;DeleteLocalRef(jniEnv, XXX);</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="jbyteArray"><a href="#jbyteArray" class="headerlink" title="jbyteArray"></a>jbyteArray</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyteArray arr = jnienv-&gt;NewByteArray(frameSize);</span><br><span class="line">jnienv-&gt;DeleteLocalRef(arr);</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="GetByteArrayElements"><a href="#GetByteArrayElements" class="headerlink" title="GetByteArrayElements"></a>GetByteArrayElements</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyte* <span class="built_in">array</span>= jniEnv-&gt;GetByteArrayElements(env,jarray,&amp;isCopy);</span><br><span class="line">jniEnv-&gt;ReleaseByteArrayElements(env,jarray,<span class="built_in">array</span>,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="NewGlobalRef"><a href="#NewGlobalRef" class="headerlink" title="NewGlobalRef"></a>NewGlobalRef</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jobject ref= env-&gt;NewGlobalRef(customObj);</span><br><span class="line">env-&gt;DeleteGlobalRef(customObj);</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>目前使用到的就那么多啦，后面有更多的方法涉及到，再进行添加，Enjoy it ~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JNI/" rel="tag"># JNI</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/Kotlin/" rel="tag"># Kotlin</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/01/Jetpack-Navigation-分析/" rel="next" title="Jetpack Navigation 分析">
+                <i class="fa fa-chevron-left"></i> Jetpack Navigation 分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="kuky">
+            
+              <p class="site-author-name" itemprop="name">kuky</p>
+              <p class="site-description motion-element" itemprop="description">不给哔哔还是咋的~ o(´^｀)o</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kukyxs" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:kukyxingshi@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/9fcd71535294" title="简书" target="_blank">简书</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/588719c72f301e0069a581f7" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.wanandroid.com" title="WanAndroid" target="_blank">WanAndroid</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#loadLiabry"><span class="nav-number">1.</span> <span class="nav-text">loadLiabry</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原生调用-cpp-方法"><span class="nav-number">2.</span> <span class="nav-text">原生调用 cpp 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JNI-数据类型"><span class="nav-number">3.</span> <span class="nav-text">JNI 数据类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-调用-Kotlin-方法"><span class="nav-number">4.</span> <span class="nav-text">C++ 调用 Kotlin 方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-获取-Kotlin-的内部参数"><span class="nav-number">5.</span> <span class="nav-text">C++ 获取 Kotlin 的内部参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-获取普通类的参数信息"><span class="nav-number">6.</span> <span class="nav-text">C++ 获取普通类的参数信息</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#动态注册"><span class="nav-number">7.</span> <span class="nav-text">动态注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存释放"><span class="nav-number">8.</span> <span class="nav-text">内存释放</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#哪些需要手动释放"><span class="nav-number">8.1.</span> <span class="nav-text">哪些需要手动释放</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#释放方法（该部分参考自《JNI手动释放内存》）"><span class="nav-number">8.2.</span> <span class="nav-text">释放方法（该部分参考自《JNI手动释放内存》）</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#jstring-amp-char"><span class="nav-number">8.2.1.</span> <span class="nav-text">jstring &amp; char *</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#jobject，jobjectArray，jclass-，jmethodID-等引用类型"><span class="nav-number">8.2.2.</span> <span class="nav-text">jobject，jobjectArray，jclass ，jmethodID 等引用类型</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#jbyteArray"><span class="nav-number">8.2.3.</span> <span class="nav-text">jbyteArray</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#GetByteArrayElements"><span class="nav-number">8.2.4.</span> <span class="nav-text">GetByteArrayElements</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#NewGlobalRef"><span class="nav-number">8.2.5.</span> <span class="nav-text">NewGlobalRef</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kuky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+	
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: '你猜有没有人会回复评论呢~╭(╯^╰)╮ -- 来自博主的「挑衅」',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
