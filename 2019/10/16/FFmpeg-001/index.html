@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FFmpeg,C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="自学 FFmpeg 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 win 那么直接安装 Visual Studio 吧，不要用 CLion 啥的了，在配置环境上坑了好久还是没爬出来，这边以 VS 为例，记录 FFmpage 的配置过程 在你的计算机配置 FFmpeg首先你需要到官网下载 FFmpeg，打开链接后你会看到如下界面，我们需要下载 Shared 和 Dev 版本">
+<meta name="keywords" content="FFmpeg,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg 配置及 VS 环境搭建">
+<meta property="og:url" content="http://yoursite.com/2019/10/16/FFmpeg-001/index.html">
+<meta property="og:site_name" content="KK的小树洞">
+<meta property="og:description" content="自学 FFmpeg 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 win 那么直接安装 Visual Studio 吧，不要用 CLion 啥的了，在配置环境上坑了好久还是没爬出来，这边以 VS 为例，记录 FFmpage 的配置过程 在你的计算机配置 FFmpeg首先你需要到官网下载 FFmpeg，打开链接后你会看到如下界面，我们需要下载 Shared 和 Dev 版本">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFXON6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFjBUx.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFjTG8.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/Kk9sPI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFvbY6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFxS0A.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFz62T.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFzyGV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KkSqf0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KkSOpV.png">
+<meta property="og:updated_time" content="2019-10-16T14:54:07.058Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FFmpeg 配置及 VS 环境搭建">
+<meta name="twitter:description" content="自学 FFmpeg 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 win 那么直接安装 Visual Studio 吧，不要用 CLion 啥的了，在配置环境上坑了好久还是没爬出来，这边以 VS 为例，记录 FFmpage 的配置过程 在你的计算机配置 FFmpeg首先你需要到官网下载 FFmpeg，打开链接后你会看到如下界面，我们需要下载 Shared 和 Dev 版本">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/16/KFXON6.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'kuky'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/16/FFmpeg-001/">
+
+
+
+
+
+  <title>FFmpeg 配置及 VS 环境搭建 | KK的小树洞</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+	</div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KK的小树洞</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活记录「你」</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>	  
+    </header>
+
+    <main id="main" class="main">	
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/16/FFmpeg-001/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kuky">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KK的小树洞">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">FFmpeg 配置及 VS 环境搭建</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-16T21:36:08+08:00">
+                2019-10-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/FFmpeg/" itemprop="url" rel="index">
+                    <span itemprop="name">FFmpeg</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/16/FFmpeg-001/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/16/FFmpeg-001/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>自学 <code>FFmpeg</code> 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 <code>win</code> 那么直接安装 <code>Visual Studio</code> 吧，不要用 <code>CLion</code> 啥的了，在配置环境上坑了好久还是没爬出来，这边以 <code>VS</code> 为例，记录 <code>FFmpage</code> 的配置过程</p>
+<h4 id="在你的计算机配置-FFmpeg"><a href="#在你的计算机配置-FFmpeg" class="headerlink" title="在你的计算机配置 FFmpeg"></a>在你的计算机配置 FFmpeg</h4><p>首先你需要到<a href="https://ffmpeg.zeranoe.com/builds/" target="_blank" rel="noopener">官网</a>下载 <code>FFmpeg</code>，打开链接后你会看到如下界面，我们需要下载 <code>Shared</code> 和 <code>Dev</code> 版本，当然你可以选择自己需要的版本，为了不那么麻烦，直接下了最新版本的，可能会有 <code>Bug</code> 等遇到了再慢慢解决吧，毕竟爬过坑才能涨记性</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFXON6.png" alt="KFXON6.png"></p>
+<p>下载完成后，需要把两个文件夹内的取出来放到同个文件夹下，例如 <code>ffmpeglib-4.2.1</code>，不要把这个文件夹放到 <code>Program Files / Program Files(x86)</code> 这些高权限的文件夹内，可以另外放一个文件夹，最后这个文件夹应该是下图这样的。</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFjBUx.png" alt="KFjBUx.png"></p>
+<p>放好文件夹后呢，将 <code>bin</code> 文件配置到系统环境中去，不懂如何配置的，出门右拐找 <code>Google</code>，配置完成环境后，打开终端，输入 <code>ffmpeg</code> 将出现如下图，说明计算机环境配置完成。如果提示 <code>ffmpeg</code> 指令无法识别，那么重启下就可以了。</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFjTG8.png" alt="KFjTG8.png"></p>
+<p>配置完成后，可以试下播放一个 <code>mp4</code> 文件， 例如输入命令行 <code>ffplay C:\Users\kuky\Desktop\1.mp4</code>，就可以看到视频播放啦，同时在终端输出了一些视频信息，例如创建时间等等</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/Kk9sPI.png" alt="Kk9sPI.png"></p>
+<h4 id="配置-FFmpeg-到项目"><a href="#配置-FFmpeg-到项目" class="headerlink" title="配置 FFmpeg 到项目"></a>配置 FFmpeg 到项目</h4><p>打开 <code>VS</code> 创建项目，这里选择需要选择 “控制台应用”，然后下一步，命名项目选择项目位置，点击创建稍等下就可以看见 <code>Hello World</code> 了</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KFvbY6.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KFxS0A.png" width="400">
+</div>
+
+<p>在引入 <code>FFmpeg</code> 库和头文件之前，如果你的系统是 64 位，需要做些如下的修改，首先打开 “项目 -&gt; 属性 -&gt; 链接器 -&gt; 高级 -&gt; 目标计算机” 设置为 <code>MachineX64(/MACHINE:X64)</code>，修改完成后，打开 “生成 -&gt; 配置管理器 -&gt; 活动解决方案平台” 设置为 <code>x64</code>，再点击 “生成 -&gt; 清理解决方案” 就可以了。</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KFz62T.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KFzyGV.png" width="400">
+</div>
+
+<p>然后就是配置 <code>FFmpeg</code> 库和头文件了，打开 “项目 -&gt;  属性”，分别做如下配置，这里先引入一个 <code>avutil.lib</code> 用来验证是否真的依赖成功，成功后再引入其他 <code>lib</code> 文件。首先在 “VC++目录” 下配置 “包含目录” 和 “库目录”，包含目录就是刚才下载 <code>ffmpeg</code> 整合文件夹中的 <code>include</code> 文件夹，库目录就是整合后的 <code>lib</code> 文件夹。配置完成后，选择 “链接器 -&gt; 输入” 配置 “附加依赖项” 属性，这里就是 <code>lib</code> 文件夹下的库，只不过命名方式不同，例如在 <code>lib</code> 下的 <code>libavutil</code> 在这就是 <code>avutil.lib</code>，其余类似，多个 <code>lib</code> 库之间用换行间隔即可</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KkSqf0.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KkSOpV.png" width="400">
+</div>
+
+<p>配置完成后，来做下验证是否真的成功引入 <code>avutil</code> 库，修改代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">"C"</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;libavutil/log.h&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	av_log_set_level(AV_LOG_DEBUG);</span><br><span class="line">	av_log(<span class="literal">nullptr</span>, AV_LOG_INFO, <span class="string">"Hello World\n"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后如果正常输出 <code>Hello World</code> 那么说明项目配置 <code>FFmpeg</code> 库成功啦~ 至于剩余的 <code>lib</code> 可以自行配置进去，完成后就可以愉快的继续写代码了，在接下来的时间，会有不定期的更新，记录 <code>ffmpeg</code> 的踩坑记录。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/09/初识-JNI/" rel="next" title="初识 JNI">
+                <i class="fa fa-chevron-left"></i> 初识 JNI
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="kuky">
+            
+              <p class="site-author-name" itemprop="name">kuky</p>
+              <p class="site-description motion-element" itemprop="description">不给哔哔还是咋的~ o(´^｀)o</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kukyxs" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:kukyxingshi@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/9fcd71535294" title="简书" target="_blank">简书</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/588719c72f301e0069a581f7" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.wanandroid.com" title="WanAndroid" target="_blank">WanAndroid</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#在你的计算机配置-FFmpeg"><span class="nav-number">1.</span> <span class="nav-text">在你的计算机配置 FFmpeg</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置-FFmpeg-到项目"><span class="nav-number">2.</span> <span class="nav-text">配置 FFmpeg 到项目</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kuky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+	
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: '随便留点？~',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
