@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FFmpeg,C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在使用 FFmpeg 之前，先认识下装载的容器 SDL2(Simple DirectMedia Layer)，下载 Development Libraries 后就可以在本地进行配置，配置到项目的方法同上节 FFmpeg 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 SDL2.dll 文件复制到项目下来，在 SDL2 的 lib 中分有 x64 和 x86 文件夹，根据自己计">
+<meta name="keywords" content="FFmpeg,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识 SDL2">
+<meta property="og:url" content="http://yoursite.com/2019/10/22/FFmpeg-002/index.html">
+<meta property="og:site_name" content="KK的小树洞">
+<meta property="og:description" content="在使用 FFmpeg 之前，先认识下装载的容器 SDL2(Simple DirectMedia Layer)，下载 Development Libraries 后就可以在本地进行配置，配置到项目的方法同上节 FFmpeg 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 SDL2.dll 文件复制到项目下来，在 SDL2 的 lib 中分有 x64 和 x86 文件夹，根据自己计">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-22T15:08:57.069Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识 SDL2">
+<meta name="twitter:description" content="在使用 FFmpeg 之前，先认识下装载的容器 SDL2(Simple DirectMedia Layer)，下载 Development Libraries 后就可以在本地进行配置，配置到项目的方法同上节 FFmpeg 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 SDL2.dll 文件复制到项目下来，在 SDL2 的 lib 中分有 x64 和 x86 文件夹，根据自己计">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'kuky'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/22/FFmpeg-002/">
+
+
+
+
+
+  <title>初识 SDL2 | KK的小树洞</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+	</div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KK的小树洞</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活记录「你」</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>	  
+    </header>
+
+    <main id="main" class="main">	
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/22/FFmpeg-002/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kuky">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KK的小树洞">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">初识 SDL2</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-22T21:12:40+08:00">
+                2019-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/FFmpeg/" itemprop="url" rel="index">
+                    <span itemprop="name">FFmpeg</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/22/FFmpeg-002/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/22/FFmpeg-002/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在使用 <code>FFmpeg</code> 之前，先认识下装载的容器 <a href="https://www.libsdl.org/download-2.0.php" target="_blank" rel="noopener"><code>SDL2(Simple DirectMedia Layer)</code></a>，下载 <code>Development Libraries</code> 后就可以在本地进行配置，配置到项目的方法同上节 <code>FFmpeg</code> 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 <code>SDL2.dll</code> 文件复制到项目下来，在 <code>SDL2</code> 的 <code>lib</code> 中分有 <code>x64</code> 和 <code>x86</code> 文件夹，根据自己计算机进行选择，否则会出错哦~</p>
+<h4 id="使用-SDL2-显示-bmp-图片"><a href="#使用-SDL2-显示-bmp-图片" class="headerlink" title="使用 SDL2 显示 bmp 图片"></a>使用 <code>SDL2</code> 显示 <code>bmp</code> 图片</h4><p>使用 <code>SDL2</code> 的大概流程主要为以下步骤</p>
+<ol>
+<li>初始化 <code>SDL</code></li>
+<li>创建 <code>SDL_Window</code> 用来承载内容</li>
+<li>创建 <code>SDL_Renderer</code> 用来做些渲染</li>
+<li>创建 <code>SDL_Texture</code> 用来显示一些纹理</li>
+<li>清屏，显示内容</li>
+</ol>
+<p>接下来就来看些代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// SDL 初始化直接通过 SDL_Init 来处理</span></span><br><span class="line">    <span class="comment">// 该方法可传入的参数包括 SDL_INIT_TIMER，SDL_INIT_AUDIO，SDL_INIT_VIDEO 等 9 中，可通过源码查看</span></span><br><span class="line">    <span class="comment">// SDL_INIT_EVERYTHING 则是包含了上述的所有</span></span><br><span class="line">    <span class="keyword">if</span> (SDL_Init(SDL_INIT_EVERYTHING) == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Init SDL fail: "</span> &lt;&lt; SDL_GetError() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SDL_Window* window = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateWindow 方法来创建 Window</span></span><br><span class="line">    <span class="comment">// 参数分别为：窗体标题，x 位置，y 位置，宽度，高度，标志位</span></span><br><span class="line">    <span class="comment">// x, y 位置可以是某些固定的值，例如 0，也可以是 SDL 中定义的</span></span><br><span class="line">    <span class="comment">// SDL_WINDOWPOS_CENTERED(中间位置)，SDL_WINDOWPOS_UNDEFINED(任意位置)等等</span></span><br><span class="line">    <span class="comment">// 标志位有许多可以选择，包括 SDL_WINDOW_FULLSCREEN，SDL_WINDOW_OPENGL</span></span><br><span class="line">    <span class="comment">// SDL_WINDOW_SHOWN，SDL_WINDOW_HIDDEN 等等，具体的可通过源码查看，对应的属性注释也比较清楚</span></span><br><span class="line">    window = SDL_CreateWindow(<span class="string">"Hello World"</span>, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, </span><br><span class="line">                             <span class="number">640</span>, <span class="number">480</span>, SDL_WINDOW_SHOWN);</span><br><span class="line">    <span class="keyword">if</span> (window == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Create window fail: "</span> &lt;&lt; SDL_GetError() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">   	SDL_Renderer* renderer = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateRenderer 方法创建 renderer 渲染器</span></span><br><span class="line">    <span class="comment">// 参数分别为：显示的窗体，用于初始化渲染驱动的索引(一般为 -1)，渲染标志位</span></span><br><span class="line">    <span class="comment">// 渲染标志位包括 SDL_RENDERER_SOFTWARE，SDL_RENDERER_ACCELERATED 等等，可以根据需要进行选择</span></span><br><span class="line">    <span class="comment">// 这里选择了硬件加速，以及使渲染器能够按照显示器刷新率来刷新画面</span></span><br><span class="line">    renderer = SDL_CreateRenderer(window, <span class="number">-1</span>, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);</span><br><span class="line">    <span class="keyword">if</span> (renderer == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Create renderer fail: "</span> &lt;&lt; SDL_GetError() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	SDL_Surface* image = <span class="literal">nullptr</span>;     </span><br><span class="line">    <span class="comment">// 通过 SDL_LoadBMP 将图片加载到 SDL_Surface 来</span></span><br><span class="line">    image = SDL_LoadBMP(<span class="string">"xxx.bmp"</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (image == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Open image fail: "</span> &lt;&lt; SDL_GetError() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 通过加载图片的 SDL_Surface 来创建 SDL_Texture</span></span><br><span class="line">    <span class="comment">// 同时，因为 SDL_Surface 不需要再次使用了，这边就需要通过 SDL_FreeSurface 方法将其释放，避免内存泄漏</span></span><br><span class="line">	texture = SDL_CreateTextureFromSurface(renderer, image);</span><br><span class="line">	SDL_FreeSurface(image);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (texture == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Create texture fail: "</span> &lt;&lt; SDL_GetError() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    SDL_RenderClear(renderer); <span class="comment">// 将渲染器清空</span></span><br><span class="line">    <span class="comment">// 将 texture 的内容加载到渲染器来，后面传空的参数分别为</span></span><br><span class="line">    <span class="comment">// 指向源矩形的指针(即从图像上裁剪下一块矩形)，指向目标矩形的指针</span></span><br><span class="line">    <span class="comment">// 两个参数为空即告诉 SDL 渲染整个源图像，并绘制在屏幕 (0, 0) 位置</span></span><br><span class="line">	SDL_RenderCopy(renderer, texture, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">	SDL_DestroyTexture(texture); <span class="comment">// 加载到渲染器后，如果 Texture 不再使用则将其释放</span></span><br><span class="line">	SDL_RenderPresent(renderer); <span class="comment">// 将渲染的内容展示出来</span></span><br><span class="line">    </span><br><span class="line">    SDL_Delay(<span class="number">5000</span>); <span class="comment">// 用于延时 5s，否则屏幕一闪而过</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 显示完毕后，释放 renderer 和 window 对象，</span></span><br><span class="line">    <span class="comment">// 同时通过 SDL_Quit 方法告诉 SDL 可以退出了</span></span><br><span class="line">	SDL_DestroyRenderer(renderer); </span><br><span class="line">	SDL_DestroyWindow(window);</span><br><span class="line">	SDL_Quit();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样就将图片显示到屏幕上了。</p>
+<p>但是 <code>SDL2</code> 目前也有些限制，比如加载图片只能加载 <code>bmp</code> 格式图片，如果想加载 <code>png</code> 或者 <code>jpeg</code> 等格式，不好意思，不行。同样，如果想在 <code>SDL2</code> 上加载文字，不好意思，也不行。这就需要用到 <code>SDL</code> 扩展库了，加载图片可以使用 <a href="https://www.libsdl.org/projects/SDL_image/" target="_blank" rel="noopener"><code>SDL_image</code></a>，而加载文字通过 <a href="https://www.libsdl.org/projects/SDL_ttf/" target="_blank" rel="noopener"><code>SDL_ttf</code></a> 扩展库来操作，添加到项目同 <code>SDL2</code> 一致，通过扩展库，可以更方便来处理</p>
+<p>例如加载图片可以直接通过 <code>IMG_LoadTexture</code> 方法生成一个 <code>SDL_Texture</code> 实例，省去了上述过程中需要 <code>SDL_Surface</code> 进行过渡的过程</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SDL_Texture* <span class="title">LoadImage</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> imagePath, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    texture = IMG_LoadTexture(renderer, imagePath.c_str());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (texture == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"Fail load image: "</span> + IMG_GetError());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而加载文字则可以通过如下方式进行加载</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SDL_Texture* <span class="title">RenderText</span><span class="params">(<span class="built_in">std</span>::<span class="built_in">string</span> text, <span class="built_in">std</span>::<span class="built_in">string</span> fontPath, SDL_Color color, </span></span></span><br><span class="line"><span class="function"><span class="params">                        <span class="keyword">int</span> fontSize, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TTF_Font* font = <span class="literal">nullptr</span>;</span><br><span class="line">    font = TTF_OpenFont(fontPath.c_str(), fontSize); <span class="comment">// 打开一个字体文件</span></span><br><span class="line">    <span class="keyword">if</span> (font == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> <span class="built_in">std</span>::runtime_error(<span class="string">"Fail load font: "</span> + TTF_GetError());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将文字渲染到 SDL_Surface</span></span><br><span class="line">   	SDL_Surface* surfcae = TTF_RenderText_Blended(font, text.c_str(), color); </span><br><span class="line">    SDL_Texture* texture = SDL_CreateTextureFromSurface(render, surface);</span><br><span class="line">    SDL_FreeSurface(surface); <span class="comment">// 释放 surface 和 font</span></span><br><span class="line">    TTF_CloseFont(font);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/16/FFmpeg-001/" rel="next" title="FFmpeg 配置">
+                <i class="fa fa-chevron-left"></i> FFmpeg 配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="kuky">
+            
+              <p class="site-author-name" itemprop="name">kuky</p>
+              <p class="site-description motion-element" itemprop="description">不给哔哔还是咋的~ o(´^｀)o</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kukyxs" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:kukyxingshi@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/9fcd71535294" title="简书" target="_blank">简书</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/588719c72f301e0069a581f7" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.wanandroid.com" title="WanAndroid" target="_blank">WanAndroid</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用-SDL2-显示-bmp-图片"><span class="nav-number">1.</span> <span class="nav-text">使用 SDL2 显示 bmp 图片</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kuky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+	
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: '随便留点？~',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
