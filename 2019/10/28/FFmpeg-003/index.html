@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FFmpeg,C++,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+<meta name="keywords" content="FFmpeg,C++">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg 常用结构体">
+<meta property="og:url" content="http://yoursite.com/2019/10/28/FFmpeg-003/index.html">
+<meta property="og:site_name" content="KK的小树洞">
+<meta property="og:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-28T03:11:53.685Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="FFmpeg 常用结构体">
+<meta name="twitter:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'kuky'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/10/28/FFmpeg-003/">
+
+
+
+
+
+  <title>FFmpeg 常用结构体 | KK的小树洞</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+  
+  
+    
+  
+  
+  <link rel="stylesheet" href="/dist/APlayer.min.css">
+  <div id="aplayer"></div>
+  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
+  <script type="text/javascript" src="/dist/music.js"></script>
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband">
+	</div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KK的小树洞</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录生活记录「你」</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>	  
+    </header>
+
+    <main id="main" class="main">	
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/28/FFmpeg-003/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="kuky">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KK的小树洞">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">FFmpeg 常用结构体</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-28T09:40:22+08:00">
+                2019-10-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/FFmpeg/" itemprop="url" rel="index">
+                    <span itemprop="name">FFmpeg</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/10/28/FFmpeg-003/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count valine-comment-count" data-xid="/2019/10/28/FFmpeg-003/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><code>FFmpeg</code> 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分</p>
+<h4 id="AVFormatContext"><a href="#AVFormatContext" class="headerlink" title="AVFormatContext"></a><code>AVFormatContext</code></h4><p><code>AVFormatContext</code> 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 <code>av_format_alloc_context()</code> 进行分配</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AVFormatContext* pFormatContext;</span><br><span class="line">pFormatContext = avformat_alloc_context();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">AVFormatContext</span> &#123;</span></span><br><span class="line">    <span class="keyword">const</span> AVClass *av_class; <span class="comment">// 与 logging 和 avoptions 相关的结构体</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* AVInputFormat 和 AVOutputFormat 在一个 AVFormatContext 中只能存在一种 */</span></span><br><span class="line">    <span class="comment">// 输入容器，仅用于 demuxing 通过 `avformat_open_input()` 函数设置</span></span><br><span class="line">    ff_const59 <span class="class"><span class="keyword">struct</span> <span class="title">AVInputFormat</span> *<span class="title">iformat</span>;</span> </span><br><span class="line">    <span class="comment">// 输出容器，仅用于 muxing，必须在 `avformat_write_header()` 函数前设置</span></span><br><span class="line">    ff_const59 <span class="class"><span class="keyword">struct</span> <span class="title">AVOutputFormat</span> *<span class="title">oformat</span>;</span> </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">void</span> *priv_data;</span><br><span class="line">    AVIOContext *pb; <span class="comment">// I/O Context</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* 以下字段包含流信息(stream info) */</span></span><br><span class="line">    <span class="keyword">int</span> ctx_flags;</span><br><span class="line">    <span class="comment">// 流数量，如果流数量小于 2，那么该音频文件中只可能包含音频流或视频流其中一种，或者都不包含</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> nb_streams;</span><br><span class="line">    <span class="comment">// 流列表，通过 `avformat_new_stream()` 函数可以创建新的流</span></span><br><span class="line">    AVStream **streams;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> FF_API_FORMAT_FILENAME</span></span><br><span class="line">    attribute_deprecated</span><br><span class="line">	<span class="comment">// 文件名，目前已过时，用 url 替换，如果是输入流的情况，通过 `avformat_open_input()` 函数设置</span></span><br><span class="line">	<span class="comment">// 如果是输出流，则该字段设置需要在调用 `avformat_write_header()` 函数前</span></span><br><span class="line">    <span class="keyword">char</span> filename[<span class="number">1024</span>]; </span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 替换旧版的 filename 字段，取消了长度的限制，通过 `avformat_free_context()` 函数释放</span></span><br><span class="line">    <span class="keyword">char</span> *url;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过 `libavformat` 来设置，不能手动赋值</span></span><br><span class="line">    <span class="keyword">int64_t</span> start_time;</span><br><span class="line">	<span class="comment">// 流时长，通过 `libavformat` 来设置</span></span><br><span class="line">    <span class="keyword">int64_t</span> duration;</span><br><span class="line">    <span class="comment">// 比特率，通过 duration，file_size 自动计算</span></span><br><span class="line">    <span class="keyword">int64_t</span> bit_rate;</span><br><span class="line">    <span class="comment">// Packet 大小</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> packet_size;</span><br><span class="line">    <span class="keyword">int</span> max_delay;</span><br><span class="line">    <span class="comment">// 标识 Demuxer/muxer 行为状态的标志位，AVFMT_FLAS_*</span></span><br><span class="line">    <span class="keyword">int</span> flags;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 能读取的最大长度</span></span><br><span class="line">    <span class="keyword">int64_t</span> probesize;</span><br><span class="line">    <span class="comment">// 最大时长，需要在 `avformat_find_stream_info()` 方法前设置</span></span><br><span class="line">    <span class="comment">// 通常可以设为 0</span></span><br><span class="line">    <span class="keyword">int64_t</span> max_analyze_duration;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">uint8_t</span> *key;</span><br><span class="line">    <span class="keyword">int</span> keylen;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> nb_programs;</span><br><span class="line">    AVProgram **programs;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 视频/音频/字幕 codec_id</span></span><br><span class="line">    <span class="keyword">enum</span> AVCodecID video_codec_id;</span><br><span class="line">    <span class="keyword">enum</span> AVCodecID audio_codec_id;</span><br><span class="line">    <span class="keyword">enum</span> AVCodecID subtitle_codec_id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 流的最大内存字节数</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> max_index_size;</span><br><span class="line">	<span class="comment">// buffering frame 中最大内存字节数 </span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> max_picture_buffer;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// AVChapter 的数量，需要在 `write_header()` 函数前设置</span></span><br><span class="line">    <span class="comment">// muxing 情况下也可以在 `write_trailer()` 设置，</span></span><br><span class="line">    <span class="comment">// 这种情况需要保证 `write_header` 时候为 0，`write_trailer` 调用后非 0</span></span><br><span class="line">    <span class="comment">// demuxing 情况下通过 libavformat 设置</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> nb_chapters;</span><br><span class="line">    AVChapter **chapters;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 整个文件的 metadata，调用 `avformat_free_context()` 后释放内存</span></span><br><span class="line">    AVDictionary *metadata;</span><br><span class="line">	<span class="comment">// 起始时间</span></span><br><span class="line">    <span class="keyword">int64_t</span> start_time_realtime;</span><br><span class="line">    <span class="comment">// 在 `avformat_find_stream_info()` 中确定帧数</span></span><br><span class="line">    <span class="keyword">int</span> fps_probe_size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 错误检测，值越高能检测到更多错误，但可能将有效值检测为错误</span></span><br><span class="line">    <span class="keyword">int</span> error_recognition;</span><br><span class="line">    <span class="comment">// 自定义的中断回调</span></span><br><span class="line">    AVIOInterruptCB interrupt_callback;</span><br><span class="line">    <span class="keyword">int</span> debug;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> FF_FDEBUG_TS        0x0001</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 最大交叉 buffering 时长</span></span><br><span class="line">    <span class="keyword">int64_t</span> max_interleave_delta;</span><br><span class="line">    <span class="comment">// 允许非标扩展</span></span><br><span class="line">    <span class="keyword">int</span> strict_std_compliance;</span><br><span class="line">    </span><br><span class="line">   	<span class="keyword">int</span> event_flags;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVFMT_EVENT_FLAG_METADATA_UPDATED 0x0001 <span class="comment">///&lt; The call resulted in updated metadata.</span></span></span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 解码第一帧时读取的最大 Packet 数目</span></span><br><span class="line">    <span class="keyword">int</span> max_ts_probe;</span><br><span class="line">	<span class="comment">// 防止无效时间戳</span></span><br><span class="line">    <span class="keyword">int</span> avoid_negative_ts;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVFMT_AVOID_NEG_TS_AUTO             -1 <span class="comment">///&lt; Enabled when required by target format</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVFMT_AVOID_NEG_TS_MAKE_NON_NEGATIVE 1 <span class="comment">///&lt; Shift timestamps so they are non negative</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> AVFMT_AVOID_NEG_TS_MAKE_ZERO         2 <span class="comment">///&lt; Shift timestamps so that they start at 0</span></span></span><br><span class="line">	</span><br><span class="line">    <span class="keyword">int</span> ts_id;</span><br><span class="line">	<span class="comment">// 音频预加载</span></span><br><span class="line">    <span class="keyword">int</span> audio_preload;</span><br><span class="line">	<span class="comment">// 最大 chunk 时长，非所有格式支持</span></span><br><span class="line">    <span class="keyword">int</span> max_chunk_duration;</span><br><span class="line">    <span class="keyword">int</span> max_chunk_size;</span><br><span class="line">	<span class="comment">// 强制使用 wallclock 作为时间戳</span></span><br><span class="line">    <span class="keyword">int</span> use_wallclock_as_timestamps;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> avio_flags; <span class="comment">// AVIO_FLAG_DIRECT</span></span><br><span class="line">	<span class="comment">// 通过不同方法估算时长</span></span><br><span class="line">    <span class="keyword">enum</span> AVDurationEstimationMethod duration_estimation_method;</span><br><span class="line">	<span class="comment">// 跳过的额初始字节数</span></span><br><span class="line">    <span class="keyword">int64_t</span> skip_initial_bytes;</span><br><span class="line">	<span class="comment">// 纠正单个时间戳溢出</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> correct_ts_overflow;</span><br><span class="line">    <span class="comment">// 强制跳转到任意帧</span></span><br><span class="line">    <span class="keyword">int</span> seek2any;</span><br><span class="line">	<span class="comment">// 每个 packet 后刷新 I/O Context</span></span><br><span class="line">    <span class="keyword">int</span> flush_packets;</span><br><span class="line">	<span class="comment">// 最大值为 AVPROBE_SCORE_MAX</span></span><br><span class="line">    <span class="keyword">int</span> probe_score;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 读取最大字节数来确定格式</span></span><br><span class="line">    <span class="keyword">int</span> format_probesize;</span><br><span class="line">	<span class="comment">// 所有可用的 decoder，通过 `,` 隔开</span></span><br><span class="line">    <span class="keyword">char</span> *codec_whitelist;</span><br><span class="line">	<span class="comment">// 所有可用的 demuxer，通过 `,` 隔开</span></span><br><span class="line">    <span class="keyword">char</span> *format_whitelist;</span><br><span class="line">    </span><br><span class="line">    AVFormatInternal *internal;</span><br><span class="line">    <span class="keyword">int</span> io_repositioned;</span><br><span class="line">    <span class="comment">// 特殊解码器或同个 codec_id 的视频/音频/字幕/数据 codec</span></span><br><span class="line">    AVCodec *video_codec;</span><br><span class="line">    AVCodec *audio_codec;</span><br><span class="line">    AVCodec *subtitle_codec;</span><br><span class="line">    AVCodec *data_codec;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">int</span> metadata_header_padding;</span><br><span class="line">    <span class="keyword">void</span> *opaque;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 设备和应用的通信回调</span></span><br><span class="line">    av_format_control_message control_message_cb;</span><br><span class="line">	<span class="comment">// 输出时间戳位偏</span></span><br><span class="line">    <span class="keyword">int64_t</span> output_ts_offset;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">uint8_t</span> *dump_separator;</span><br><span class="line">	<span class="comment">// 数据 codec_id</span></span><br><span class="line">    <span class="keyword">enum</span> AVCodecID data_codec_id;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> FF_API_OLD_OPEN_CALLBACKS</span></span><br><span class="line">    <span class="comment">// 见 io_open  io_close</span></span><br><span class="line">    attribute_deprecated</span><br><span class="line">    <span class="keyword">int</span> (*open_cb)(struct AVFormatContext *s, AVIOContext **p, <span class="keyword">const</span> <span class="keyword">char</span> *url, <span class="keyword">int</span> flags, <span class="keyword">const</span> AVIOInterruptCB *int_cb, AVDictionary **options);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 支持协议列表</span></span><br><span class="line">    <span class="keyword">char</span> *protocol_whitelist;</span><br><span class="line">	<span class="comment">// 新的 I/O 流打开时，demux 操作回调</span></span><br><span class="line">    <span class="keyword">int</span> (*io_open)(struct AVFormatContext *s, AVIOContext **pb, <span class="keyword">const</span> <span class="keyword">char</span> *url,</span><br><span class="line">                   <span class="keyword">int</span> flags, AVDictionary **options);</span><br><span class="line">	<span class="comment">// 通过 `AVFormatContext.io_open()` 后关闭 IO 流的回调</span></span><br><span class="line">    <span class="keyword">void</span> (*io_close)(struct AVFormatContext *s, AVIOContext *pb);</span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 协议黑名单</span></span><br><span class="line">    <span class="keyword">char</span> *protocol_blacklist;</span><br><span class="line">    <span class="comment">// 最大流数量</span></span><br><span class="line">    <span class="keyword">int</span> max_streams;</span><br><span class="line">    <span class="keyword">int</span> skip_estimate_duration_from_pts;</span><br><span class="line">&#125; AVFormatContext;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>看看就好，请忽略</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wxpay.jpg" alt="kuky 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="kuky 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FFmpeg/" rel="tag"># FFmpeg</a>
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/22/FFmpeg-002/" rel="next" title="初识 SDL2">
+                <i class="fa fa-chevron-left"></i> 初识 SDL2
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/uploads/avatar.png" alt="kuky">
+            
+              <p class="site-author-name" itemprop="name">kuky</p>
+              <p class="site-description motion-element" itemprop="description">不给哔哔还是咋的~ o(´^｀)o</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/kukyxs" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:kukyxingshi@163.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/9fcd71535294" title="简书" target="_blank">简书</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://juejin.im/user/588719c72f301e0069a581f7" title="掘金" target="_blank">掘金</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.wanandroid.com" title="WanAndroid" target="_blank">WanAndroid</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#AVFormatContext"><span class="nav-number">1.</span> <span class="nav-text">AVFormatContext</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">kuky</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+	
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+  
+  <script type="text/javascript">
+    var GUEST = ['nick','mail','link'];
+    var guest = 'nick';
+    guest = guest.split(',').filter(item=>{
+      return GUEST.indexOf(item)>-1;
+    });
+    new Valine({
+        el: '#comments' ,
+        verify: false,
+        notify: false,
+        appId: 'kCT9mLKsz19Gpfl2ojva2PzQ-gzGzoHsz',
+        appKey: 'p9856xuyRDpw5sySzSE6xlBw',
+        placeholder: '随便留点？~',
+        avatar:'mm',
+        guest_info:guest,
+        pageSize:'10' || 10,
+    });
+  </script>
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
