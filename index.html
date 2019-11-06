@@ -142,11 +142,6 @@
     
   
   
-  <link rel="stylesheet" href="/dist/APlayer.min.css">
-  <div id="aplayer"></div>
-  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
-  <script type="text/javascript" src="/dist/music.js"></script>
-
   <div class="container sidebar-position-left 
   page-home">
     <div class="headband">
@@ -371,7 +366,8 @@
         
           
           FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分
-AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_fo
+本文参考自 雷神 - FFMPEG中最关键的结构体之间的关系 及何俊林 Android 音视频开发
+AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始
           ...
           <!--noindex-->
           <div class="post-button text-center">
@@ -2063,8 +2059,6 @@ Stream在 dart 部分记得分享过 Stream 的文章链接，但是我知道你
   
 
 
-  
-
 
 
 
@@ -2103,11 +2097,6 @@ Stream在 dart 部分记得分享过 Stream 的文章链接，但是我知道你
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
   
 
 

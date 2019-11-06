@@ -1943,7 +1943,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #8b91ff;
+  background: #9e096f;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3240,12 +3240,6 @@ pre .javascript .function {
   .pagination {
     margin: 8px 0 0;
   }
-}
-body {
-  background: url("https://s2.ax1x.com/2019/08/27/m5KrRS.jpg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: 100% 100%;
 }
 .main-inner {
   background: #fff;

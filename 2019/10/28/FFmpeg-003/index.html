@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+<meta name="description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 本文参考自 雷神 - FFMPEG中最关键的结构体之间的关系 及何俊林 Android 音视频开发 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_fo">
 <meta name="keywords" content="FFmpeg,C++">
 <meta property="og:type" content="article">
 <meta property="og:title" content="FFmpeg 常用结构体">
 <meta property="og:url" content="http://yoursite.com/2019/10/28/FFmpeg-003/index.html">
 <meta property="og:site_name" content="KK的小树洞">
-<meta property="og:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+<meta property="og:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 本文参考自 雷神 - FFMPEG中最关键的结构体之间的关系 及何俊林 Android 音视频开发 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_fo">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-28T03:11:53.685Z">
+<meta property="og:updated_time" content="2019-11-06T15:47:48.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="FFmpeg 常用结构体">
-<meta name="twitter:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_format_alloc_context() 进行分配 12AVFormatContext* pForm">
+<meta name="twitter:description" content="FFmpeg 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分 本文参考自 雷神 - FFMPEG中最关键的结构体之间的关系 及何俊林 Android 音视频开发 AVFormatContextAVFormatContext 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 av_fo">
 
 
 
@@ -144,11 +144,6 @@
     
   
   
-  <link rel="stylesheet" href="/dist/APlayer.min.css">
-  <div id="aplayer"></div>
-  <script type="text/javascript" src="/dist/APlayer.min.js"></script>
-  <script type="text/javascript" src="/dist/music.js"></script>
-
   <div class="container sidebar-position-left page-post-detail">
     <div class="headband">
 	</div>
@@ -368,6 +363,7 @@
 
       
         <p><code>FFmpeg</code> 开发过程中，需要用到很多常用的结构体，包括不仅仅是如下部分</p>
+<p>本文参考自 <a href="https://blog.csdn.net/leixiaohua1020/article/details/11693997" target="_blank" rel="noopener">雷神 - FFMPEG中最关键的结构体之间的关系</a> 及何俊林 <code>Android</code> 音视频开发</p>
 <h4 id="AVFormatContext"><a href="#AVFormatContext" class="headerlink" title="AVFormatContext"></a><code>AVFormatContext</code></h4><p><code>AVFormatContext</code> 是一个贯穿全局的结构体，其中包含一个视频流的格式内容，由于其初始化过程分多个过程完成，其中可能有些变量没有值可用，也不可以进行初始化。内存分配可通过函数 <code>av_format_alloc_context()</code> 进行分配</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AVFormatContext* pFormatContext;</span><br><span class="line">pFormatContext = avformat_alloc_context();</span><br></pre></td></tr></table></figure>
 
@@ -701,8 +697,6 @@
   
 
 
-  
-
 
 
 
@@ -741,11 +735,6 @@
   
   
     <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
-  
-
-  
-  
-    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
   
 
 
