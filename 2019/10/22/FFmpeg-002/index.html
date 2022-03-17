@@ -1,103 +1,346 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+  <title>初识 SDL2</title>
   
-
+    
+      <meta 
+        property="og:title" 
+        content="初识 SDL2">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2019/10/22/FFmpeg-002/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2019-10-22">
+      <meta 
+        property="og:article:modified_time" 
+        content="2019-11-04">
+      <meta 
+        property="og:article:author" 
+        content="kuky">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="FFmpeg">
+        
+          <meta 
+            property="og:article:tag" 
+            content="C++">
+        
+          <meta 
+            property="og:article:tag" 
+            content="SDL">
+        
+      
+    
   
-  <title>初识 SDL2 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在使用 FFmpeg 之前，先认识下装载的容器 SDL2(Simple DirectMedia Layer)，下载 Development Libraries 后就可以在本地进行配置，配置到项目的方法同上节 FFmpeg 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 SDL2.dll 文件复制到项目下来，在 SDL2 的 lib 中分有 x64 和 x86 文件夹，根据自己计">
-<meta property="og:type" content="article">
-<meta property="og:title" content="初识 SDL2">
-<meta property="og:url" content="http://example.com/2019/10/22/FFmpeg-002/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="在使用 FFmpeg 之前，先认识下装载的容器 SDL2(Simple DirectMedia Layer)，下载 Development Libraries 后就可以在本地进行配置，配置到项目的方法同上节 FFmpeg 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 SDL2.dll 文件复制到项目下来，在 SDL2 的 lib 中分有 x64 和 x86 文件夹，根据自己计">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://s2.ax1x.com/2019/10/23/Kt5Z1e.png">
-<meta property="article:published_time" content="2019-10-22T13:12:40.000Z">
-<meta property="article:modified_time" content="2019-11-04T13:57:13.078Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="FFmpeg">
-<meta property="article:tag" content="C++">
-<meta property="article:tag" content="SDL">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/23/Kt5Z1e.png">
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
   
   
-    <link rel="icon" href="/favicon.png">
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
   
   
-<link rel="stylesheet" href="/css/style.css">
-
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">Kukyxs</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
         
-          <a class="main-nav-link" href="/">Home</a>
+          Home
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
         
-      </nav>
-      <nav id="sub-nav">
+          Archive
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          Friends
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-FFmpeg-002" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/10/22/FFmpeg-002/" class="article-date">
-  <time datetime="2019-10-22T13:12:40.000Z" itemprop="datePublished">2019-10-22</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/FFmpeg/">FFmpeg</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
       初识 SDL2
     </h1>
-  
-
-      </header>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-10-22T13:12:40.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2019-10-22</span>
+    </time>
     
-    <div class="article-entry" itemprop="articleBody">
+      <span class="dot"></span>
       
-        <p>在使用 <code>FFmpeg</code> 之前，先认识下装载的容器 <a target="_blank" rel="noopener" href="https://www.libsdl.org/download-2.0.php"><code>SDL2(Simple DirectMedia Layer)</code></a>，下载 <code>Development Libraries</code> 后就可以在本地进行配置，配置到项目的方法同上节 <code>FFmpeg</code> 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 <code>SDL2.dll</code> 文件复制到项目下来，在 <code>SDL2</code> 的 <code>lib</code> 中分有 <code>x64</code> 和 <code>x86</code> 文件夹，根据自己计算机进行选择，否则会出错哦~</p>
+        <a 
+          href="/categories/FFmpeg/" 
+          class="post-meta-link">
+          FFmpeg
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>3.4k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/FFmpeg/" 
+            class="post-meta-link">
+            FFmpeg
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/C/" 
+            class="post-meta-link">
+            C++
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/SDL/" 
+            class="post-meta-link">
+            SDL
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>在使用 <code>FFmpeg</code> 之前，先认识下装载的容器 <a target="_blank" rel="noopener" href="https://www.libsdl.org/download-2.0.php"><code>SDL2(Simple DirectMedia Layer)</code></a>，下载 <code>Development Libraries</code> 后就可以在本地进行配置，配置到项目的方法同上节 <code>FFmpeg</code> 的配置，可以不需要配置系统环境，同时还需要注意的是，将对应文件下的 <code>SDL2.dll</code> 文件复制到项目下来，在 <code>SDL2</code> 的 <code>lib</code> 中分有 <code>x64</code> 和 <code>x86</code> 文件夹，根据自己计算机进行选择，否则会出错哦~</p>
 <h4 id="使用-SDL2-显示-bmp-图片"><a href="#使用-SDL2-显示-bmp-图片" class="headerlink" title="使用 SDL2 显示 bmp 图片"></a>使用 <code>SDL2</code> 显示 <code>bmp</code> 图片</h4><p>使用 <code>SDL2</code> 的大概流程主要为以下步骤</p>
 <ol>
 <li>初始化 <code>SDL</code></li>
@@ -107,15 +350,15 @@
 <li>清屏，显示内容</li>
 </ol>
 <p>接下来就来看些代码</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// SDL 初始化直接通过 SDL_Init 来处理</span></span><br><span class="line">    <span class="comment">// 该方法可传入的参数包括 SDL_INIT_TIMER，SDL_INIT_AUDIO，SDL_INIT_VIDEO 等 9 中，可通过源码查看</span></span><br><span class="line">    <span class="comment">// SDL_INIT_EVERYTHING 则是包含了上述的所有</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Init SDL fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SDL_Window* window = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateWindow 方法来创建 Window</span></span><br><span class="line">    <span class="comment">// 参数分别为：窗体标题，x 位置，y 位置，宽度，高度，标志位</span></span><br><span class="line">    <span class="comment">// x, y 位置可以是某些固定的值，例如 0，也可以是 SDL 中定义的</span></span><br><span class="line">    <span class="comment">// SDL_WINDOWPOS_CENTERED(中间位置)，SDL_WINDOWPOS_UNDEFINED(任意位置)等等</span></span><br><span class="line">    <span class="comment">// 标志位有许多可以选择，包括 SDL_WINDOW_FULLSCREEN，SDL_WINDOW_OPENGL</span></span><br><span class="line">    <span class="comment">// SDL_WINDOW_SHOWN，SDL_WINDOW_HIDDEN 等等，具体的可通过源码查看，对应的属性注释也比较清楚</span></span><br><span class="line">    window = <span class="built_in">SDL_CreateWindow</span>(<span class="string">&quot;Hello World&quot;</span>, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, </span><br><span class="line">                             <span class="number">640</span>, <span class="number">480</span>, SDL_WINDOW_SHOWN);</span><br><span class="line">    <span class="keyword">if</span> (window == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create window fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">   	SDL_Renderer* renderer = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateRenderer 方法创建 renderer 渲染器</span></span><br><span class="line">    <span class="comment">// 参数分别为：显示的窗体，用于初始化渲染驱动的索引(一般为 -1)，渲染标志位</span></span><br><span class="line">    <span class="comment">// 渲染标志位包括 SDL_RENDERER_SOFTWARE，SDL_RENDERER_ACCELERATED 等等，可以根据需要进行选择</span></span><br><span class="line">    <span class="comment">// 这里选择了硬件加速，以及使渲染器能够按照显示器刷新率来刷新画面</span></span><br><span class="line">    renderer = <span class="built_in">SDL_CreateRenderer</span>(window, <span class="number">-1</span>, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);</span><br><span class="line">    <span class="keyword">if</span> (renderer == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create renderer fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	SDL_Surface* image = <span class="literal">nullptr</span>;     </span><br><span class="line">    <span class="comment">// 通过 SDL_LoadBMP 将图片加载到 SDL_Surface 来</span></span><br><span class="line">    image = <span class="built_in">SDL_LoadBMP</span>(<span class="string">&quot;xxx.bmp&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (image == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Open image fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 通过加载图片的 SDL_Surface 来创建 SDL_Texture</span></span><br><span class="line">    <span class="comment">// 同时，因为 SDL_Surface 不需要再次使用了，这边就需要通过 SDL_FreeSurface 方法将其释放，避免内存泄漏</span></span><br><span class="line">	texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(renderer, image);</span><br><span class="line">	<span class="built_in">SDL_FreeSurface</span>(image);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (texture == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create texture fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">SDL_RenderClear</span>(renderer); <span class="comment">// 将渲染器清空</span></span><br><span class="line">    <span class="comment">// 将 texture 的内容加载到渲染器来，后面传空的参数分别为</span></span><br><span class="line">    <span class="comment">// 指向源矩形的指针(即从图像上裁剪下一块矩形)，指向目标矩形的指针</span></span><br><span class="line">    <span class="comment">// 两个参数为空即告诉 SDL 渲染整个源图像，并绘制在屏幕 (0, 0) 位置</span></span><br><span class="line">	<span class="built_in">SDL_RenderCopy</span>(renderer, texture, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">	<span class="built_in">SDL_DestroyTexture</span>(texture); <span class="comment">// 加载到渲染器后，如果 Texture 不再使用则将其释放</span></span><br><span class="line">	<span class="built_in">SDL_RenderPresent</span>(renderer); <span class="comment">// 将渲染的内容展示出来</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">SDL_Delay</span>(<span class="number">5000</span>); <span class="comment">// 用于延时 5s，否则屏幕一闪而过</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 显示完毕后，释放 renderer 和 window 对象，</span></span><br><span class="line">    <span class="comment">// 同时通过 SDL_Quit 方法告诉 SDL 可以退出了</span></span><br><span class="line">	<span class="built_in">SDL_DestroyRenderer</span>(renderer); </span><br><span class="line">	<span class="built_in">SDL_DestroyWindow</span>(window);</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// SDL 初始化直接通过 SDL_Init 来处理</span></span><br><span class="line">    <span class="comment">// 该方法可传入的参数包括 SDL_INIT_TIMER，SDL_INIT_AUDIO，SDL_INIT_VIDEO 等 9 中，可通过源码查看</span></span><br><span class="line">    <span class="comment">// SDL_INIT_EVERYTHING 则是包含了上述的所有</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) == <span class="number">-1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Init SDL fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    SDL_Window* window = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateWindow 方法来创建 Window</span></span><br><span class="line">    <span class="comment">// 参数分别为：窗体标题，x 位置，y 位置，宽度，高度，标志位</span></span><br><span class="line">    <span class="comment">// x, y 位置可以是某些固定的值，例如 0，也可以是 SDL 中定义的</span></span><br><span class="line">    <span class="comment">// SDL_WINDOWPOS_CENTERED(中间位置)，SDL_WINDOWPOS_UNDEFINED(任意位置)等等</span></span><br><span class="line">    <span class="comment">// 标志位有许多可以选择，包括 SDL_WINDOW_FULLSCREEN，SDL_WINDOW_OPENGL</span></span><br><span class="line">    <span class="comment">// SDL_WINDOW_SHOWN，SDL_WINDOW_HIDDEN 等等，具体的可通过源码查看，对应的属性注释也比较清楚</span></span><br><span class="line">    window = <span class="built_in">SDL_CreateWindow</span>(<span class="string">&quot;Hello World&quot;</span>, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, </span><br><span class="line">                             <span class="number">640</span>, <span class="number">480</span>, SDL_WINDOW_SHOWN);</span><br><span class="line">    <span class="keyword">if</span> (window == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create window fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">   	SDL_Renderer* renderer = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// SDL 通过 SDL_CreateRenderer 方法创建 renderer 渲染器</span></span><br><span class="line">    <span class="comment">// 参数分别为：显示的窗体，用于初始化渲染驱动的索引(一般为 -1)，渲染标志位</span></span><br><span class="line">    <span class="comment">// 渲染标志位包括 SDL_RENDERER_SOFTWARE，SDL_RENDERER_ACCELERATED 等等，可以根据需要进行选择</span></span><br><span class="line">    <span class="comment">// 这里选择了硬件加速，以及使渲染器能够按照显示器刷新率来刷新画面</span></span><br><span class="line">    renderer = <span class="built_in">SDL_CreateRenderer</span>(window, <span class="number">-1</span>, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);</span><br><span class="line">    <span class="keyword">if</span> (renderer == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create renderer fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	SDL_Surface* image = <span class="literal">nullptr</span>;     </span><br><span class="line">    <span class="comment">// 通过 SDL_LoadBMP 将图片加载到 SDL_Surface 来</span></span><br><span class="line">    image = <span class="built_in">SDL_LoadBMP</span>(<span class="string">&quot;xxx.bmp&quot;</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (image == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Open image fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 通过加载图片的 SDL_Surface 来创建 SDL_Texture</span></span><br><span class="line">    <span class="comment">// 同时，因为 SDL_Surface 不需要再次使用了，这边就需要通过 SDL_FreeSurface 方法将其释放，避免内存泄漏</span></span><br><span class="line">	texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(renderer, image);</span><br><span class="line">	<span class="built_in">SDL_FreeSurface</span>(image);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (texture == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; <span class="string">&quot;Create texture fail: &quot;</span> &lt;&lt; <span class="built_in">SDL_GetError</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">SDL_RenderClear</span>(renderer); <span class="comment">// 将渲染器清空</span></span><br><span class="line">    <span class="comment">// 将 texture 的内容加载到渲染器来，后面传空的参数分别为</span></span><br><span class="line">    <span class="comment">// 指向源矩形的指针(即从图像上裁剪下一块矩形)，指向目标矩形的指针</span></span><br><span class="line">    <span class="comment">// 两个参数为空即告诉 SDL 渲染整个源图像，并绘制在屏幕 (0, 0) 位置</span></span><br><span class="line">	<span class="built_in">SDL_RenderCopy</span>(renderer, texture, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">	<span class="built_in">SDL_DestroyTexture</span>(texture); <span class="comment">// 加载到渲染器后，如果 Texture 不再使用则将其释放</span></span><br><span class="line">	<span class="built_in">SDL_RenderPresent</span>(renderer); <span class="comment">// 将渲染的内容展示出来</span></span><br><span class="line">    </span><br><span class="line">    <span class="built_in">SDL_Delay</span>(<span class="number">5000</span>); <span class="comment">// 用于延时 5s，否则屏幕一闪而过</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 显示完毕后，释放 renderer 和 window 对象，</span></span><br><span class="line">    <span class="comment">// 同时通过 SDL_Quit 方法告诉 SDL 可以退出了</span></span><br><span class="line">	<span class="built_in">SDL_DestroyRenderer</span>(renderer); </span><br><span class="line">	<span class="built_in">SDL_DestroyWindow</span>(window);</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>这样就将图片显示到屏幕上了。</p>
 <h4 id="SDL2-显示其他类型图片和文字"><a href="#SDL2-显示其他类型图片和文字" class="headerlink" title="SDL2 显示其他类型图片和文字"></a><code>SDL2</code> 显示其他类型图片和文字</h4><p><code>SDL2</code> 目前存在些限制，比如加载图片只能加载 <code>bmp</code> 格式图片，如果想加载 <code>png</code> 或者 <code>jpeg</code> 等格式，不好意思，不行。同样，如果想在 <code>SDL2</code> 上加载文字，不好意思，也不行。这就需要用到 <code>SDL</code> 扩展库了，加载图片可以使用 <a target="_blank" rel="noopener" href="https://www.libsdl.org/projects/SDL_image/"><code>SDL_image</code></a>，而加载文字通过 <a target="_blank" rel="noopener" href="https://www.libsdl.org/projects/SDL_ttf/"><code>SDL_ttf</code></a> 扩展库来操作，添加到项目同 <code>SDL2</code> 一致，通过扩展库，可以更方便来处理</p>
 <p>例如加载图片可以直接通过 <code>IMG_LoadTexture</code> 方法生成一个 <code>SDL_Texture</code> 实例，省去了上述过程中需要 <code>SDL_Surface</code> 进行过渡的过程</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SDL_Texture* <span class="title">LoadImage</span><span class="params">(std::string imagePath, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 目前使用 SDL_image 遇到无法正常打开 png 图片&lt;Failed loading libpng16-16.dll&gt;</span></span><br><span class="line">    <span class="comment">// 未找到解决方案，希望了解这块的大佬能指导下</span></span><br><span class="line">    texture = <span class="built_in">IMG_LoadTexture</span>(renderer, imagePath.<span class="built_in">c_str</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (texture == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Fail load image: &quot;</span> + <span class="built_in">IMG_GetError</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function">SDL_Texture* <span class="title">LoadImage</span><span class="params">(std::string imagePath, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 目前使用 SDL_image 遇到无法正常打开 png 图片&lt;Failed loading libpng16-16.dll&gt;</span></span><br><span class="line">    <span class="comment">// 未找到解决方案，希望了解这块的大佬能指导下</span></span><br><span class="line">    texture = <span class="built_in">IMG_LoadTexture</span>(renderer, imagePath.<span class="built_in">c_str</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (texture == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Fail load image: &quot;</span> + <span class="built_in">IMG_GetError</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>而加载文字则可以通过如下方式进行加载</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SDL_Texture* <span class="title">RenderText</span><span class="params">(std::string text, std::string fontPath, SDL_Color color, </span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="type">int</span> fontSize, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TTF_Font* font = <span class="literal">nullptr</span>;</span><br><span class="line">    font = <span class="built_in">TTF_OpenFont</span>(fontPath.<span class="built_in">c_str</span>(), fontSize); <span class="comment">// 打开一个字体文件</span></span><br><span class="line">    <span class="keyword">if</span> (font == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Fail load font: &quot;</span> + <span class="built_in">TTF_GetError</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将文字渲染到 SDL_Surface</span></span><br><span class="line">   	SDL_Surface* surfcae = <span class="built_in">TTF_RenderText_Blended</span>(font, text.<span class="built_in">c_str</span>(), color); </span><br><span class="line">    SDL_Texture* texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(render, surface);</span><br><span class="line">    <span class="built_in">SDL_FreeSurface</span>(surface); <span class="comment">// 释放 surface 和 font</span></span><br><span class="line">    <span class="built_in">TTF_CloseFont</span>(font);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function">SDL_Texture* <span class="title">RenderText</span><span class="params">(std::string text, std::string fontPath, SDL_Color color, </span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="type">int</span> fontSize, SDL_Renderer render)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    TTF_Font* font = <span class="literal">nullptr</span>;</span><br><span class="line">    font = <span class="built_in">TTF_OpenFont</span>(fontPath.<span class="built_in">c_str</span>(), fontSize); <span class="comment">// 打开一个字体文件</span></span><br><span class="line">    <span class="keyword">if</span> (font == <span class="literal">nullptr</span>) </span><br><span class="line">        <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Fail load font: &quot;</span> + <span class="built_in">TTF_GetError</span>());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将文字渲染到 SDL_Surface</span></span><br><span class="line">   	SDL_Surface* surfcae = <span class="built_in">TTF_RenderText_Blended</span>(font, text.<span class="built_in">c_str</span>(), color); </span><br><span class="line">    SDL_Texture* texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(render, surface);</span><br><span class="line">    <span class="built_in">SDL_FreeSurface</span>(surface); <span class="comment">// 释放 surface 和 font</span></span><br><span class="line">    <span class="built_in">TTF_CloseFont</span>(font);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br></pre>
 
 <h4 id="SDL2-事件处理机制"><a href="#SDL2-事件处理机制" class="headerlink" title="SDL2 事件处理机制"></a><code>SDL2</code> 事件处理机制</h4><p>前面显示 <code>Window</code> 通过 <code>SDL_Delay</code> 方法来指定相应时长，然后再消失，这样体验就不太好了，理想的状态是监测到用户点击关闭按钮的时候，关闭窗体，这就涉及到 <code>SDL</code> 的事件处理机制了，<code>SDL</code> 事件包括键盘事件，鼠标事件，窗口事件等等，<code>SDL</code> 会将所有事件都存放在一个队列中，通过获取队列中的事件进行判断并操作。</p>
 <h5 id="SDL-处理事件的-API"><a href="#SDL-处理事件的-API" class="headerlink" title="SDL 处理事件的 API"></a><code>SDL</code> 处理事件的 <code>API</code></h5><ul>
@@ -133,10 +376,10 @@
 <li><code>SDL_PushEvent</code>: 向队列中插入事件。</li>
 </ul>
 <h5 id="增加窗体退出事件监听"><a href="#增加窗体退出事件监听" class="headerlink" title="增加窗体退出事件监听"></a>增加窗体退出事件监听</h5><p>那么我们就可以对上面 <code>SDL_Delay</code> 通过事件机制来替换下</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...省略 `SDL_Delay(5000)` 之前的代码</span></span><br><span class="line">    <span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">while</span>(!quit)</span><br><span class="line">    &#123;</span><br><span class="line">        SDL_Event event;</span><br><span class="line">        <span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line">        <span class="keyword">if</span> (event.type == SDL_QUIT)</span><br><span class="line">        &#123;</span><br><span class="line">            quit = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...省略 `SDL_Delay(5000)` 之后的代码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// ...省略 `SDL_Delay(5000)` 之前的代码</span></span><br><span class="line">    <span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">    <span class="keyword">while</span>(!quit)</span><br><span class="line">    &#123;</span><br><span class="line">        SDL_Event event;</span><br><span class="line">        <span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line">        <span class="keyword">if</span> (event.type == SDL_QUIT)</span><br><span class="line">        &#123;</span><br><span class="line">            quit = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// ...省略 `SDL_Delay(5000)` 之后的代码</span></span><br><span class="line">&#125;</span><br></pre>
 
 <h5 id="对键盘事件的监听"><a href="#对键盘事件的监听" class="headerlink" title="对键盘事件的监听"></a>对键盘事件的监听</h5><p><code>SDL</code> 对其他事件支持也通过相应的 <code>type</code> 来进行判断，例如监听键盘方向键</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">while</span> (!quit)</span><br><span class="line">	&#123;</span><br><span class="line">		SDL_Event event;</span><br><span class="line">		<span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> (event.type)</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="keyword">case</span> SDL_QUIT:</span><br><span class="line">			quit = <span class="literal">true</span>;</span><br><span class="line">			cout &lt;&lt; <span class="string">&quot;quit&quot;</span> &lt;&lt; endl;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">case</span> SDL_KEYDOWN:</span><br><span class="line">			<span class="keyword">switch</span> (event.key.keysym.sym)</span><br><span class="line">			&#123;</span><br><span class="line">			<span class="keyword">case</span> SDLK_LEFT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ← down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_RIGHT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key → down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_UP:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↑ down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_DOWN:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↓ down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">case</span> SDL_KEYUP:</span><br><span class="line">			<span class="keyword">switch</span> (event.key.keysym.sym)</span><br><span class="line">			&#123;</span><br><span class="line">			<span class="keyword">case</span> SDLK_LEFT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ← up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_RIGHT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key → up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_UP:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↑ up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_DOWN:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↓ up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">                </span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">	<span class="keyword">while</span> (!quit)</span><br><span class="line">	&#123;</span><br><span class="line">		SDL_Event event;</span><br><span class="line">		<span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">switch</span> (event.type)</span><br><span class="line">		&#123;</span><br><span class="line">		<span class="keyword">case</span> SDL_QUIT:</span><br><span class="line">			quit = <span class="literal">true</span>;</span><br><span class="line">			cout &lt;&lt; <span class="string">&quot;quit&quot;</span> &lt;&lt; endl;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">case</span> SDL_KEYDOWN:</span><br><span class="line">			<span class="keyword">switch</span> (event.key.keysym.sym)</span><br><span class="line">			&#123;</span><br><span class="line">			<span class="keyword">case</span> SDLK_LEFT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ← down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_RIGHT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key → down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_UP:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↑ down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_DOWN:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↓ down&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">case</span> SDL_KEYUP:</span><br><span class="line">			<span class="keyword">switch</span> (event.key.keysym.sym)</span><br><span class="line">			&#123;</span><br><span class="line">			<span class="keyword">case</span> SDLK_LEFT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ← up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_RIGHT:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key → up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_UP:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↑ up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">case</span> SDLK_DOWN:</span><br><span class="line">				cout &lt;&lt; <span class="string">&quot;key ↓ up&quot;</span> &lt;&lt; endl;</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			<span class="keyword">default</span>:</span><br><span class="line">				<span class="keyword">break</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">                </span><br><span class="line">		<span class="keyword">default</span>:</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre>
 
 <p>当按下相应按键的时候，就会打印出相应的内容出来了</p>
 <p>需要注意的是，<code>SDL_PollEvent</code> 和 <code>SDL_WaitEvent</code> 都可以达到获取队列事件，但是有不同的使用场景：</p>
@@ -145,171 +388,500 @@
 <li>对于一些其它实时性不高的场景来说，则可以使用 <code>SDL_WaitEvent</code></li>
 </ul>
 <h4 id="SDL-方法封装"><a href="#SDL-方法封装" class="headerlink" title="SDL 方法封装"></a><code>SDL</code> 方法封装</h4><p>在第一部分，介绍了 <code>SDL</code> 显示内容的基本步骤，为了提高复用，我们可以进行一些必要的封装</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Window.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL_image.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL_ttf.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Window</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// position 用来确定 window 的位置和宽高信息</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Init</span><span class="params">(SDL_Rect&amp; wh, std::string title = <span class="string">&quot;Window Title&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主要做些显示完毕的操作</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Quit</span><span class="params">(std::initializer_list&lt;SDL_Texture*&gt; ts)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 texture copy 到 render 上</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Draw</span><span class="params">(SDL_Texture* texture, SDL_Rect* sorce = <span class="literal">nullptr</span>, SDL_Rect* clip = <span class="literal">nullptr</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="type">float</span> angle = <span class="number">0.0</span>, <span class="type">int</span> xPivot = <span class="number">0</span>, <span class="type">int</span> yPivot = <span class="number">0</span>, SDL_RendererFlip flip = SDL_FLIP_NONE)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 加载图片</span></span><br><span class="line">	<span class="function"><span class="type">static</span> SDL_Texture* <span class="title">LoadImage</span><span class="params">(std::string image)</span></span>;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 加载文字</span></span><br><span class="line">	<span class="function"><span class="type">static</span> SDL_Texture* <span class="title">RenderText</span><span class="params">(std::string text, std::string fontPath, <span class="type">int</span> fontSize, SDL_Color color)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清屏</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Present</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 使用智能指针，方便回收等处理</span></span><br><span class="line">    <span class="comment">// 通过如下方式进行智能指针的定义，因为 SDL_Window 和 SDL_Renderer</span></span><br><span class="line">    <span class="comment">// 都是 struct，不能使用 new 关键词进行创建实例，用于指定创建方法</span></span><br><span class="line">	<span class="type">static</span> std::unique_ptr&lt;SDL_Window, std::function&lt;<span class="type">void</span>(SDL_Window*)&gt;&gt; mWindow;</span><br><span class="line">	<span class="type">static</span> std::unique_ptr&lt;SDL_Renderer, std::function&lt;<span class="type">void</span>(SDL_Renderer*)&gt;&gt; mRenderer;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// Window.h</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL_image.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;SDL_ttf.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;initializer_list&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Window</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// position 用来确定 window 的位置和宽高信息</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Init</span><span class="params">(SDL_Rect&amp; wh, std::string title = <span class="string">&quot;Window Title&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 主要做些显示完毕的操作</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Quit</span><span class="params">(std::initializer_list&lt;SDL_Texture*&gt; ts)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 texture copy 到 render 上</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Draw</span><span class="params">(SDL_Texture* texture, SDL_Rect* sorce = <span class="literal">nullptr</span>, SDL_Rect* clip = <span class="literal">nullptr</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">		<span class="type">float</span> angle = <span class="number">0.0</span>, <span class="type">int</span> xPivot = <span class="number">0</span>, <span class="type">int</span> yPivot = <span class="number">0</span>, SDL_RendererFlip flip = SDL_FLIP_NONE)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 加载图片</span></span><br><span class="line">	<span class="function"><span class="type">static</span> SDL_Texture* <span class="title">LoadImage</span><span class="params">(std::string image)</span></span>;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 加载文字</span></span><br><span class="line">	<span class="function"><span class="type">static</span> SDL_Texture* <span class="title">RenderText</span><span class="params">(std::string text, std::string fontPath, <span class="type">int</span> fontSize, SDL_Color color)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清屏</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Clear</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 显示</span></span><br><span class="line">	<span class="function"><span class="type">static</span> <span class="type">void</span> <span class="title">Present</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="comment">// 使用智能指针，方便回收等处理</span></span><br><span class="line">    <span class="comment">// 通过如下方式进行智能指针的定义，因为 SDL_Window 和 SDL_Renderer</span></span><br><span class="line">    <span class="comment">// 都是 struct，不能使用 new 关键词进行创建实例，用于指定创建方法</span></span><br><span class="line">	<span class="type">static</span> std::unique_ptr&lt;SDL_Window, std::function&lt;<span class="type">void</span>(SDL_Window*)&gt;&gt; mWindow;</span><br><span class="line">	<span class="type">static</span> std::unique_ptr&lt;SDL_Renderer, std::function&lt;<span class="type">void</span>(SDL_Renderer*)&gt;&gt; mRenderer;</span><br><span class="line">&#125;;</span><br></pre>
 
 <p>具体的实现，和上面的介绍没太大区别，除了使用智能指针更方便回收内存</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Window.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">std::unique_ptr&lt;SDL_Window, std::function&lt;<span class="type">void</span>(SDL_Window*)&gt;&gt; Window::mWindow</span><br><span class="line">= std::<span class="built_in">unique_ptr</span>&lt;SDL_Window, <span class="built_in">void</span>(*)(SDL_Window*)&gt;(<span class="literal">nullptr</span>, SDL_DestroyWindow);</span><br><span class="line"></span><br><span class="line">std::unique_ptr&lt;SDL_Renderer, std::function&lt;<span class="type">void</span>(SDL_Renderer*)&gt;&gt; Window::mRenderer</span><br><span class="line">= std::<span class="built_in">unique_ptr</span>&lt;SDL_Renderer, <span class="built_in">void</span>(*)(SDL_Renderer*)&gt;(<span class="literal">nullptr</span>, SDL_DestroyRenderer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化实现</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Init</span><span class="params">(SDL_Rect&amp; wh, std::string title)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (&amp;wh == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Window Position can&#x27;t be null&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) == <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Init SDL fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">TTF_Init</span>() == <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Init font fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 mWindow 实例</span></span><br><span class="line">	mWindow.<span class="built_in">reset</span>(<span class="built_in">SDL_CreateWindow</span>(title.<span class="built_in">c_str</span>(), wh.x, wh.y, wh.w, wh.h, SDL_WINDOW_SHOWN));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mWindow == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Create window fail: &quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 mRenderer 实例</span></span><br><span class="line">	mRenderer.<span class="built_in">reset</span>(<span class="built_in">SDL_CreateRenderer</span>(mWindow.<span class="built_in">get</span>(), <span class="number">-1</span>, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mRenderer == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Create renderer fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Quit</span><span class="params">(std::initializer_list&lt;SDL_Texture*&gt; ts)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> ptr = ts.<span class="built_in">begin</span>(); ptr != ts.<span class="built_in">end</span>(); ptr++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">SDL_DestroyTexture</span>(*ptr);</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 由于使用了智能指针，mWindow, mRenderer 能够自动释放，所以只需通知 SDL 退出</span></span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Draw</span><span class="params">(SDL_Texture* texture, SDL_Rect* source, SDL_Rect* clip, <span class="type">float</span> angle,</span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">int</span> xPivot, <span class="type">int</span> yPivot, SDL_RendererFlip flip)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	xPivot += source == <span class="literal">nullptr</span> ? <span class="number">0</span> : source-&gt;w / <span class="number">2</span>;</span><br><span class="line">	yPivot += source == <span class="literal">nullptr</span> ? <span class="number">0</span> : source-&gt;y / <span class="number">2</span>;</span><br><span class="line">	SDL_Point pivot = &#123; xPivot, yPivot &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 使用 SDL_RenderCopyEx 可以进行角度旋转等操作</span></span><br><span class="line">	<span class="built_in">SDL_RenderCopyEx</span>(mRenderer.<span class="built_in">get</span>(), texture, source, clip, angle, &amp;pivot, flip);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">SDL_Texture* <span class="title">Window::LoadImage</span><span class="params">(std::string file)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	texture = <span class="built_in">IMG_LoadTexture</span>(mRenderer.<span class="built_in">get</span>(), file.<span class="built_in">c_str</span>());</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (texture == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="built_in">IMG_GetError</span>());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">SDL_Texture* <span class="title">Window::RenderText</span><span class="params">(std::string text, std::string fontPath, <span class="type">int</span> fontSize, SDL_Color color)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	TTF_Font* font = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Surface* surface = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	font = <span class="built_in">TTF_OpenFont</span>(fontPath.<span class="built_in">c_str</span>(), fontSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (font == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="built_in">TTF_GetError</span>());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	surface = <span class="built_in">TTF_RenderText_Blended</span>(font, text.<span class="built_in">c_str</span>(), color);</span><br><span class="line">	texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(mRenderer.<span class="built_in">get</span>(), surface);</span><br><span class="line">	<span class="built_in">SDL_FreeSurface</span>(surface);</span><br><span class="line">	<span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Clear</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">SDL_RenderClear</span>(mRenderer.<span class="built_in">get</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Present</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">	<span class="built_in">SDL_RenderPresent</span>(mRenderer.<span class="built_in">get</span>());</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (!quit)</span><br><span class="line">	&#123;</span><br><span class="line">		SDL_Event event;</span><br><span class="line">		<span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (event.type == SDL_QUIT)</span><br><span class="line">		&#123;</span><br><span class="line">			quit = <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;Window.h&quot;</span></span></span><br><span class="line"></span><br><span class="line">std::unique_ptr&lt;SDL_Window, std::function&lt;<span class="type">void</span>(SDL_Window*)&gt;&gt; Window::mWindow</span><br><span class="line">= std::<span class="built_in">unique_ptr</span>&lt;SDL_Window, <span class="built_in">void</span>(*)(SDL_Window*)&gt;(<span class="literal">nullptr</span>, SDL_DestroyWindow);</span><br><span class="line"></span><br><span class="line">std::unique_ptr&lt;SDL_Renderer, std::function&lt;<span class="type">void</span>(SDL_Renderer*)&gt;&gt; Window::mRenderer</span><br><span class="line">= std::<span class="built_in">unique_ptr</span>&lt;SDL_Renderer, <span class="built_in">void</span>(*)(SDL_Renderer*)&gt;(<span class="literal">nullptr</span>, SDL_DestroyRenderer);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 初始化实现</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Init</span><span class="params">(SDL_Rect&amp; wh, std::string title)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (&amp;wh == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Window Position can&#x27;t be null&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) == <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Init SDL fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">TTF_Init</span>() == <span class="number">-1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Init font fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 mWindow 实例</span></span><br><span class="line">	mWindow.<span class="built_in">reset</span>(<span class="built_in">SDL_CreateWindow</span>(title.<span class="built_in">c_str</span>(), wh.x, wh.y, wh.w, wh.h, SDL_WINDOW_SHOWN));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mWindow == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Create window fail: &quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 mRenderer 实例</span></span><br><span class="line">	mRenderer.<span class="built_in">reset</span>(<span class="built_in">SDL_CreateRenderer</span>(mWindow.<span class="built_in">get</span>(), <span class="number">-1</span>, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (mRenderer == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Create renderer fail&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Quit</span><span class="params">(std::initializer_list&lt;SDL_Texture*&gt; ts)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">auto</span> ptr = ts.<span class="built_in">begin</span>(); ptr != ts.<span class="built_in">end</span>(); ptr++)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">SDL_DestroyTexture</span>(*ptr);</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 由于使用了智能指针，mWindow, mRenderer 能够自动释放，所以只需通知 SDL 退出</span></span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Draw</span><span class="params">(SDL_Texture* texture, SDL_Rect* source, SDL_Rect* clip, <span class="type">float</span> angle,</span></span></span><br><span class="line"><span class="params"><span class="function">	<span class="type">int</span> xPivot, <span class="type">int</span> yPivot, SDL_RendererFlip flip)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	xPivot += source == <span class="literal">nullptr</span> ? <span class="number">0</span> : source-&gt;w / <span class="number">2</span>;</span><br><span class="line">	yPivot += source == <span class="literal">nullptr</span> ? <span class="number">0</span> : source-&gt;y / <span class="number">2</span>;</span><br><span class="line">	SDL_Point pivot = &#123; xPivot, yPivot &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 使用 SDL_RenderCopyEx 可以进行角度旋转等操作</span></span><br><span class="line">	<span class="built_in">SDL_RenderCopyEx</span>(mRenderer.<span class="built_in">get</span>(), texture, source, clip, angle, &amp;pivot, flip);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">SDL_Texture* <span class="title">Window::LoadImage</span><span class="params">(std::string file)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	texture = <span class="built_in">IMG_LoadTexture</span>(mRenderer.<span class="built_in">get</span>(), file.<span class="built_in">c_str</span>());</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (texture == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="built_in">IMG_GetError</span>());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">SDL_Texture* <span class="title">Window::RenderText</span><span class="params">(std::string text, std::string fontPath, <span class="type">int</span> fontSize, SDL_Color color)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	TTF_Font* font = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Surface* surface = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Texture* texture = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	font = <span class="built_in">TTF_OpenFont</span>(fontPath.<span class="built_in">c_str</span>(), fontSize);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (font == <span class="literal">nullptr</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="built_in">TTF_GetError</span>());</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	surface = <span class="built_in">TTF_RenderText_Blended</span>(font, text.<span class="built_in">c_str</span>(), color);</span><br><span class="line">	texture = <span class="built_in">SDL_CreateTextureFromSurface</span>(mRenderer.<span class="built_in">get</span>(), surface);</span><br><span class="line">	<span class="built_in">SDL_FreeSurface</span>(surface);</span><br><span class="line">	<span class="keyword">return</span> texture;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Clear</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">SDL_RenderClear</span>(mRenderer.<span class="built_in">get</span>());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">Window::Present</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="type">bool</span> quit = <span class="literal">false</span>;</span><br><span class="line">	<span class="built_in">SDL_RenderPresent</span>(mRenderer.<span class="built_in">get</span>());</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> (!quit)</span><br><span class="line">	&#123;</span><br><span class="line">		SDL_Event event;</span><br><span class="line">		<span class="built_in">SDL_WaitEvent</span>(&amp;event);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (event.type == SDL_QUIT)</span><br><span class="line">		&#123;</span><br><span class="line">			quit = <span class="literal">true</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>那么实际调用的时候就可以更加方便</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SDL_Texture* background = <span class="literal">nullptr</span>, *text = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Rect wh, textZone;</span><br><span class="line"></span><br><span class="line">	wh.w = <span class="number">640</span>;</span><br><span class="line">	wh.h = <span class="number">480</span>;</span><br><span class="line">	wh.x = SDL_WINDOWPOS_CENTERED;</span><br><span class="line">	wh.y = SDL_WINDOWPOS_CENTERED;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		Window::<span class="built_in">Init</span>(wh, <span class="string">&quot;Hello SDL&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">const</span> std::exception &amp; e)</span><br><span class="line">	&#123;</span><br><span class="line">		Window::<span class="built_in">Quit</span>(&#123;&#125;);</span><br><span class="line">		std::cout &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		background = Window::<span class="built_in">LoadImage</span>(<span class="string">&quot;xxx.bmp&quot;</span>);</span><br><span class="line">		text = Window::<span class="built_in">RenderText</span>(<span class="string">&quot;Hello SDL&quot;</span>, <span class="string">&quot;xxx.ttf&quot;</span>, <span class="number">25</span>, &#123;<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">200</span>&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">const</span> std::exception &amp; e)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// SDL_QueryTexture 可以测量对应 Texture 的宽高</span></span><br><span class="line">    <span class="built_in">SDL_QueryTexture</span>(text, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, &amp;textZone.w, &amp;textZone.h);</span><br><span class="line">	textZone.x = (<span class="number">640</span> - textZone.w) / <span class="number">2</span>;</span><br><span class="line">	textZone.y = (<span class="number">480</span> - textZone.h) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">	Window::<span class="built_in">Clear</span>();</span><br><span class="line">	Window::<span class="built_in">Draw</span>(background, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">45</span>, <span class="number">320</span>, <span class="number">240</span>, SDL_FLIP_VERTICAL);</span><br><span class="line">	Window::<span class="built_in">Draw</span>(text, <span class="literal">nullptr</span>, &amp;textZone);</span><br><span class="line"></span><br><span class="line">	Window::<span class="built_in">Present</span>();</span><br><span class="line">	Window::<span class="built_in">Quit</span>(&#123;background, text&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	SDL_Texture* background = <span class="literal">nullptr</span>, *text = <span class="literal">nullptr</span>;</span><br><span class="line">	SDL_Rect wh, textZone;</span><br><span class="line"></span><br><span class="line">	wh.w = <span class="number">640</span>;</span><br><span class="line">	wh.h = <span class="number">480</span>;</span><br><span class="line">	wh.x = SDL_WINDOWPOS_CENTERED;</span><br><span class="line">	wh.y = SDL_WINDOWPOS_CENTERED;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		Window::<span class="built_in">Init</span>(wh, <span class="string">&quot;Hello SDL&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">const</span> std::exception &amp; e)</span><br><span class="line">	&#123;</span><br><span class="line">		Window::<span class="built_in">Quit</span>(&#123;&#125;);</span><br><span class="line">		std::cout &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">try</span></span><br><span class="line">	&#123;</span><br><span class="line">		background = Window::<span class="built_in">LoadImage</span>(<span class="string">&quot;xxx.bmp&quot;</span>);</span><br><span class="line">		text = Window::<span class="built_in">RenderText</span>(<span class="string">&quot;Hello SDL&quot;</span>, <span class="string">&quot;xxx.ttf&quot;</span>, <span class="number">25</span>, &#123;<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>, <span class="number">200</span>&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">catch</span> (<span class="type">const</span> std::exception &amp; e)</span><br><span class="line">	&#123;</span><br><span class="line">		std::cout &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// SDL_QueryTexture 可以测量对应 Texture 的宽高</span></span><br><span class="line">    <span class="built_in">SDL_QueryTexture</span>(text, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, &amp;textZone.w, &amp;textZone.h);</span><br><span class="line">	textZone.x = (<span class="number">640</span> - textZone.w) / <span class="number">2</span>;</span><br><span class="line">	textZone.y = (<span class="number">480</span> - textZone.h) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">	Window::<span class="built_in">Clear</span>();</span><br><span class="line">	Window::<span class="built_in">Draw</span>(background, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>, <span class="number">45</span>, <span class="number">320</span>, <span class="number">240</span>, SDL_FLIP_VERTICAL);</span><br><span class="line">	Window::<span class="built_in">Draw</span>(text, <span class="literal">nullptr</span>, &amp;textZone);</span><br><span class="line"></span><br><span class="line">	Window::<span class="built_in">Present</span>();</span><br><span class="line">	Window::<span class="built_in">Quit</span>(&#123;background, text&#125;);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>最后还是以图结束 <code>SDL</code> 加载视图</p>
-<p><img src="https://s2.ax1x.com/2019/10/23/Kt5Z1e.png" alt="Kt5Z1e.png"></p>
+<p><img src="https://s2.ax1x.com/2019/10/23/Kt5Z1e.png" alt="Kt5Z1e.png" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://s2.ax1x.com/2019/10/23/Kt5Z1e.png" class="lozad post-image"></p>
 <h4 id="SDL-播放音乐（补充）"><a href="#SDL-播放音乐（补充）" class="headerlink" title="SDL 播放音乐（补充）"></a><code>SDL</code> 播放音乐（补充）</h4><p><code>SDL</code> 除了加载视图外，还内置播放 <code>Api</code> 用来播放音乐，不过自带的 <code>Api</code> 只加载 <code>wav</code> 格式</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> LOGE(...) av_log(nullptr, AV_LOG_ERROR, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span> </span>&#123;</span><br><span class="line">	Uint32 wav_length;</span><br><span class="line">	Uint8* wav_buffer;</span><br><span class="line">	SDL_AudioSpec wanted_spec;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 SDL</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;init SDL fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个 SDL_AudioSpec，不为空则加载成功</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_LoadWAV</span>(music_path, &amp;wanted_spec, &amp;wav_buffer, &amp;wav_length) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据获取到的 SDL_AudioSpec 获取 device</span></span><br><span class="line">	SDL_AudioDeviceID deviceId = <span class="built_in">SDL_OpenAudioDevice</span>(<span class="literal">nullptr</span>, <span class="number">0</span>, &amp;wanted_spec, <span class="literal">nullptr</span>, <span class="number">0</span>);</span><br><span class="line">	<span class="built_in">LOGE</span>(<span class="string">&quot;device: %d\n&quot;</span>, deviceId);</span><br><span class="line">	<span class="keyword">if</span> (deviceId &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;didn&#x27;t find device: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_QueueAudio</span>(deviceId, wav_buffer, wav_length) != <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;queue audio fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 根据 deviceId 播放音乐文件，0 表示打开对应 id 的 device</span></span><br><span class="line">	<span class="built_in">SDL_PauseAudioDevice</span>(deviceId, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">SDL_Delay</span>(<span class="number">20000</span>);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">	<span class="built_in">SDL_CloseAudioDevice</span>(deviceId);</span><br><span class="line">	<span class="built_in">SDL_FreeWAV</span>(wav_buffer);</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="meta">#<span class="keyword">define</span> LOGE(...) av_log(nullptr, AV_LOG_ERROR, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span> </span>&#123;</span><br><span class="line">	Uint32 wav_length;</span><br><span class="line">	Uint8* wav_buffer;</span><br><span class="line">	SDL_AudioSpec wanted_spec;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 SDL</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;init SDL fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回一个 SDL_AudioSpec，不为空则加载成功</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_LoadWAV</span>(music_path, &amp;wanted_spec, &amp;wav_buffer, &amp;wav_length) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据获取到的 SDL_AudioSpec 获取 device</span></span><br><span class="line">	SDL_AudioDeviceID deviceId = <span class="built_in">SDL_OpenAudioDevice</span>(<span class="literal">nullptr</span>, <span class="number">0</span>, &amp;wanted_spec, <span class="literal">nullptr</span>, <span class="number">0</span>);</span><br><span class="line">	<span class="built_in">LOGE</span>(<span class="string">&quot;device: %d\n&quot;</span>, deviceId);</span><br><span class="line">	<span class="keyword">if</span> (deviceId &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;didn&#x27;t find device: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_QueueAudio</span>(deviceId, wav_buffer, wav_length) != <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;queue audio fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 根据 deviceId 播放音乐文件，0 表示打开对应 id 的 device</span></span><br><span class="line">	<span class="built_in">SDL_PauseAudioDevice</span>(deviceId, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	<span class="built_in">SDL_Delay</span>(<span class="number">20000</span>);</span><br><span class="line">	</span><br><span class="line">    <span class="comment">// 释放内存</span></span><br><span class="line">	<span class="built_in">SDL_CloseAudioDevice</span>(deviceId);</span><br><span class="line">	<span class="built_in">SDL_FreeWAV</span>(wav_buffer);</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br></pre>
 
 <h4 id="使用-SDL-mixer-加载音乐文件"><a href="#使用-SDL-mixer-加载音乐文件" class="headerlink" title="使用 SDL_mixer 加载音乐文件"></a>使用 <code>SDL_mixer</code> 加载音乐文件</h4><p>因为 <code>SDL</code> 加载音乐文件有限制，那么可以选择通过 <code>SDL_mixer</code> 库来加载音乐文件，而且使用也更加方便</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">define</span> PLAYING_WAV  0;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span> </span>&#123;</span><br><span class="line">	Mix_Music* music = <span class="literal">nullptr</span>;</span><br><span class="line">	Mix_Chunk* chunk = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;init SDL fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打开调音台，参数分别为 频率，格式，声道，chunk 大小</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_OpenAudio</span>(<span class="number">22050</span>, MIX_DEFAULT_FORMAT, <span class="number">2</span>, <span class="number">4096</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;open audio fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载的文件类型包括 .wav .mod .s3m .it .xm 等多种类型</span></span><br><span class="line"><span class="comment">// 加载方式有两种，一种通过指定 channel 加载，一种直接加载文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> PLAYING_WAV</span></span><br><span class="line">    <span class="comment">// 通过 chunk 方式进行加载，方法名中虽然是 loadWav，但是也可加载其他文件</span></span><br><span class="line">	<span class="keyword">if</span> ((chunk = <span class="built_in">Mix_LoadWAV</span>(music_path)) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music file fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 在指定的 channel 播放，如果声道指定 -1，则会在第一个可播放声道播放</span></span><br><span class="line">    <span class="comment">// loop 表示循环次数，如果指定 -1 则无限循环</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_PlayChannel</span>(<span class="number">-1</span>, chunk, <span class="number">1</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;play music fail: %s\n&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测指定声道的状态，如果为 -1 则检测全部声道</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="built_in">Mix_Playing</span>(<span class="number">-1</span>)) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;playing wav file...\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 播放完毕后释放文件</span></span><br><span class="line">	<span class="built_in">Mix_FreeChunk</span>(chunk);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="keyword">if</span> ((music = <span class="built_in">Mix_LoadMUS</span>(music_path)) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music file fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 播放文件，loop = -1 表示无限循环</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_PlayMusic</span>(music, <span class="number">-1</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;play music fail: %s\n&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测声道状态</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="built_in">Mix_PlayingMusic</span>()) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;music is playing.\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 播放完毕释放文件</span></span><br><span class="line">	<span class="built_in">Mix_FreeMusic</span>(music);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// PLAYING_WAV</span></span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关闭 audio</span></span><br><span class="line">	<span class="built_in">Mix_CloseAudio</span>();</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="meta">#<span class="keyword">define</span> PLAYING_WAV  0;</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* agrv[])</span> </span>&#123;</span><br><span class="line">	Mix_Music* music = <span class="literal">nullptr</span>;</span><br><span class="line">	Mix_Chunk* chunk = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">SDL_Init</span>(SDL_INIT_EVERYTHING) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;init SDL fail: %s&quot;</span>, <span class="built_in">SDL_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 打开调音台，参数分别为 频率，格式，声道，chunk 大小</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_OpenAudio</span>(<span class="number">22050</span>, MIX_DEFAULT_FORMAT, <span class="number">2</span>, <span class="number">4096</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;open audio fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加载的文件类型包括 .wav .mod .s3m .it .xm 等多种类型</span></span><br><span class="line"><span class="comment">// 加载方式有两种，一种通过指定 channel 加载，一种直接加载文件</span></span><br><span class="line"><span class="meta">#<span class="keyword">if</span> PLAYING_WAV</span></span><br><span class="line">    <span class="comment">// 通过 chunk 方式进行加载，方法名中虽然是 loadWav，但是也可加载其他文件</span></span><br><span class="line">	<span class="keyword">if</span> ((chunk = <span class="built_in">Mix_LoadWAV</span>(music_path)) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music file fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 在指定的 channel 播放，如果声道指定 -1，则会在第一个可播放声道播放</span></span><br><span class="line">    <span class="comment">// loop 表示循环次数，如果指定 -1 则无限循环</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_PlayChannel</span>(<span class="number">-1</span>, chunk, <span class="number">1</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;play music fail: %s\n&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测指定声道的状态，如果为 -1 则检测全部声道</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="built_in">Mix_Playing</span>(<span class="number">-1</span>)) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;playing wav file...\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 播放完毕后释放文件</span></span><br><span class="line">	<span class="built_in">Mix_FreeChunk</span>(chunk);</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	<span class="keyword">if</span> ((music = <span class="built_in">Mix_LoadMUS</span>(music_path)) == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;load music file fail: %s&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 播放文件，loop = -1 表示无限循环</span></span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Mix_PlayMusic</span>(music, <span class="number">-1</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;play music fail: %s\n&quot;</span>, <span class="built_in">Mix_GetError</span>());</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测声道状态</span></span><br><span class="line">	<span class="keyword">while</span> (<span class="built_in">Mix_PlayingMusic</span>()) &#123;</span><br><span class="line">		<span class="built_in">LOGE</span>(<span class="string">&quot;music is playing.\n&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 播放完毕释放文件</span></span><br><span class="line">	<span class="built_in">Mix_FreeMusic</span>(music);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// PLAYING_WAV</span></span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 关闭 audio</span></span><br><span class="line">	<span class="built_in">Mix_CloseAudio</span>();</span><br><span class="line">	<span class="built_in">SDL_Quit</span>();</span><br><span class="line">&#125;</span><br></pre>
 
 <p>以上就是 <code>SDL</code> 加载音频文件的几种方式。</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/10/22/FFmpeg-002/" data-id="cl0ukmc2k0006pn1g53qwg1jf" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li></ul>
-
-    </footer>
   </div>
-  
+  <div>
     
-<nav id="article-nav">
-  
-    <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          fish_redux 「食用指南」
-        
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            kuky
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2019/10/22/FFmpeg-002/">
+            http://example.com/2019/10/22/FFmpeg-002/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
       </div>
-    </a>
-  
-  
-    <a href="/2019/10/16/FFmpeg-001/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">FFmpeg 配置</div>
-    </a>
-  
-</nav>
-
-  
+    
+  </div>
 </article>
-
-</section>
-        
-          <aside id="sidebar">
+<div class="nav">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    <div class="nav-item-prev">
+      <a 
+        href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">fish_redux 「食用指南」 </div>
+          
+        </div>
+      </a>
     </div>
-  </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2019/10/16/FFmpeg-001/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">FFmpeg 配置 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
     </div>
-  </div>
-
-
   
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL2-%E6%98%BE%E7%A4%BA-bmp-%E5%9B%BE%E7%89%87"><span class="toc-text">使用 SDL2 显示 bmp 图片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E6%98%BE%E7%A4%BA%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E5%9B%BE%E7%89%87%E5%92%8C%E6%96%87%E5%AD%97"><span class="toc-text">SDL2 显示其他类型图片和文字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-text">SDL2 事件处理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%E7%9A%84-API"><span class="toc-text">SDL 处理事件的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E6%93%8D%E4%BD%9C%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97%E7%9A%84-API"><span class="toc-text">SDL 操作事件队列的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E7%AA%97%E4%BD%93%E9%80%80%E5%87%BA%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC"><span class="toc-text">增加窗体退出事件监听</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%B9%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%91%E5%90%AC"><span class="toc-text">对键盘事件的监听</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%96%B9%E6%B3%95%E5%B0%81%E8%A3%85"><span class="toc-text">SDL 方法封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%EF%BC%88%E8%A1%A5%E5%85%85%EF%BC%89"><span class="toc-text">SDL 播放音乐（补充）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL-mixer-%E5%8A%A0%E8%BD%BD%E9%9F%B3%E4%B9%90%E6%96%87%E4%BB%B6"><span class="toc-text">使用 SDL_mixer 加载音乐文件</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">kuky</p>
+<p class="author-description">啊哈！</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>23</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>5</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>14</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL2-%E6%98%BE%E7%A4%BA-bmp-%E5%9B%BE%E7%89%87"><span class="toc-text">使用 SDL2 显示 bmp 图片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E6%98%BE%E7%A4%BA%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E5%9B%BE%E7%89%87%E5%92%8C%E6%96%87%E5%AD%97"><span class="toc-text">SDL2 显示其他类型图片和文字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-text">SDL2 事件处理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%E7%9A%84-API"><span class="toc-text">SDL 处理事件的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E6%93%8D%E4%BD%9C%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97%E7%9A%84-API"><span class="toc-text">SDL 操作事件队列的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E7%AA%97%E4%BD%93%E9%80%80%E5%87%BA%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC"><span class="toc-text">增加窗体退出事件监听</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%B9%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%91%E5%90%AC"><span class="toc-text">对键盘事件的监听</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%96%B9%E6%B3%95%E5%B0%81%E8%A3%85"><span class="toc-text">SDL 方法封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%EF%BC%88%E8%A1%A5%E5%85%85%EF%BC%89"><span class="toc-text">SDL 播放音乐（补充）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL-mixer-%E5%8A%A0%E8%BD%BD%E9%9F%B3%E4%B9%90%E6%96%87%E4%BB%B6"><span class="toc-text">使用 SDL_mixer 加载音乐文件</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
-    </div>
-  </div>
-
-  
+      <a href="/categories/Android/">
+        <div class="categories-list-item">
+          Android
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
+      <a href="/categories/FFmpeg/">
+        <div class="categories-list-item">
+          FFmpeg
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
-          </li>
-        
-      </ul>
-    </div>
+      <a href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">
+        <div class="categories-list-item">
+          跨平台
+          <span class="categories-list-item-badge">16</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%88%AC%E8%99%AB-Spider/">
+        <div class="categories-list-item">
+          爬虫-Spider
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JNI/">
+        <div class="categories-list-item">
+          JNI
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
   </div>
-
+</div>
+  </article>
   
-</aside>
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/Android/" 
+        title="Android">
+        <div class="tags-list-item">Android</div>
+      </a>
+    
+      <a 
+        href="/tags/Flutter/" 
+        title="Flutter">
+        <div class="tags-list-item">Flutter</div>
+      </a>
+    
+      <a 
+        href="/tags/C/" 
+        title="C++">
+        <div class="tags-list-item">C++</div>
+      </a>
+    
+      <a 
+        href="/tags/Dart/" 
+        title="Dart">
+        <div class="tags-list-item">Dart</div>
+      </a>
+    
+      <a 
+        href="/tags/FFmpeg/" 
+        title="FFmpeg">
+        <div class="tags-list-item">FFmpeg</div>
+      </a>
+    
+      <a 
+        href="/tags/%E4%BB%BF-iOS/" 
+        title="仿 iOS">
+        <div class="tags-list-item">仿 iOS</div>
+      </a>
+    
+      <a 
+        href="/tags/Kotlin/" 
+        title="Kotlin">
+        <div class="tags-list-item">Kotlin</div>
+      </a>
+    
+      <a 
+        href="/tags/JNI/" 
+        title="JNI">
+        <div class="tags-list-item">JNI</div>
+      </a>
+    
+      <a 
+        href="/tags/Scrapy/" 
+        title="Scrapy">
+        <div class="tags-list-item">Scrapy</div>
+      </a>
+    
+      <a 
+        href="/tags/Python/" 
+        title="Python">
+        <div class="tags-list-item">Python</div>
+      </a>
+    
+      <a 
+        href="/tags/fish-redux/" 
+        title="fish_redux">
+        <div class="tags-list-item">fish_redux</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+        title="源码分析">
+        <div class="tags-list-item">源码分析</div>
+      </a>
+    
+      <a 
+        href="/tags/Jetpack/" 
+        title="Jetpack">
+        <div class="tags-list-item">Jetpack</div>
+      </a>
+    
+      <a 
+        href="/tags/SDL/" 
+        title="SDL">
+        <div class="tags-list-item">SDL</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL2-%E6%98%BE%E7%A4%BA-bmp-%E5%9B%BE%E7%89%87"><span class="toc-text">使用 SDL2 显示 bmp 图片</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E6%98%BE%E7%A4%BA%E5%85%B6%E4%BB%96%E7%B1%BB%E5%9E%8B%E5%9B%BE%E7%89%87%E5%92%8C%E6%96%87%E5%AD%97"><span class="toc-text">SDL2 显示其他类型图片和文字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL2-%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="toc-text">SDL2 事件处理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E5%A4%84%E7%90%86%E4%BA%8B%E4%BB%B6%E7%9A%84-API"><span class="toc-text">SDL 处理事件的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#SDL-%E6%93%8D%E4%BD%9C%E4%BA%8B%E4%BB%B6%E9%98%9F%E5%88%97%E7%9A%84-API"><span class="toc-text">SDL 操作事件队列的 API</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E7%AA%97%E4%BD%93%E9%80%80%E5%87%BA%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC"><span class="toc-text">增加窗体退出事件监听</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AF%B9%E9%94%AE%E7%9B%98%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%9B%91%E5%90%AC"><span class="toc-text">对键盘事件的监听</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%96%B9%E6%B3%95%E5%B0%81%E8%A3%85"><span class="toc-text">SDL 方法封装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SDL-%E6%92%AD%E6%94%BE%E9%9F%B3%E4%B9%90%EF%BC%88%E8%A1%A5%E5%85%85%EF%BC%89"><span class="toc-text">SDL 播放音乐（补充）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-SDL-mixer-%E5%8A%A0%E8%BD%BD%E9%9F%B3%E4%B9%90%E6%96%87%E4%BB%B6"><span class="toc-text">使用 SDL_mixer 加载音乐文件</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-02-19</div>
+        <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/"><div class="recent-posts-item-content">fish_redux 「食用指南」</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-22</div>
+        <a href="/2019/10/22/FFmpeg-002/"><div class="recent-posts-item-content">初识 SDL2</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-16</div>
+        <a href="/2019/10/16/FFmpeg-001/"><div class="recent-posts-item-content">FFmpeg 配置</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-09</div>
+        <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/"><div class="recent-posts-item-content">初识 JNI</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020
+          
+          
+                - 
+                2022
+          
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          Kukyxs
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
     
+    
+    
+    
+</footer>
+ 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
 </html>

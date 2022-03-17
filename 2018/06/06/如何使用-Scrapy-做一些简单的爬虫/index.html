@@ -1,115 +1,338 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+  <title>如何使用 Scrapy 做一些简单的爬虫</title>
   
-
+    
+      <meta 
+        property="og:title" 
+        content="如何使用 Scrapy 做一些简单的爬虫">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2018-06-06">
+      <meta 
+        property="og:article:modified_time" 
+        content="2019-08-27">
+      <meta 
+        property="og:article:author" 
+        content="kuky">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="Python">
+        
+          <meta 
+            property="og:article:tag" 
+            content="Scrapy">
+        
+      
+    
   
-  <title>如何使用 Scrapy 做一些简单的爬虫 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="一. 环境搭建在安装 scrapy 之前，先安装 scrapy 的辅助模块，lxml，twisted，pyOpenSSL 等，lxml 用于解析 XML 和 HTML，twisted 是一个异步的网络框架，pyOpenSSL 用于处理网络级的安全需求，直接通过 pip 进行安装即可，安装 twisted 可能会连接超时，可以通过 whl 文件进行安装，我这边提供 python 3.6 下 twis">
-<meta property="og:type" content="article">
-<meta property="og:title" content="如何使用 Scrapy 做一些简单的爬虫">
-<meta property="og:url" content="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一. 环境搭建在安装 scrapy 之前，先安装 scrapy 的辅助模块，lxml，twisted，pyOpenSSL 等，lxml 用于解析 XML 和 HTML，twisted 是一个异步的网络框架，pyOpenSSL 用于处理网络级的安全需求，直接通过 pip 进行安装即可，安装 twisted 可能会连接超时，可以通过 whl 文件进行安装，我这边提供 python 3.6 下 twis">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-cfa1af0e04e3e8f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-11d25f9568dff49a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-dfdd2ba73bba7c24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/757/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-cb8d7ecbd841e3c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/593/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d013a54775b62398.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-47cc4c0b023db005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
-<meta property="article:published_time" content="2018-06-06T15:51:47.000Z">
-<meta property="article:modified_time" content="2019-08-27T02:01:35.816Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Python">
-<meta property="article:tag" content="Scrapy">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-cfa1af0e04e3e8f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
   
   
-    <link rel="icon" href="/favicon.png">
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
   
   
-<link rel="stylesheet" href="/css/style.css">
-
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">Kukyxs</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
         
-          <a class="main-nav-link" href="/">Home</a>
+          Home
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
         
-      </nav>
-      <nav id="sub-nav">
+          Archive
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          Friends
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-如何使用-Scrapy-做一些简单的爬虫" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/" class="article-date">
-  <time datetime="2018-06-06T15:51:47.000Z" itemprop="datePublished">2018-06-06</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
       如何使用 Scrapy 做一些简单的爬虫
     </h1>
-  
-
-      </header>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-06T15:51:47.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2018-06-06</span>
+    </time>
     
-    <div class="article-entry" itemprop="articleBody">
+      <span class="dot"></span>
       
-        <h5 id="一-环境搭建"><a href="#一-环境搭建" class="headerlink" title="一. 环境搭建"></a>一. 环境搭建</h5><p>在安装 scrapy 之前，先安装 scrapy 的辅助模块，lxml，twisted，pyOpenSSL 等，lxml 用于解析 XML 和 HTML，twisted 是一个异步的网络框架，pyOpenSSL 用于处理网络级的安全需求，直接通过 pip 进行安装即可，安装 twisted 可能会连接超时，可以通过 whl 文件进行安装，我这边提供 python 3.6 下 twisted 的 whl 文件，<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1YajwptBfdSr1jmNME0bI5Q">twisted-17.9.0-cp36</a> ，提取码：169a。下载完 whl 文件，通过命令行进入下载 whl 的文件夹，然后命令行 <code>pip install Twisted-17.9.0-cp36-cp36m-win_amd64.whl</code> 即可。做好准备工作后，就可以通过 pip 一路畅通的安装 scrapy 啦~ 否则会遇到一些不可描述的问题~</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-cfa1af0e04e3e8f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="pip 安装 scrapy"></p>
+        <a 
+          href="/categories/%E7%88%AC%E8%99%AB-Spider/" 
+          class="post-meta-link">
+          爬虫 Spider
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>4.6k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/Python/" 
+            class="post-meta-link">
+            Python
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/Scrapy/" 
+            class="post-meta-link">
+            Scrapy
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <h5 id="一-环境搭建"><a href="#一-环境搭建" class="headerlink" title="一. 环境搭建"></a>一. 环境搭建</h5><p>在安装 scrapy 之前，先安装 scrapy 的辅助模块，lxml，twisted，pyOpenSSL 等，lxml 用于解析 XML 和 HTML，twisted 是一个异步的网络框架，pyOpenSSL 用于处理网络级的安全需求，直接通过 pip 进行安装即可，安装 twisted 可能会连接超时，可以通过 whl 文件进行安装，我这边提供 python 3.6 下 twisted 的 whl 文件，<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1YajwptBfdSr1jmNME0bI5Q">twisted-17.9.0-cp36</a> ，提取码：169a。下载完 whl 文件，通过命令行进入下载 whl 的文件夹，然后命令行 <code>pip install Twisted-17.9.0-cp36-cp36m-win_amd64.whl</code> 即可。做好准备工作后，就可以通过 pip 一路畅通的安装 scrapy 啦~ 否则会遇到一些不可描述的问题~</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-cfa1af0e04e3e8f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="pip 安装 scrapy" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-cfa1af0e04e3e8f2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" class="lozad post-image"></p>
 <h5 id="二-创建-Scrapy-项目"><a href="#二-创建-Scrapy-项目" class="headerlink" title="二. 创建 Scrapy 项目"></a>二. 创建 Scrapy 项目</h5><p>先通过命令行切换到要创建项目的文件夹下，然后输入命令行 <code>scrapy startproject first_spider[项目名]</code> 看到这是不是发现和 django 的创建方式差不多~ 创建完项目，就可以创建具体的爬虫啦，进入项目文件，输入命令行 <code>scrapy genspider blog[爬虫名] blog.scrapinghub.com/[爬取的网址] </code> 这边的网址我选择了官网首页提供的 ‘The Scrapinghub Blog’ 网址</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-11d25f9568dff49a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="scrapy 创建爬虫"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-11d25f9568dff49a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="scrapy 创建爬虫" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-11d25f9568dff49a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" class="lozad post-image"></p>
 <p>接着打开项目下的 ‘spiders’ 文件夹，里面就多了一个 ‘blog.py’ 文件，里面就是 scrapy 自动生成的爬虫内容啦</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" width="500" height="160" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" width="500" height="160" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" class="lozad post-image">
 
 <p>其中 name 属性就是爬虫名，allowed_domains 属性是爬取的域名，start_urls 属性是爬取的网址，parse 方法是用来写爬虫爬取的逻辑的。需要注意的是：</p>
 <ol>
@@ -119,222 +342,551 @@
 <li><strong>检查下网址，可能会多 ‘&#x2F;‘ 或者别的什么问题</strong></li>
 </ol>
 <p>接着我们先来编写一个简单的爬虫(这边我借助 pycharm 来写，相对比较友好)，然后一步步分析实现的过程，再编写前，先解决下编码的问题，打开 settings.py 文件加入如下代码，防止爬取的汉字会乱码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解决编码 unicode 问题</span></span><br><span class="line">FEED_EXPORT_ENCODING = <span class="string">&#x27;utf-8&#x27;</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment"># 解决编码 unicode 问题</span></span><br><span class="line">FEED_EXPORT_ENCODING = <span class="string">&#x27;utf-8&#x27;</span></span><br></pre>
 
 <p>然后就开始写第一个爬虫文件，爬取 blog 的标题，发表日期，作者，评论数量，以及概要，首先通过 css 方式</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlogSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;blog&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;https://blog.scrapinghub.com//&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> article <span class="keyword">in</span> response.css(<span class="string">&#x27;article&#x27;</span>):</span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="comment"># 爬取标题</span></span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: article.css(<span class="string">&#x27;h2.entry-title a::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取发表日期</span></span><br><span class="line">                <span class="string">&#x27;pub_date&#x27;</span>: article.css(<span class="string">&#x27;h5.entry-date a time::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取作者</span></span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: article.css(<span class="string">&#x27;span.byline span a::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取评论数量</span></span><br><span class="line">                <span class="string">&#x27;comment_num&#x27;</span>: article.css(<span class="string">&#x27;a.comments-link::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取概要</span></span><br><span class="line">                <span class="string">&#x27;summary&#x27;</span>: article.css(<span class="string">&#x27;div.entry-summary p::text&#x27;</span>).extract_first()</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">BlogSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;blog&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;https://blog.scrapinghub.com//&#x27;</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> article <span class="keyword">in</span> response.css(<span class="string">&#x27;article&#x27;</span>):</span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="comment"># 爬取标题</span></span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: article.css(<span class="string">&#x27;h2.entry-title a::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取发表日期</span></span><br><span class="line">                <span class="string">&#x27;pub_date&#x27;</span>: article.css(<span class="string">&#x27;h5.entry-date a time::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取作者</span></span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: article.css(<span class="string">&#x27;span.byline span a::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取评论数量</span></span><br><span class="line">                <span class="string">&#x27;comment_num&#x27;</span>: article.css(<span class="string">&#x27;a.comments-link::text&#x27;</span>).extract_first(),</span><br><span class="line">                <span class="comment"># 爬取概要</span></span><br><span class="line">                <span class="string">&#x27;summary&#x27;</span>: article.css(<span class="string">&#x27;div.entry-summary p::text&#x27;</span>).extract_first()</span><br><span class="line">            &#125;</span><br></pre>
 <p>或者通过 xpath 爬取(结果是一样一样的~)</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">BlogSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;blog&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;http://blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">       <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> article <span class="keyword">in</span> response.xpath(<span class="string">&#x27;//main[@id=&quot;main&quot;]/article&#x27;</span>):</span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//h2[@class=&quot;entry-title&quot;]/a/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;pub_date&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//h5[@class=&quot;entry-date&quot;]/a/time/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//span[@class=&quot;byline&quot;]/span/a/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;comment_num&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//a[@class=&quot;comments-link&quot;]/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;summary&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//div[@class=&quot;entry-summary&quot;]/p/text()&#x27;</span>)</span><br><span class="line">                    .extract_first()</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">BlogSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;blog&#x27;</span></span><br><span class="line">    allowed_domains = [<span class="string">&#x27;blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line">    start_urls = [<span class="string">&#x27;http://blog.scrapinghub.com/&#x27;</span>]</span><br><span class="line"></span><br><span class="line">       <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> article <span class="keyword">in</span> response.xpath(<span class="string">&#x27;//main[@id=&quot;main&quot;]/article&#x27;</span>):</span><br><span class="line">            <span class="keyword">yield</span> &#123;</span><br><span class="line">                <span class="string">&#x27;title&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//h2[@class=&quot;entry-title&quot;]/a/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;pub_date&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//h5[@class=&quot;entry-date&quot;]/a/time/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;author&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//span[@class=&quot;byline&quot;]/span/a/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;comment_num&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//a[@class=&quot;comments-link&quot;]/text()&#x27;</span>)</span><br><span class="line">                    .extract_first(),</span><br><span class="line">                <span class="string">&#x27;summary&#x27;</span>: article</span><br><span class="line">                    .xpath(<span class="string">&#x27;.//div[@class=&quot;entry-summary&quot;]/p/text()&#x27;</span>)</span><br><span class="line">                    .extract_first()</span><br><span class="line">            &#125;</span><br></pre>
 
 <p>写完爬虫文件，先检查是否有语句错误，<code>scrapy check blog</code>，如果没有错误就可以通过命令行 <code>scrapy crawl blog -o blog.json</code> 来执行爬虫文件，其中 <code>-o blog.json</code> 是将爬取的信息写入到 blog.json 文件中，除了 .json 文件还可以有 .jl，.csv 文件等等，.json 文件不能够在末尾继续添加，而 .jl，.csv 文件则可以，爬取过程大概如下(复制的打印信息，删除了部分，否则太多了……)，这里提下 scrapy 的命令行，还是很适合调试的，这边附上官网网址<a target="_blank" rel="noopener" href="https://docs.scrapy.org/en/latest/topics/commands.html">Scrapy Commands</a></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" alt="scrapy 爬取数据"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" alt="scrapy 爬取数据" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-d64ede087f4b092a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/567/format/webp" class="lozad post-image"></p>
 <h5 id="三-xpath-css-选择器"><a href="#三-xpath-css-选择器" class="headerlink" title="三. xpath, css 选择器"></a>三. xpath, css 选择器</h5><p>xpath 和 css 具体的内容我们不多介绍，这边直接给我学习的网址，然后通过官网提供的例子，用两种方式实现并解释下常用的几个功能 <a target="_blank" rel="noopener" href="http://www.zvon.org/comp/r/tut-XPath_1.html#intro">xpath tutorial</a>，<a target="_blank" rel="noopener" href="https://leohxj.gitbooks.io/front-end-database/html-and-css-basic/css-selector.html">css 选择器</a> 在官方的文档中，有这么个例子 <a target="_blank" rel="noopener" href="https://doc.scrapy.org/en/latest/_static/selectors-sample1.html">Example website</a> 打开网址后，通过 F12 打开网页的开发者模式功能，会高亮显示选中的内容，接着打开终端，输入命令行 <code>scrapy shell https://doc.scrapy.org/en/latest/_static/selectors-sample1.html</code>，scrapy 会返回一个 response 的 shell 变量，并绑定一个 selector 选择器。接着一段代码来袭，跟着一起敲吧~</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取 response 下 title 文本</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;//element&#x27; 表示任意位置下的某个节点，这里表示 title 节点；css 直接通过 element 表示任意节点</span></span><br><span class="line"><span class="comment"># 不管 response.xpath(...) 还是 response.css(...) 都会返回一个 Selector，通过 extract() 方法进行内容提取，返回一个内容的列表</span></span><br><span class="line"><span class="comment"># 使用 extract_first() 而不使用 extract()[0] 是为了防止未找到该节点，如果不存在 extract() 会直接报错，而 extract_first() 会返回 null，或者也可以通过 default 属性定义返回空的默认值</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//title/text()&#x27;</span>).extract_first()</span><br><span class="line">response.css(<span class="string">&#x27;title::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取链接属性</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;@xxx&#x27; 获取某个节点的属性值，而 css 通过 attr(xxx) 来获取</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//a/@href&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;a::attr(href)&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取图片链接</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//img/@src&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;img::attr(src)&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过指定某个属性值进行进一步的数据筛选</span></span><br><span class="line"><span class="comment"># 假设在该例子上增加一个标签 &lt;div id=&quot;imgs&quot;&gt;...&lt;/div&gt;，我们需要获取该 &lt;images&gt; 标签内的内容</span></span><br><span class="line"><span class="comment"># xpath 通过 [@xx=&quot;xxx&quot;] 来进一步删选，css 则不同，&#x27;#&#x27; 用来表示 id 属性，&#x27;.&#x27; 用来表示 class 属性，后面跟属性值即可</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div[@id=&quot;images&quot;]&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div#images&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取图片名</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;/&#x27; 表示路径分割，css 通过 &#x27; &#x27; 表示后代选择器</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div[@id=&quot;images&quot;]/a/text()&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div#images a::text&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 href 中包含 image 的所有图片名</span></span><br><span class="line"><span class="comment"># xpath 通过 contains 表示属性包含，css 通过 *=</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div/a[contains(@href, &quot;image&quot;)]/text()&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div a[href*=image]::text&#x27;</span>).extract()</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment"># 获取 response 下 title 文本</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;//element&#x27; 表示任意位置下的某个节点，这里表示 title 节点；css 直接通过 element 表示任意节点</span></span><br><span class="line"><span class="comment"># 不管 response.xpath(...) 还是 response.css(...) 都会返回一个 Selector，通过 extract() 方法进行内容提取，返回一个内容的列表</span></span><br><span class="line"><span class="comment"># 使用 extract_first() 而不使用 extract()[0] 是为了防止未找到该节点，如果不存在 extract() 会直接报错，而 extract_first() 会返回 null，或者也可以通过 default 属性定义返回空的默认值</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//title/text()&#x27;</span>).extract_first()</span><br><span class="line">response.css(<span class="string">&#x27;title::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取链接属性</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;@xxx&#x27; 获取某个节点的属性值，而 css 通过 attr(xxx) 来获取</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//a/@href&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;a::attr(href)&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取图片链接</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//img/@src&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;img::attr(src)&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过指定某个属性值进行进一步的数据筛选</span></span><br><span class="line"><span class="comment"># 假设在该例子上增加一个标签 &lt;div id=&quot;imgs&quot;&gt;...&lt;/div&gt;，我们需要获取该 &lt;images&gt; 标签内的内容</span></span><br><span class="line"><span class="comment"># xpath 通过 [@xx=&quot;xxx&quot;] 来进一步删选，css 则不同，&#x27;#&#x27; 用来表示 id 属性，&#x27;.&#x27; 用来表示 class 属性，后面跟属性值即可</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div[@id=&quot;images&quot;]&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div#images&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取图片名</span></span><br><span class="line"><span class="comment"># xpath 通过 &#x27;/&#x27; 表示路径分割，css 通过 &#x27; &#x27; 表示后代选择器</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div[@id=&quot;images&quot;]/a/text()&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div#images a::text&#x27;</span>).extract()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 获取 href 中包含 image 的所有图片名</span></span><br><span class="line"><span class="comment"># xpath 通过 contains 表示属性包含，css 通过 *=</span></span><br><span class="line">response.xpath(<span class="string">&#x27;//div/a[contains(@href, &quot;image&quot;)]/text()&#x27;</span>).extract()</span><br><span class="line">response.css(<span class="string">&#x27;div a[href*=image]::text&#x27;</span>).extract()</span><br></pre>
 
 <p>附上添加后的 html 文件以及部分内容爬取的实现</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-dfdd2ba73bba7c24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/757/format/webp" with="300" height="500" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-dfdd2ba73bba7c24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/757/format/webp" with="300" height="500" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-dfdd2ba73bba7c24.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/757/format/webp" class="lozad post-image">
 
 <p>介绍完 xpath 和 css 之后，之前的爬虫逻辑也就能个看懂了。接着，在前面的例子只做了当前页的内容爬取，实际还有很多也的内容可以爬取，但是我们不可能去把每页的 url 都去写出来，那样太麻烦了，这里去寻找一个突破口，就是“下一页”按钮，打开开发者模式功能，可以发现“下一页”按钮如下图</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-cb8d7ecbd841e3c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/593/format/webp" alt="blog_next"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-cb8d7ecbd841e3c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/593/format/webp" alt="blog_next" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-cb8d7ecbd841e3c1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/593/format/webp" class="lozad post-image"></p>
 <p>那就可以很容易获取到下一页的 url，在 BlogSpider 文件中 parse 加入如下代码，可以根据喜好选择 xpath 或者 css 选择器</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="comment"># ....</span></span><br><span class="line">    <span class="comment"># next_page = response.xpath(&#x27;//div[@class=&quot;nav-links&quot;]//div/a/@href&#x27;).extract_first()</span></span><br><span class="line">    next_page = response.css(<span class="string">&#x27;div.nav-links div a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">    <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 通过将响应 url 与可能的相对 URL 组合构造绝对 url</span></span><br><span class="line">        next_page = response.urljoin(next_page)</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parse)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="comment"># ....</span></span><br><span class="line">    <span class="comment"># next_page = response.xpath(&#x27;//div[@class=&quot;nav-links&quot;]//div/a/@href&#x27;).extract_first()</span></span><br><span class="line">    next_page = response.css(<span class="string">&#x27;div.nav-links div a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">    <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        <span class="comment"># 通过将响应 url 与可能的相对 URL 组合构造绝对 url</span></span><br><span class="line">        next_page = response.urljoin(next_page)</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parse)</span><br></pre>
 
 <p>添加完后重新运行爬虫文件 <code>scrapy crawl blog -o blog_all.json </code>就可以继续爬取别的数据了。</p>
 <h5 id="四-使用-Item"><a href="#四-使用-Item" class="headerlink" title="四. 使用 Item"></a>四. 使用 Item</h5><p>之前的爬虫，通过 yield 一个 dict 来实现，但是缺少结构性，容易打错字段，所以 scrapy 提供 Item 类来解决这个问题。打开项目下的 items.py，加入如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BlogItem</span>(scrapy.Item):</span><br><span class="line">    title = scrapy.Field()</span><br><span class="line">    pub_date = scrapy.Field()</span><br><span class="line">    author = scrapy.Field()</span><br><span class="line">    comment_num = scrapy.Field()</span><br><span class="line">    summary = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">import</span> scrapy</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">BlogItem</span>(scrapy.Item):</span><br><span class="line">    title = scrapy.Field()</span><br><span class="line">    pub_date = scrapy.Field()</span><br><span class="line">    author = scrapy.Field()</span><br><span class="line">    comment_num = scrapy.Field()</span><br><span class="line">    summary = scrapy.Field()</span><br></pre>
 
 <p>是不是很像 django 的 Model，但是没有那么多不同的字段类型。接着对爬虫的代码进行部分修改。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">    item = BlogItem()</span><br><span class="line">    <span class="keyword">for</span> article <span class="keyword">in</span> response.css(<span class="string">&#x27;article&#x27;</span>):</span><br><span class="line">        item[<span class="string">&#x27;title&#x27;</span>] = article.css(<span class="string">&#x27;h2.entry-title a::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;pub_date&#x27;</span>] = article.css(<span class="string">&#x27;h5.entry-date a time::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;author&#x27;</span>] = article.css(<span class="string">&#x27;span.byline span a::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;comment_num&#x27;</span>] = article.css(<span class="string">&#x27;a.comments-link::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;summary&#x27;</span>] = article.css(<span class="string">&#x27;div.entry-summary p::text&#x27;</span>).extract_first()</span><br><span class="line">        <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">    next_page = response.css(<span class="string">&#x27;div.nav-links div a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">    <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        next_page = response.urljoin(next_page)</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parse)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">    item = BlogItem()</span><br><span class="line">    <span class="keyword">for</span> article <span class="keyword">in</span> response.css(<span class="string">&#x27;article&#x27;</span>):</span><br><span class="line">        item[<span class="string">&#x27;title&#x27;</span>] = article.css(<span class="string">&#x27;h2.entry-title a::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;pub_date&#x27;</span>] = article.css(<span class="string">&#x27;h5.entry-date a time::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;author&#x27;</span>] = article.css(<span class="string">&#x27;span.byline span a::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;comment_num&#x27;</span>] = article.css(<span class="string">&#x27;a.comments-link::text&#x27;</span>).extract_first()</span><br><span class="line">        item[<span class="string">&#x27;summary&#x27;</span>] = article.css(<span class="string">&#x27;div.entry-summary p::text&#x27;</span>).extract_first()</span><br><span class="line">        <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">    next_page = response.css(<span class="string">&#x27;div.nav-links div a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">    <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">        next_page = response.urljoin(next_page)</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(next_page, callback=self.parse)</span><br></pre>
 
 <p>修改完后，重新运行爬虫(如果之前写入的是 json 文件，记得先删除)，又会得到相同的结果。</p>
 <h5 id="五-通过-Pipeline-将数据写入-MySql"><a href="#五-通过-Pipeline-将数据写入-MySql" class="headerlink" title="五. 通过 Pipeline 将数据写入 MySql"></a>五. 通过 Pipeline 将数据写入 MySql</h5><p>相信很多朋友都喜欢看电影，这边就通过爬取豆瓣 Top250 作为例子来实现写入 MySql 的功能(为什么要选取豆瓣呢，因为反爬做的简单，容易爬取啊~)豆瓣网址为：<a target="_blank" rel="noopener" href="https://movie.douban.com/top250">豆瓣 Top250</a>，打开开发者模式，编写爬取的 Item</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MovieItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># 排名</span></span><br><span class="line">    rank = scrapy.Field()</span><br><span class="line">    <span class="comment"># 图片链接</span></span><br><span class="line">    img_link = scrapy.Field()</span><br><span class="line">    <span class="comment"># 影片名</span></span><br><span class="line">    chinese_title = scrapy.Field()</span><br><span class="line">    foreign_title = scrapy.Field()</span><br><span class="line">    other_title = scrapy.Field()</span><br><span class="line">    <span class="comment"># 播放状态</span></span><br><span class="line">    playable = scrapy.Field()</span><br><span class="line">    <span class="comment"># 评分</span></span><br><span class="line">    avg_rating = scrapy.Field()</span><br><span class="line">    <span class="comment"># 评论数量</span></span><br><span class="line">    comment_num = scrapy.Field()</span><br><span class="line">    quote = scrapy.Field()</span><br><span class="line">    detail_link = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">MovieItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># 排名</span></span><br><span class="line">    rank = scrapy.Field()</span><br><span class="line">    <span class="comment"># 图片链接</span></span><br><span class="line">    img_link = scrapy.Field()</span><br><span class="line">    <span class="comment"># 影片名</span></span><br><span class="line">    chinese_title = scrapy.Field()</span><br><span class="line">    foreign_title = scrapy.Field()</span><br><span class="line">    other_title = scrapy.Field()</span><br><span class="line">    <span class="comment"># 播放状态</span></span><br><span class="line">    playable = scrapy.Field()</span><br><span class="line">    <span class="comment"># 评分</span></span><br><span class="line">    avg_rating = scrapy.Field()</span><br><span class="line">    <span class="comment"># 评论数量</span></span><br><span class="line">    comment_num = scrapy.Field()</span><br><span class="line">    quote = scrapy.Field()</span><br><span class="line">    detail_link = scrapy.Field()</span><br></pre>
 
 <p>编写完 Item 后就可以来写爬虫的逻辑了，这边要注意下，需要将爬虫伪装成浏览器，否则是爬取不到数据的</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;douban_movie&#x27;</span></span><br><span class="line">    url = <span class="string">&quot;https://movie.douban.com/top250&quot;</span></span><br><span class="line">    <span class="comment"># 伪装成浏览器</span></span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">start_requests</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(url=self.url, headers=self.header, callback=self.parse)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        item = MovieItem()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 获取影片信息列表</span></span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> response.css(<span class="string">&#x27;ol.grid_view li&#x27;</span>):</span><br><span class="line">            item[<span class="string">&#x27;rank&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic em::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;img_link&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic a img::attr(src)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                item[<span class="string">&#x27;img_link&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;chinese_title&#x27;</span>] = movie.css(<span class="string">&#x27;div.info a span.title::text&#x27;</span>) \</span><br><span class="line">                    .extract_first().strip() \</span><br><span class="line">                    .replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                item[<span class="string">&#x27;chinese_title&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get chinese title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 防止空数据，将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;foreign_title&#x27;</span>] = movie.css(<span class="string">&#x27;div.info a span.title::text&#x27;</span>) \</span><br><span class="line">                    .extract()[<span class="number">1</span>].strip().split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>] \</span><br><span class="line">                    .strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                item[<span class="string">&#x27;foreign_title&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get foreign title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 可能存在多个，发现由 &quot;/&quot; 进行分割，但是首位也是 &quot;/&quot;，通过 &quot;/&quot; 分割字符串后再重新合成</span></span><br><span class="line">            ot = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            delimiter = <span class="string">&#x27;/&#x27;</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">for</span> other <span class="keyword">in</span> movie.css(<span class="string">&#x27;div.info a span.other::text&#x27;</span>).extract_first(default=<span class="string">&#x27;&#x27;</span>).strip().split(<span class="string">&#x27;/&#x27;</span>):</span><br><span class="line">                    <span class="keyword">if</span> other:</span><br><span class="line">                        ot = ot + other.strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>) + delimiter</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get other title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 去除最末尾的分隔符</span></span><br><span class="line">            item[<span class="string">&#x27;other_title&#x27;</span>] = ot.rstrip(delimiter)</span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;playable&#x27;</span>] = movie.css(<span class="string">&#x27;div.info span.playable::text&#x27;</span>) \</span><br><span class="line">                .extract_first(default=<span class="string">&#x27;[]&#x27;</span>).lstrip(<span class="string">&#x27;[&#x27;</span>).rstrip(<span class="string">&#x27;]&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;avg_rating&#x27;</span>] = movie.css(<span class="string">&#x27;div.star span.rating_num::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># re_first() 类似 extract_first()，不过 re_first() 通过正则进行数据匹配</span></span><br><span class="line">            item[<span class="string">&#x27;comment_num&#x27;</span>] = movie.css(<span class="string">&#x27;div.star span::text&#x27;</span>).re_first(<span class="string">r&#x27;[0-9]+人评价&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 防止空数据，将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            quote = movie.xpath(<span class="string">&#x27;.//p[@class=&quot;quote&quot;]/span/text()&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">if</span> quote:</span><br><span class="line">                item[<span class="string">&#x27;quote&#x27;</span>] = quote.strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                item[<span class="string">&#x27;quote&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;detail_link&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 获取下一页 url</span></span><br><span class="line">            next_page = response.css(<span class="string">&#x27;span.next a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                next_page = response.urljoin(next_page)</span><br><span class="line">                <span class="keyword">yield</span> scrapy.Request(next_page, headers=self.header, callback=self.parse)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;douban_movie&#x27;</span></span><br><span class="line">    url = <span class="string">&quot;https://movie.douban.com/top250&quot;</span></span><br><span class="line">    <span class="comment"># 伪装成浏览器</span></span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">start_requests</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(url=self.url, headers=self.header, callback=self.parse)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        item = MovieItem()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 获取影片信息列表</span></span><br><span class="line">        <span class="keyword">for</span> movie <span class="keyword">in</span> response.css(<span class="string">&#x27;ol.grid_view li&#x27;</span>):</span><br><span class="line">            item[<span class="string">&#x27;rank&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic em::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;img_link&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic a img::attr(src)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">except</span>:</span><br><span class="line">                item[<span class="string">&#x27;img_link&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;chinese_title&#x27;</span>] = movie.css(<span class="string">&#x27;div.info a span.title::text&#x27;</span>) \</span><br><span class="line">                    .extract_first().strip() \</span><br><span class="line">                    .replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                item[<span class="string">&#x27;chinese_title&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get chinese title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 防止空数据，将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                item[<span class="string">&#x27;foreign_title&#x27;</span>] = movie.css(<span class="string">&#x27;div.info a span.title::text&#x27;</span>) \</span><br><span class="line">                    .extract()[<span class="number">1</span>].strip().split(<span class="string">&#x27;/&#x27;</span>)[-<span class="number">1</span>] \</span><br><span class="line">                    .strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                item[<span class="string">&#x27;foreign_title&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get foreign title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 可能存在多个，发现由 &quot;/&quot; 进行分割，但是首位也是 &quot;/&quot;，通过 &quot;/&quot; 分割字符串后再重新合成</span></span><br><span class="line">            ot = <span class="string">&#x27;&#x27;</span></span><br><span class="line">            delimiter = <span class="string">&#x27;/&#x27;</span></span><br><span class="line">            <span class="keyword">try</span>:</span><br><span class="line">                <span class="keyword">for</span> other <span class="keyword">in</span> movie.css(<span class="string">&#x27;div.info a span.other::text&#x27;</span>).extract_first(default=<span class="string">&#x27;&#x27;</span>).strip().split(<span class="string">&#x27;/&#x27;</span>):</span><br><span class="line">                    <span class="keyword">if</span> other:</span><br><span class="line">                        ot = ot + other.strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>) + delimiter</span><br><span class="line">            <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;get other title Error:&#x27;</span>, e)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 去除最末尾的分隔符</span></span><br><span class="line">            item[<span class="string">&#x27;other_title&#x27;</span>] = ot.rstrip(delimiter)</span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;playable&#x27;</span>] = movie.css(<span class="string">&#x27;div.info span.playable::text&#x27;</span>) \</span><br><span class="line">                .extract_first(default=<span class="string">&#x27;[]&#x27;</span>).lstrip(<span class="string">&#x27;[&#x27;</span>).rstrip(<span class="string">&#x27;]&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;avg_rating&#x27;</span>] = movie.css(<span class="string">&#x27;div.star span.rating_num::text&#x27;</span>).extract_first()</span><br><span class="line"></span><br><span class="line">            <span class="comment"># re_first() 类似 extract_first()，不过 re_first() 通过正则进行数据匹配</span></span><br><span class="line">            item[<span class="string">&#x27;comment_num&#x27;</span>] = movie.css(<span class="string">&#x27;div.star span::text&#x27;</span>).re_first(<span class="string">r&#x27;[0-9]+人评价&#x27;</span>)</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 防止空数据，将 &quot;&#x27;&quot; 替换掉，否则写入数据库会出问题</span></span><br><span class="line">            quote = movie.xpath(<span class="string">&#x27;.//p[@class=&quot;quote&quot;]/span/text()&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">if</span> quote:</span><br><span class="line">                item[<span class="string">&#x27;quote&#x27;</span>] = quote.strip().replace(<span class="string">r&quot;&#x27;&quot;</span>, <span class="string">&quot; &quot;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                item[<span class="string">&#x27;quote&#x27;</span>] = <span class="string">&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">            item[<span class="string">&#x27;detail_link&#x27;</span>] = movie.css(<span class="string">&#x27;div.pic a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">            <span class="comment"># 获取下一页 url</span></span><br><span class="line">            next_page = response.css(<span class="string">&#x27;span.next a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">            <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">                next_page = response.urljoin(next_page)</span><br><span class="line">                <span class="keyword">yield</span> scrapy.Request(next_page, headers=self.header, callback=self.parse)</span><br></pre>
 
 <p>如果需要通过 shell 命令行进行调试，添加头部信息方法如下 <code>scrapy shell -s USER_AGENT=&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot; &quot;https://movie.douban.com/top250&quot;</code></p>
 <p>写完逻辑后，可以运行爬虫查看是否正确获取到数据，如果获取的数据是乱码，那就是编码问题，在 settings.py  文件中加入编码配置</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">FEED_EXPORT_ENCODING = <span class="string">&#x27;utf-8&#x27;</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">FEED_EXPORT_ENCODING = <span class="string">&#x27;utf-8&#x27;</span></span><br></pre>
 
 <p>运行没问题后我们通过 Pipeline 将获取到的数据写入 MySql 了，自定义 Pipeline 需要继承 <code>object</code> ，实现 <code>process_item(self, item, spider)</code> 方法，Pipeline 还有好多方法，例如 <code>open_spider(self, spider)</code> 在爬虫打开的时候执行，<code>close_spider(self, spider)</code> 在爬取完数据时候执行等等，接着就来定义写数据的 Pipeline</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMoviePipeline</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 连接数据库，需要先创建好数据库</span></span><br><span class="line">        self.db = pymysql.connect(<span class="string">&#x27;localhost&#x27;</span>, user=<span class="string">&#x27;root&#x27;</span>, password=<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">                                  db=<span class="string">&#x27;douban_movie&#x27;</span>, use_unicode=<span class="literal">True</span>, charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        <span class="comment"># 获取操作的游标</span></span><br><span class="line">        self.cursor = self.db.cursor()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">open_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="comment"># 创建对应的表</span></span><br><span class="line">        create_sql = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            CREATE TABLE</span></span><br><span class="line"><span class="string">            IF NOT EXISTS movie (</span></span><br><span class="line"><span class="string">                id INT (20) NOT NULL PRIMARY KEY AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">                rank INT (10) NOT NULL,</span></span><br><span class="line"><span class="string">                img_link CHAR (255),</span></span><br><span class="line"><span class="string">                chinese_title CHAR (255) NOT NULL,</span></span><br><span class="line"><span class="string">                foreign_title CHAR (255),</span></span><br><span class="line"><span class="string">                other_title CHAR (255),</span></span><br><span class="line"><span class="string">                playable CHAR (30),</span></span><br><span class="line"><span class="string">                avg_rating CHAR (10),</span></span><br><span class="line"><span class="string">                quote CHAR (255),</span></span><br><span class="line"><span class="string">                detail_link CHAR (255)</span></span><br><span class="line"><span class="string">            )</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.cursor.execute(create_sql)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">        rank = item[<span class="string">&#x27;rank&#x27;</span>]</span><br><span class="line">        img_link = item[<span class="string">&#x27;img_link&#x27;</span>]</span><br><span class="line">        chinese_title = item[<span class="string">&#x27;chinese_title&#x27;</span>]</span><br><span class="line">        foreign_title = item[<span class="string">&#x27;foreign_title&#x27;</span>]</span><br><span class="line">        other_title = item[<span class="string">&#x27;other_title&#x27;</span>]</span><br><span class="line">        playable = item[<span class="string">&#x27;playable&#x27;</span>]</span><br><span class="line">        avg_rating = item[<span class="string">&#x27;avg_rating&#x27;</span>]</span><br><span class="line">        quote = item[<span class="string">&#x27;quote&#x27;</span>]</span><br><span class="line">        detail_link = item[<span class="string">&#x27;detail_link&#x27;</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 爬取的数据插入数据库</span></span><br><span class="line">        insert_sql = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            INSERT INTO movie (rank, img_link, chinese_title, foreign_title, other_title, playable, avg_rating, quote, detail_link)</span></span><br><span class="line"><span class="string">            VALUES (&#123;&#125;,&#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;)</span></span><br><span class="line"><span class="string">            &quot;&quot;&quot;</span>.<span class="built_in">format</span>(rank, img_link, chinese_title, foreign_title,</span><br><span class="line">                       other_title, playable, avg_rating, quote, detail_link)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.cursor.execute(insert_sql)</span><br><span class="line">            <span class="comment"># 插入后需要提交，否则数据插入不了</span></span><br><span class="line">            self.db.commit()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="comment"># 如果出错了回滚操作</span></span><br><span class="line">            self.db.rollback()</span><br><span class="line">        <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="comment"># 结束后关闭游标和数据库</span></span><br><span class="line">        self.cursor.close()</span><br><span class="line">        self.db.close()</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">import</span> pymysql</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMoviePipeline</span>(<span class="title class_ inherited__">object</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="comment"># 连接数据库，需要先创建好数据库</span></span><br><span class="line">        self.db = pymysql.connect(<span class="string">&#x27;localhost&#x27;</span>, user=<span class="string">&#x27;root&#x27;</span>, password=<span class="string">&#x27;123456&#x27;</span>,</span><br><span class="line">                                  db=<span class="string">&#x27;douban_movie&#x27;</span>, use_unicode=<span class="literal">True</span>, charset=<span class="string">&quot;utf8&quot;</span>)</span><br><span class="line">        <span class="comment"># 获取操作的游标</span></span><br><span class="line">        self.cursor = self.db.cursor()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">open_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="comment"># 创建对应的表</span></span><br><span class="line">        create_sql = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            CREATE TABLE</span></span><br><span class="line"><span class="string">            IF NOT EXISTS movie (</span></span><br><span class="line"><span class="string">                id INT (20) NOT NULL PRIMARY KEY AUTO_INCREMENT,</span></span><br><span class="line"><span class="string">                rank INT (10) NOT NULL,</span></span><br><span class="line"><span class="string">                img_link CHAR (255),</span></span><br><span class="line"><span class="string">                chinese_title CHAR (255) NOT NULL,</span></span><br><span class="line"><span class="string">                foreign_title CHAR (255),</span></span><br><span class="line"><span class="string">                other_title CHAR (255),</span></span><br><span class="line"><span class="string">                playable CHAR (30),</span></span><br><span class="line"><span class="string">                avg_rating CHAR (10),</span></span><br><span class="line"><span class="string">                quote CHAR (255),</span></span><br><span class="line"><span class="string">                detail_link CHAR (255)</span></span><br><span class="line"><span class="string">            )</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.cursor.execute(create_sql)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">process_item</span>(<span class="params">self, item, spider</span>):</span><br><span class="line">        rank = item[<span class="string">&#x27;rank&#x27;</span>]</span><br><span class="line">        img_link = item[<span class="string">&#x27;img_link&#x27;</span>]</span><br><span class="line">        chinese_title = item[<span class="string">&#x27;chinese_title&#x27;</span>]</span><br><span class="line">        foreign_title = item[<span class="string">&#x27;foreign_title&#x27;</span>]</span><br><span class="line">        other_title = item[<span class="string">&#x27;other_title&#x27;</span>]</span><br><span class="line">        playable = item[<span class="string">&#x27;playable&#x27;</span>]</span><br><span class="line">        avg_rating = item[<span class="string">&#x27;avg_rating&#x27;</span>]</span><br><span class="line">        quote = item[<span class="string">&#x27;quote&#x27;</span>]</span><br><span class="line">        detail_link = item[<span class="string">&#x27;detail_link&#x27;</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 爬取的数据插入数据库</span></span><br><span class="line">        insert_sql = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">            INSERT INTO movie (rank, img_link, chinese_title, foreign_title, other_title, playable, avg_rating, quote, detail_link)</span></span><br><span class="line"><span class="string">            VALUES (&#123;&#125;,&#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;, &#x27;&#123;&#125;&#x27;)</span></span><br><span class="line"><span class="string">            &quot;&quot;&quot;</span>.<span class="built_in">format</span>(rank, img_link, chinese_title, foreign_title,</span><br><span class="line">                       other_title, playable, avg_rating, quote, detail_link)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            self.cursor.execute(insert_sql)</span><br><span class="line">            <span class="comment"># 插入后需要提交，否则数据插入不了</span></span><br><span class="line">            self.db.commit()</span><br><span class="line">        <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">            <span class="comment"># 如果出错了回滚操作</span></span><br><span class="line">            self.db.rollback()</span><br><span class="line">        <span class="keyword">return</span> item</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">close_spider</span>(<span class="params">self, spider</span>):</span><br><span class="line">        <span class="comment"># 结束后关闭游标和数据库</span></span><br><span class="line">        self.cursor.close()</span><br><span class="line">        self.db.close()</span><br></pre>
 <p>最后将写好的 Pipeline 写到 settings.py 文件中，当打开爬虫的时候，会自动通过 pipeline 进行操作</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;first_spider.pipelines.DoubanMoviePipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;first_spider.pipelines.DoubanMoviePipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br></pre>
 
 <p>展示下结果图：</p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="结果1"></p>
-<p><img src="https://upload-images.jianshu.io/upload_images/2888797-d013a54775b62398.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="结果2"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="结果1" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" class="lozad post-image"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-d013a54775b62398.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="结果2" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-d013a54775b62398.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" class="lozad post-image"></p>
 <h5 id="六-通过-Pipeline-下载图片"><a href="#六-通过-Pipeline-下载图片" class="headerlink" title="六. 通过 Pipeline 下载图片"></a>六. 通过 Pipeline 下载图片</h5><p>在接触 scrapy 之前，下载图片，一般都是通过 <code>urllib</code> 的 <code>urlretrieve</code> 方法进行下载，例如我们要下载一张图片，网址为 “<a target="_blank" rel="noopener" href="https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot;%EF%BC%8C%E6%88%91%E4%BB%AC%E4%B8%80%E8%88%AC%E9%83%BD%E4%BC%9A%E8%BF%99%E6%A0%B7%E4%B8%8B%E8%BD%BD(%E9%9C%80%E8%A6%81%E5%85%88%E5%88%9B%E5%BB%BA%E5%A5%BD%E6%96%87%E4%BB%B6%E5%A4%B9%E6%89%8D%E5%8F%AF%E4%BB%A5%E4%B8%8B%E8%BD%BD)">https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot;，我们一般都会这样下载(需要先创建好文件夹才可以下载)</a></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">image_url = <span class="string">&#x27;https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#x27;</span></span><br><span class="line"></span><br><span class="line">image_path = os.path.join(<span class="string">&#x27;C:\\test&#x27;</span>, <span class="string">&#x27;1.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line">urllib.request.urlretrieve(image_url, image_path)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">image_url = <span class="string">&#x27;https://upload-images.jianshu.io/upload_images/2888797-8f49bb4c2965249e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&#x27;</span></span><br><span class="line"></span><br><span class="line">image_path = os.path.join(<span class="string">&#x27;C:\\test&#x27;</span>, <span class="string">&#x27;1.png&#x27;</span>)</span><br><span class="line"></span><br><span class="line">urllib.request.urlretrieve(image_url, image_path)</span><br></pre>
 
 <p>这样就可以将图片下载下来了，但是 scrapy 自带图片下载功能，只要通过 ImagesPipeline 即可实现(不需要手动创建文件夹的喔~)。按照惯例，先创建 item</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">MovieImageItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># 图片 urls, 存放所有的 url 的列表</span></span><br><span class="line">    image_urls = scrapy.Field()</span><br><span class="line">    <span class="comment"># 文件路径，存放所有的图片文件路径</span></span><br><span class="line">    image_paths = scrapy.Field()</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">MovieImageItem</span>(scrapy.Item):</span><br><span class="line">    <span class="comment"># 图片 urls, 存放所有的 url 的列表</span></span><br><span class="line">    image_urls = scrapy.Field()</span><br><span class="line">    <span class="comment"># 文件路径，存放所有的图片文件路径</span></span><br><span class="line">    image_paths = scrapy.Field()</span><br></pre>
 
 <p>然后来编辑 Spider 的逻辑</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieImageSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;movie_image&#x27;</span></span><br><span class="line">    url = <span class="string">&quot;https://movie.douban.com/top250&quot;</span></span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">start_requests</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(url=self.url, headers=self.header, callback=self.parse)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        item = MovieImageItem()</span><br><span class="line">        <span class="comment"># 这里存放所有的 url，直接通过 extract() 方法获取列表即可</span></span><br><span class="line">        item[<span class="string">&#x27;image_urls&#x27;</span>] = response.css(<span class="string">&#x27;ol.grid_view li div.pic img::attr(src)&#x27;</span>).extract()</span><br><span class="line">        <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取下一页 url</span></span><br><span class="line">        next_page = response.css(<span class="string">&#x27;span.next a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">        <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            next_page = response.urljoin(next_page)</span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(next_page, headers=self.header, callback=self.parse)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieImageSpider</span>(scrapy.Spider):</span><br><span class="line">    name = <span class="string">&#x27;movie_image&#x27;</span></span><br><span class="line">    url = <span class="string">&quot;https://movie.douban.com/top250&quot;</span></span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">start_requests</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">yield</span> scrapy.Request(url=self.url, headers=self.header, callback=self.parse)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">parse</span>(<span class="params">self, response</span>):</span><br><span class="line">        item = MovieImageItem()</span><br><span class="line">        <span class="comment"># 这里存放所有的 url，直接通过 extract() 方法获取列表即可</span></span><br><span class="line">        item[<span class="string">&#x27;image_urls&#x27;</span>] = response.css(<span class="string">&#x27;ol.grid_view li div.pic img::attr(src)&#x27;</span>).extract()</span><br><span class="line">        <span class="keyword">yield</span> item</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 获取下一页 url</span></span><br><span class="line">        next_page = response.css(<span class="string">&#x27;span.next a::attr(href)&#x27;</span>).extract_first()</span><br><span class="line">        <span class="keyword">if</span> next_page <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            next_page = response.urljoin(next_page)</span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(next_page, headers=self.header, callback=self.parse)</span><br></pre>
 
 <p>定义完爬取逻辑后，就需要来定义 Pipeline 了，在这之前，我们先安装下 Pillow 模块 <code>pip install pillow</code>，下载图片的 Pipeline 通过继承 scrapy 自带的 <code>ImagesPipeline</code> 类，然后实现 <code>get_media_requests(self, item, info)</code> 和 <code>item_completed(self, results, item, info)</code> 方法即可</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieImagePipeline</span>(<span class="title class_ inherited__">ImagesPipeline</span>):</span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_media_requests</span>(<span class="params">self, item, info</span>):</span><br><span class="line">        <span class="comment"># 将存放在 item 里面的图片链接传给 Request</span></span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> item[<span class="string">&#x27;image_urls&#x27;</span>]:</span><br><span class="line">            <span class="comment"># 如果在爬取的时候加入了头部，这边需要将头部也加入</span></span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(url=url, headers=self.header)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">item_completed</span>(<span class="params">self, results, item, info</span>):</span><br><span class="line">        <span class="comment"># 爬完一个 item 后会调用这个方法，通过 results 中的参数，对爬取的结果进行判断</span></span><br><span class="line">        <span class="comment"># results 是一个元组，包含一个下载状态值和一个存放信息的 dict，大概如下：</span></span><br><span class="line">        <span class="comment"># (True, &#123;&#x27;url&#x27;: &#x27;https://img3.doubanio.com/view/photo/s_ratio_poster/public/p804938713.jpg&#x27;,</span></span><br><span class="line">        <span class="comment">#  &#x27;path&#x27;: &#x27;full/bd7353dc69401a1581cf1c8abca75c5395d9965d.jpg&#x27;, &#x27;checksum&#x27;: &#x27;60d0d761584f35f2ea9d86cce79b7d1b&#x27;&#125;)</span></span><br><span class="line">        <span class="comment"># True 表示下载图片成功，False 表示失败，dict 中的 url 是图片的下载 url，path 是保存的地址，checksum 是一个 MD5 hash 值</span></span><br><span class="line">        image_paths = [x[<span class="string">&#x27;path&#x27;</span>] <span class="keyword">for</span> ok, x <span class="keyword">in</span> results <span class="keyword">if</span> ok]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> image_paths:</span><br><span class="line">            <span class="keyword">raise</span> DropItem(<span class="string">&quot;Item contains no images&quot;</span>)</span><br><span class="line">        <span class="comment"># 将图片的保存地址写入 item 中</span></span><br><span class="line">        item[<span class="string">&#x27;image_paths&#x27;</span>] = image_paths</span><br><span class="line">        <span class="keyword">return</span> item</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">class</span> <span class="title class_">DoubanMovieImagePipeline</span>(<span class="title class_ inherited__">ImagesPipeline</span>):</span><br><span class="line">    header = &#123;</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">get_media_requests</span>(<span class="params">self, item, info</span>):</span><br><span class="line">        <span class="comment"># 将存放在 item 里面的图片链接传给 Request</span></span><br><span class="line">        <span class="keyword">for</span> url <span class="keyword">in</span> item[<span class="string">&#x27;image_urls&#x27;</span>]:</span><br><span class="line">            <span class="comment"># 如果在爬取的时候加入了头部，这边需要将头部也加入</span></span><br><span class="line">            <span class="keyword">yield</span> scrapy.Request(url=url, headers=self.header)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">def</span> <span class="title function_">item_completed</span>(<span class="params">self, results, item, info</span>):</span><br><span class="line">        <span class="comment"># 爬完一个 item 后会调用这个方法，通过 results 中的参数，对爬取的结果进行判断</span></span><br><span class="line">        <span class="comment"># results 是一个元组，包含一个下载状态值和一个存放信息的 dict，大概如下：</span></span><br><span class="line">        <span class="comment"># (True, &#123;&#x27;url&#x27;: &#x27;https://img3.doubanio.com/view/photo/s_ratio_poster/public/p804938713.jpg&#x27;,</span></span><br><span class="line">        <span class="comment">#  &#x27;path&#x27;: &#x27;full/bd7353dc69401a1581cf1c8abca75c5395d9965d.jpg&#x27;, &#x27;checksum&#x27;: &#x27;60d0d761584f35f2ea9d86cce79b7d1b&#x27;&#125;)</span></span><br><span class="line">        <span class="comment"># True 表示下载图片成功，False 表示失败，dict 中的 url 是图片的下载 url，path 是保存的地址，checksum 是一个 MD5 hash 值</span></span><br><span class="line">        image_paths = [x[<span class="string">&#x27;path&#x27;</span>] <span class="keyword">for</span> ok, x <span class="keyword">in</span> results <span class="keyword">if</span> ok]</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> image_paths:</span><br><span class="line">            <span class="keyword">raise</span> DropItem(<span class="string">&quot;Item contains no images&quot;</span>)</span><br><span class="line">        <span class="comment"># 将图片的保存地址写入 item 中</span></span><br><span class="line">        item[<span class="string">&#x27;image_paths&#x27;</span>] = image_paths</span><br><span class="line">        <span class="keyword">return</span> item</span><br></pre>
 
 <p>然后和写入数据库的操作一样，把定义好的 Pipeline 设置到 settings.py 文件中，再加入一些必要的设置</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;first_spider.pipelines.DoubanMovieImagePipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放的文件目录，图片下载完后会放到目录下的 full 文件夹中，如果定义了缩略图，则缩略图会放在 thumbs 文件夹中</span></span><br><span class="line">IMAGES_STORE = <span class="string">&#x27;C:\\Users\\kuky\\Desktop\\MovieImages&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 失效时间</span></span><br><span class="line">IMAGES_EXPIRES = <span class="number">90</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置缩略图</span></span><br><span class="line">IMAGES_THUMBS = &#123;</span><br><span class="line">    <span class="comment"># 定义不同的缩略图文件大小</span></span><br><span class="line">    <span class="string">&#x27;small-thumbs&#x27;</span>: (<span class="number">50</span>, <span class="number">50</span>),</span><br><span class="line">    <span class="string">&#x27;big-thumbs&#x27;</span>: (<span class="number">250</span>, <span class="number">250</span>),</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment"># settings.py</span></span><br><span class="line"></span><br><span class="line">ITEM_PIPELINES = &#123;</span><br><span class="line">    <span class="string">&#x27;first_spider.pipelines.DoubanMovieImagePipeline&#x27;</span>: <span class="number">300</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 存放的文件目录，图片下载完后会放到目录下的 full 文件夹中，如果定义了缩略图，则缩略图会放在 thumbs 文件夹中</span></span><br><span class="line">IMAGES_STORE = <span class="string">&#x27;C:\\Users\\kuky\\Desktop\\MovieImages&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 失效时间</span></span><br><span class="line">IMAGES_EXPIRES = <span class="number">90</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置缩略图</span></span><br><span class="line">IMAGES_THUMBS = &#123;</span><br><span class="line">    <span class="comment"># 定义不同的缩略图文件大小</span></span><br><span class="line">    <span class="string">&#x27;small-thumbs&#x27;</span>: (<span class="number">50</span>, <span class="number">50</span>),</span><br><span class="line">    <span class="string">&#x27;big-thumbs&#x27;</span>: (<span class="number">250</span>, <span class="number">250</span>),</span><br><span class="line">&#125;</span><br></pre>
 
-<p>然后通过运行爬虫，就可以看到爬取下来的图片啦，如果在爬取过程中遇到如下问题 <code>[scrapy.downloadermiddlewares.robotstxt] DEBUG: Forbidden by robots.txt: &lt;GET https://img3.doubanio.com/view/photo/s_ratio_poster/public/p1454261925.jpg&gt;</code> ，打开 settings.py 文件，然后将里面的 <code>ROBOTSTXT_OBEY</code> 属性设置为 <code>True</code> 即可，最后展示下爬取的结果<br><img src="https://upload-images.jianshu.io/upload_images/2888797-47cc4c0b023db005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="爬取图片"></p>
+<p>然后通过运行爬虫，就可以看到爬取下来的图片啦，如果在爬取过程中遇到如下问题 <code>[scrapy.downloadermiddlewares.robotstxt] DEBUG: Forbidden by robots.txt: &lt;GET https://img3.doubanio.com/view/photo/s_ratio_poster/public/p1454261925.jpg&gt;</code> ，打开 settings.py 文件，然后将里面的 <code>ROBOTSTXT_OBEY</code> 属性设置为 <code>True</code> 即可，最后展示下爬取的结果<br><img src="https://upload-images.jianshu.io/upload_images/2888797-47cc4c0b023db005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" alt="爬取图片" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-47cc4c0b023db005.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" class="lozad post-image"></p>
 <p>通过 scrapy 可以很简单的爬取图片文件，至于妹子图什么的，你懂得(<del><strong>项目中有，项目中有，项目中有</strong></del>)</p>
 <h5 id="七-Spider-调试"><a href="#七-Spider-调试" class="headerlink" title="七. Spider 调试"></a>七. Spider 调试</h5><p>Spider 除了用 scrapy 自带的命令行调试外，如果你用的是 pyCharm，这里再推荐一种，首先在项目下创建一个 debug.py 文件，然后加入如下代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> cmdline</span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬虫名</span></span><br><span class="line">name = <span class="string">&#x27;movie_image&#x27;</span></span><br><span class="line">cmd = <span class="string">&#x27;scrapy crawl &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(name)</span><br><span class="line">cmdline.execute(cmd.split())</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">from</span> scrapy <span class="keyword">import</span> cmdline</span><br><span class="line"></span><br><span class="line"><span class="comment"># 爬虫名</span></span><br><span class="line">name = <span class="string">&#x27;movie_image&#x27;</span></span><br><span class="line">cmd = <span class="string">&#x27;scrapy crawl &#123;&#125;&#x27;</span>.<span class="built_in">format</span>(name)</span><br><span class="line">cmdline.execute(cmd.split())</span><br></pre>
 
 <p>然后根据要调试的 Spider 修改 name 的值，在对应的 Spider 中打断点，然后右键 debug.py 选择 “ Debug‘debug’ ” 就可以进行断点调试了。</p>
 <p>Scrapy 入门的知识大概就这么多，要掌握还是得多练习多踩坑才行。最后附上 scrapy 官方文档链接：<a target="_blank" rel="noopener" href="https://docs.scrapy.org/en/latest/index.html">Scrapy 官方文档</a> 和项目链接：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/first_spider">项目地址</a></p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/" data-id="cl0ukmc2t001tpn1ga8k65c09" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li></ul>
-
-    </footer>
   </div>
-  
+  <div>
     
-<nav id="article-nav">
-  
-    <a href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Flutter Guide(01) -- Start With Dart
-        
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            kuky
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/">
+            http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
       </div>
-    </a>
-  
-  
-    <a href="/2018/05/17/Android-%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E5%8A%A8%E6%82%AC%E6%B5%AE%E7%AA%97/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Android 实现可拖动悬浮窗</div>
-    </a>
-  
-</nav>
-
-  
+    
+  </div>
 </article>
-
-</section>
-        
-          <aside id="sidebar">
+<div class="nav">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    <div class="nav-item-prev">
+      <a 
+        href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Flutter Guide(01) -- Start With Dart </div>
+          
+        </div>
+      </a>
     </div>
-  </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2018/05/17/Android-%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E5%8A%A8%E6%82%AC%E6%B5%AE%E7%AA%97/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Android 实现可拖动悬浮窗 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
     </div>
-  </div>
-
-
   
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">一. 环境搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C-%E5%88%9B%E5%BB%BA-Scrapy-%E9%A1%B9%E7%9B%AE"><span class="toc-text">二. 创建 Scrapy 项目</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89-xpath-css-%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-text">三. xpath, css 选择器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B-%E4%BD%BF%E7%94%A8-Item"><span class="toc-text">四. 使用 Item</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94-%E9%80%9A%E8%BF%87-Pipeline-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%86%99%E5%85%A5-MySql"><span class="toc-text">五. 通过 Pipeline 将数据写入 MySql</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD-%E9%80%9A%E8%BF%87-Pipeline-%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87"><span class="toc-text">六. 通过 Pipeline 下载图片</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%83-Spider-%E8%B0%83%E8%AF%95"><span class="toc-text">七. Spider 调试</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">kuky</p>
+<p class="author-description">啊哈！</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>23</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>5</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>14</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">一. 环境搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C-%E5%88%9B%E5%BB%BA-Scrapy-%E9%A1%B9%E7%9B%AE"><span class="toc-text">二. 创建 Scrapy 项目</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89-xpath-css-%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-text">三. xpath, css 选择器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B-%E4%BD%BF%E7%94%A8-Item"><span class="toc-text">四. 使用 Item</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94-%E9%80%9A%E8%BF%87-Pipeline-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%86%99%E5%85%A5-MySql"><span class="toc-text">五. 通过 Pipeline 将数据写入 MySql</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD-%E9%80%9A%E8%BF%87-Pipeline-%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87"><span class="toc-text">六. 通过 Pipeline 下载图片</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%83-Spider-%E8%B0%83%E8%AF%95"><span class="toc-text">七. Spider 调试</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
-    </div>
-  </div>
-
-  
+      <a href="/categories/Android/">
+        <div class="categories-list-item">
+          Android
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
+      <a href="/categories/FFmpeg/">
+        <div class="categories-list-item">
+          FFmpeg
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
-          </li>
-        
-      </ul>
-    </div>
+      <a href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">
+        <div class="categories-list-item">
+          跨平台
+          <span class="categories-list-item-badge">16</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%88%AC%E8%99%AB-Spider/">
+        <div class="categories-list-item">
+          爬虫-Spider
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JNI/">
+        <div class="categories-list-item">
+          JNI
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
   </div>
-
+</div>
+  </article>
   
-</aside>
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/Android/" 
+        title="Android">
+        <div class="tags-list-item">Android</div>
+      </a>
+    
+      <a 
+        href="/tags/Flutter/" 
+        title="Flutter">
+        <div class="tags-list-item">Flutter</div>
+      </a>
+    
+      <a 
+        href="/tags/C/" 
+        title="C++">
+        <div class="tags-list-item">C++</div>
+      </a>
+    
+      <a 
+        href="/tags/Dart/" 
+        title="Dart">
+        <div class="tags-list-item">Dart</div>
+      </a>
+    
+      <a 
+        href="/tags/FFmpeg/" 
+        title="FFmpeg">
+        <div class="tags-list-item">FFmpeg</div>
+      </a>
+    
+      <a 
+        href="/tags/%E4%BB%BF-iOS/" 
+        title="仿 iOS">
+        <div class="tags-list-item">仿 iOS</div>
+      </a>
+    
+      <a 
+        href="/tags/Kotlin/" 
+        title="Kotlin">
+        <div class="tags-list-item">Kotlin</div>
+      </a>
+    
+      <a 
+        href="/tags/JNI/" 
+        title="JNI">
+        <div class="tags-list-item">JNI</div>
+      </a>
+    
+      <a 
+        href="/tags/Scrapy/" 
+        title="Scrapy">
+        <div class="tags-list-item">Scrapy</div>
+      </a>
+    
+      <a 
+        href="/tags/Python/" 
+        title="Python">
+        <div class="tags-list-item">Python</div>
+      </a>
+    
+      <a 
+        href="/tags/fish-redux/" 
+        title="fish_redux">
+        <div class="tags-list-item">fish_redux</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+        title="源码分析">
+        <div class="tags-list-item">源码分析</div>
+      </a>
+    
+      <a 
+        href="/tags/Jetpack/" 
+        title="Jetpack">
+        <div class="tags-list-item">Jetpack</div>
+      </a>
+    
+      <a 
+        href="/tags/SDL/" 
+        title="SDL">
+        <div class="tags-list-item">SDL</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%80-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-text">一. 环境搭建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8C-%E5%88%9B%E5%BB%BA-Scrapy-%E9%A1%B9%E7%9B%AE"><span class="toc-text">二. 创建 Scrapy 项目</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89-xpath-css-%E9%80%89%E6%8B%A9%E5%99%A8"><span class="toc-text">三. xpath, css 选择器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%9B-%E4%BD%BF%E7%94%A8-Item"><span class="toc-text">四. 使用 Item</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%94-%E9%80%9A%E8%BF%87-Pipeline-%E5%B0%86%E6%95%B0%E6%8D%AE%E5%86%99%E5%85%A5-MySql"><span class="toc-text">五. 通过 Pipeline 将数据写入 MySql</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%AD-%E9%80%9A%E8%BF%87-Pipeline-%E4%B8%8B%E8%BD%BD%E5%9B%BE%E7%89%87"><span class="toc-text">六. 通过 Pipeline 下载图片</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%83-Spider-%E8%B0%83%E8%AF%95"><span class="toc-text">七. Spider 调试</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-02-19</div>
+        <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/"><div class="recent-posts-item-content">fish_redux 「食用指南」</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-22</div>
+        <a href="/2019/10/22/FFmpeg-002/"><div class="recent-posts-item-content">初识 SDL2</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-16</div>
+        <a href="/2019/10/16/FFmpeg-001/"><div class="recent-posts-item-content">FFmpeg 配置</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-09</div>
+        <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/"><div class="recent-posts-item-content">初识 JNI</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020
+          
+          
+                - 
+                2022
+          
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          Kukyxs
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
     
+    
+    
+    
+</footer>
+ 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
 </html>

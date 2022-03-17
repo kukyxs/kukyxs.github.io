@@ -1,299 +1,871 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+  <title>Jetpack Navigation 分析</title>
   
-
+    
+      <meta 
+        property="og:title" 
+        content="Jetpack Navigation 分析">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2019-09-01">
+      <meta 
+        property="og:article:modified_time" 
+        content="2020-01-15">
+      <meta 
+        property="og:article:author" 
+        content="kuky">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="Android">
+        
+          <meta 
+            property="og:article:tag" 
+            content="Jetpack">
+        
+          <meta 
+            property="og:article:tag" 
+            content="源码分析">
+        
+      
+    
   
-  <title>Jetpack Navigation 分析 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Android Jetpack 已经出来很久了，目前在自己的 开源项目 中体验了一把，不得不说很舒服，除了有一些坑之外，这次主要讲解下 Jetpack 中的 Navigation，Navigation 主要用来管理 Fragment，方便实现单个 Activity 及 N 多个 Fragment 的 App，Navigation 的使用网上一搜一大把，这里主要通过源码，分析下 Navigation">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Jetpack Navigation 分析">
-<meta property="og:url" content="http://example.com/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="Android Jetpack 已经出来很久了，目前在自己的 开源项目 中体验了一把，不得不说很舒服，除了有一些坑之外，这次主要讲解下 Jetpack 中的 Navigation，Navigation 主要用来管理 Fragment，方便实现单个 Activity 及 N 多个 Fragment 的 App，Navigation 的使用网上一搜一大把，这里主要通过源码，分析下 Navigation">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/02/nClj9s.png">
-<meta property="article:published_time" content="2019-09-01T13:50:25.000Z">
-<meta property="article:modified_time" content="2020-01-15T01:36:05.293Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="Jetpack">
-<meta property="article:tag" content="源码分析">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/02/nClj9s.png">
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
   
   
-    <link rel="icon" href="/favicon.png">
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
   
   
-<link rel="stylesheet" href="/css/style.css">
-
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">Kukyxs</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
         
-          <a class="main-nav-link" href="/">Home</a>
+          Home
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
         
-      </nav>
-      <nav id="sub-nav">
+          Archive
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          Friends
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-Jetpack-Navigation-分析" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/" class="article-date">
-  <time datetime="2019-09-01T13:50:25.000Z" itemprop="datePublished">2019-09-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Android/">Android</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
       Jetpack Navigation 分析
     </h1>
-  
-
-      </header>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-09-01T13:50:25.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2019-09-01</span>
+    </time>
     
-    <div class="article-entry" itemprop="articleBody">
+      <span class="dot"></span>
       
-        <p><code>Android Jetpack</code> 已经出来很久了，目前在自己的 <a target="_blank" rel="noopener" href="https://github.com/kukyxs/CoroutinesWanAndroid">开源项目</a> 中体验了一把，不得不说很舒服，除了有一些坑之外，这次主要讲解下 <code>Jetpack</code> 中的 <code>Navigation</code>，<code>Navigation</code> 主要用来管理 <code>Fragment</code>，方便实现单个 <code>Activity</code> 及 N 多个 <code>Fragment</code> 的 <code>App</code>，<code>Navigation</code> 的使用网上一搜一大把，这里主要通过源码，分析下 <code>Navigation</code> 是如何实现 <code>Fragment</code> 的管理</p>
+        <a 
+          href="/categories/Android/" 
+          class="post-meta-link">
+          Android
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>2.8k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/Android/" 
+            class="post-meta-link">
+            Android
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/Jetpack/" 
+            class="post-meta-link">
+            Jetpack
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+            class="post-meta-link">
+            源码分析
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p><code>Android Jetpack</code> 已经出来很久了，目前在自己的 <a target="_blank" rel="noopener" href="https://github.com/kukyxs/CoroutinesWanAndroid">开源项目</a> 中体验了一把，不得不说很舒服，除了有一些坑之外，这次主要讲解下 <code>Jetpack</code> 中的 <code>Navigation</code>，<code>Navigation</code> 主要用来管理 <code>Fragment</code>，方便实现单个 <code>Activity</code> 及 N 多个 <code>Fragment</code> 的 <code>App</code>，<code>Navigation</code> 的使用网上一搜一大把，这里主要通过源码，分析下 <code>Navigation</code> 是如何实现 <code>Fragment</code> 的管理</p>
 <h4 id="从布局入手"><a href="#从布局入手" class="headerlink" title="从布局入手"></a>从布局入手</h4><p><code>Navigation</code> 通过指定布局中的 <code>fragment</code> 即可实现，即</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!-- name 指定了根 Fragment，defaultNavHost 用于设置 Fragment 控制系统返回键，</span></span><br><span class="line"><span class="comment">navGraph 用于指定 fragment 管理 graph --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fragment</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/nav_fragment&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">&quot;androidx.navigation.fragment.NavHostFragment&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:defaultNavHost</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:navGraph</span>=<span class="string">&quot;@navigation/demo_navigation&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="tag">&lt;<span class="name">FrameLayout</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!-- name 指定了根 Fragment，defaultNavHost 用于设置 Fragment 控制系统返回键，</span></span><br><span class="line"><span class="comment">navGraph 用于指定 fragment 管理 graph --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">fragment</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">&quot;@+id/nav_fragment&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">&quot;androidx.navigation.fragment.NavHostFragment&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:defaultNavHost</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">app:navGraph</span>=<span class="string">&quot;@navigation/demo_navigation&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br></pre>
 
 <p>所以我们就从 <code>NavHostFragment</code> 这个类开始入手</p>
-<h4 id="NavHostFragment-amp-amp-NavHost"><a href="#NavHostFragment-amp-amp-NavHost" class="headerlink" title="NavHostFragment &amp;&amp; NavHost"></a>NavHostFragment &amp;&amp; NavHost</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NavHostFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> <span class="keyword">implements</span> <span class="title class_">NavHost</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="NavHostFragment-amp-amp-NavHost"><a href="#NavHostFragment-amp-amp-NavHost" class="headerlink" title="NavHostFragment &amp;&amp; NavHost"></a>NavHostFragment &amp;&amp; NavHost</h4><pre class="highlight"><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NavHostFragment</span> <span class="keyword">extends</span> <span class="title class_">Fragment</span> <span class="keyword">implements</span> <span class="title class_">NavHost</span> &#123;&#125;</span><br></pre>
 
 <p>该 <code>Fragment</code> 实现了 <code>NavHost</code> 接口，这边先跳开下，看下这个接口需要实现的方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A host is a single context or container for navigation via a &#123;<span class="doctag">@link</span> NavController&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">NavHost</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns the &#123;<span class="doctag">@link</span> NavController navigation controller&#125; for this navigation host.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this host&#x27;s navigation controller</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    NavController <span class="title function_">getNavController</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A host is a single context or container for navigation via a &#123;<span class="doctag">@link</span> NavController&#125;.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">NavHost</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns the &#123;<span class="doctag">@link</span> NavController navigation controller&#125; for this navigation host.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> this host&#x27;s navigation controller</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@NonNull</span></span><br><span class="line">    NavController <span class="title function_">getNavController</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>看下官方给该接口的定位，「是个 <code>NavController</code> 的宿主」，<code>NavController</code> 是啥，我们后面再来看，回到 <code>NavHostFragment</code>，首先看下用于 <code>Fragment</code> 初始化常用的几个方法 <code>onInflate</code>，<code>onAttach</code>，<code>onViewCreated</code>，<code>onCreateView</code> 以及 <code>onCreate</code></p>
-<h5 id="onInflate"><a href="#onInflate" class="headerlink" title="onInflate"></a>onInflate</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onInflate</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@NonNull</span> AttributeSet attrs,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">	<span class="comment">// 省略一些非关键代码...</span></span><br><span class="line">	<span class="comment">// 映射布局的 navGraph 属性，并赋值给 mGraphId，该值用于指定导航图</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">graphId</span> <span class="operator">=</span> navHost.getResourceId(R.styleable.NavHost_navGraph, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (graphId != <span class="number">0</span>) &#123;</span><br><span class="line">        mGraphId = graphId;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 省略一些非关键代码...</span></span><br><span class="line">	<span class="comment">// 映射布局的 defaultNavHost 并赋值给 mDefaultNavHost，该值用于设置是否将返回键控制权给 fragment</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">TypedArray</span> <span class="variable">a</span> <span class="operator">=</span> context.obtainStyledAttributes(attrs, R.styleable.NavHostFragment);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">defaultHost</span> <span class="operator">=</span> a.getBoolean(R.styleable.NavHostFragment_defaultNavHost, <span class="literal">false</span>);</span><br><span class="line">    <span class="keyword">if</span> (defaultHost) &#123;</span><br><span class="line">        mDefaultNavHost = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="onInflate"><a href="#onInflate" class="headerlink" title="onInflate"></a>onInflate</h5><pre class="highlight"><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onInflate</span><span class="params">(<span class="meta">@NonNull</span> Context context, <span class="meta">@NonNull</span> AttributeSet attrs,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">	<span class="comment">// 省略一些非关键代码...</span></span><br><span class="line">	<span class="comment">// 映射布局的 navGraph 属性，并赋值给 mGraphId，该值用于指定导航图</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">graphId</span> <span class="operator">=</span> navHost.getResourceId(R.styleable.NavHost_navGraph, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">if</span> (graphId != <span class="number">0</span>) &#123;</span><br><span class="line">        mGraphId = graphId;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	<span class="comment">// 省略一些非关键代码...</span></span><br><span class="line">	<span class="comment">// 映射布局的 defaultNavHost 并赋值给 mDefaultNavHost，该值用于设置是否将返回键控制权给 fragment</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">TypedArray</span> <span class="variable">a</span> <span class="operator">=</span> context.obtainStyledAttributes(attrs, R.styleable.NavHostFragment);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">defaultHost</span> <span class="operator">=</span> a.getBoolean(R.styleable.NavHostFragment_defaultNavHost, <span class="literal">false</span>);</span><br><span class="line">    <span class="keyword">if</span> (defaultHost) &#123;</span><br><span class="line">        mDefaultNavHost = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
-<h5 id="onAttach"><a href="#onAttach" class="headerlink" title="onAttach"></a>onAttach</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallSuper</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAttach</span><span class="params">(<span class="meta">@NonNull</span> Context context)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onAttach(context);</span><br><span class="line">    <span class="comment">// 如果设置获取返回键控制权的属性为 true，通过 setPrimaryNavigationFragment 方法进行设置</span></span><br><span class="line">    <span class="comment">// 否则，控制权还是在 activity</span></span><br><span class="line">    <span class="keyword">if</span> (mDefaultNavHost) &#123;</span><br><span class="line">        requireFragmentManager().beginTransaction()</span><br><span class="line">                .setPrimaryNavigationFragment(<span class="built_in">this</span>)</span><br><span class="line">                .commit();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="onAttach"><a href="#onAttach" class="headerlink" title="onAttach"></a>onAttach</h5><pre class="highlight"><span class="line"><span class="meta">@CallSuper</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAttach</span><span class="params">(<span class="meta">@NonNull</span> Context context)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onAttach(context);</span><br><span class="line">    <span class="comment">// 如果设置获取返回键控制权的属性为 true，通过 setPrimaryNavigationFragment 方法进行设置</span></span><br><span class="line">    <span class="comment">// 否则，控制权还是在 activity</span></span><br><span class="line">    <span class="keyword">if</span> (mDefaultNavHost) &#123;</span><br><span class="line">        requireFragmentManager().beginTransaction()</span><br><span class="line">                .setPrimaryNavigationFragment(<span class="built_in">this</span>)</span><br><span class="line">                .commit();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
-<h5 id="onViewCreated"><a href="#onViewCreated" class="headerlink" title="onViewCreated"></a>onViewCreated</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onViewCreated</span><span class="params">(<span class="meta">@NonNull</span> View view, <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">    <span class="comment">// 该方法通过设置 view 的 tag 属性为 controller，后期获取 controller 可能会使用，下同</span></span><br><span class="line">    Navigation.setViewNavController(view, mNavController);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (view.getParent() != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">View</span> <span class="variable">rootView</span> <span class="operator">=</span> (View) view.getParent();</span><br><span class="line">        <span class="keyword">if</span> (rootView.getId() == getId()) &#123;</span><br><span class="line">            Navigation.setViewNavController(rootView, mNavController);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="onViewCreated"><a href="#onViewCreated" class="headerlink" title="onViewCreated"></a>onViewCreated</h5><pre class="highlight"><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onViewCreated</span><span class="params">(<span class="meta">@NonNull</span> View view, <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onViewCreated(view, savedInstanceState);</span><br><span class="line">    <span class="comment">// 该方法通过设置 view 的 tag 属性为 controller，后期获取 controller 可能会使用，下同</span></span><br><span class="line">    Navigation.setViewNavController(view, mNavController);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (view.getParent() != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="type">View</span> <span class="variable">rootView</span> <span class="operator">=</span> (View) view.getParent();</span><br><span class="line">        <span class="keyword">if</span> (rootView.getId() == getId()) &#123;</span><br><span class="line">            Navigation.setViewNavController(rootView, mNavController);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
-<h5 id="onCreateView"><a href="#onCreateView" class="headerlink" title="onCreateView"></a>onCreateView</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> View <span class="title function_">onCreateView</span><span class="params">(<span class="meta">@NonNull</span> LayoutInflater inflater, <span class="meta">@Nullable</span> ViewGroup container,</span></span><br><span class="line"><span class="params">                         <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">	<span class="comment">// FragmentContainerView 实际是一个 FrameLayout，在该生命周期中，将 fragment 的 id 设置给父布局</span></span><br><span class="line">    <span class="type">FragmentContainerView</span> <span class="variable">containerView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FragmentContainerView</span>(inflater.getContext());</span><br><span class="line">    containerView.setId(getId());</span><br><span class="line">    <span class="keyword">return</span> containerView;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="onCreateView"><a href="#onCreateView" class="headerlink" title="onCreateView"></a>onCreateView</h5><pre class="highlight"><span class="line"><span class="keyword">public</span> View <span class="title function_">onCreateView</span><span class="params">(<span class="meta">@NonNull</span> LayoutInflater inflater, <span class="meta">@Nullable</span> ViewGroup container,</span></span><br><span class="line"><span class="params">                         <span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">	<span class="comment">// FragmentContainerView 实际是一个 FrameLayout，在该生命周期中，将 fragment 的 id 设置给父布局</span></span><br><span class="line">    <span class="type">FragmentContainerView</span> <span class="variable">containerView</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FragmentContainerView</span>(inflater.getContext());</span><br><span class="line">    containerView.setId(getId());</span><br><span class="line">    <span class="keyword">return</span> containerView;</span><br><span class="line">&#125;</span><br></pre>
 
-<h5 id="onCreate"><a href="#onCreate" class="headerlink" title="onCreate"></a>onCreate</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@CallSuper</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(<span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> requireContext();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 NavController 的一些属性，并将 controller 设置给宿主</span></span><br><span class="line">    <span class="comment">// 包括关联 lifeCycler，返回键的监听属性等</span></span><br><span class="line">    mNavController = <span class="keyword">new</span> <span class="title class_">NavHostController</span>(context);</span><br><span class="line">    <span class="comment">// ... 省略一些属性设置代码</span></span><br><span class="line">    <span class="comment">// 在 onCreateNavController 方法中，给 controller 中的 NavigatorProvider 添加了</span></span><br><span class="line">    <span class="comment">// DialogFragmentNavigator 和 FragmentNavigator，这两个类具体实现了什么，先留点悬念，稍后解读</span></span><br><span class="line">    onCreateNavController(mNavController);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取 store 的状态，并判断是否要获取返回键控制</span></span><br><span class="line">    <span class="type">Bundle</span> <span class="variable">navState</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (savedInstanceState != <span class="literal">null</span>) &#123;</span><br><span class="line">        navState = savedInstanceState.getBundle(KEY_NAV_CONTROLLER_STATE);</span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState.getBoolean(KEY_DEFAULT_NAV_HOST, <span class="literal">false</span>)) &#123;</span><br><span class="line">            mDefaultNavHost = <span class="literal">true</span>;</span><br><span class="line">            requireFragmentManager().beginTransaction()</span><br><span class="line">                    .setPrimaryNavigationFragment(<span class="built_in">this</span>)</span><br><span class="line">                    .commit();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    <span class="comment">// 将保存的状态设置回去</span></span><br><span class="line">    <span class="keyword">if</span> (navState != <span class="literal">null</span>) &#123;</span><br><span class="line">        mNavController.restoreState(navState);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将映射的 navigation 布局设置给 controller</span></span><br><span class="line">    <span class="keyword">if</span> (mGraphId != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// Set from onInflate()</span></span><br><span class="line">        mNavController.setGraph(mGraphId);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// See if it was set by NavHostFragment.create()</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">Bundle</span> <span class="variable">args</span> <span class="operator">=</span> getArguments();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">graphId</span> <span class="operator">=</span> args != <span class="literal">null</span> ? args.getInt(KEY_GRAPH_ID) : <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Bundle</span> <span class="variable">startDestinationArgs</span> <span class="operator">=</span> args != <span class="literal">null</span></span><br><span class="line">                ? args.getBundle(KEY_START_DESTINATION_ARGS)</span><br><span class="line">                : <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (graphId != <span class="number">0</span>) &#123;</span><br><span class="line">            mNavController.setGraph(graphId, startDestinationArgs);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="onCreate"><a href="#onCreate" class="headerlink" title="onCreate"></a>onCreate</h5><pre class="highlight"><span class="line"><span class="meta">@CallSuper</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onCreate</span><span class="params">(<span class="meta">@Nullable</span> Bundle savedInstanceState)</span> &#123;</span><br><span class="line">    <span class="built_in">super</span>.onCreate(savedInstanceState);</span><br><span class="line">    <span class="keyword">final</span> <span class="type">Context</span> <span class="variable">context</span> <span class="operator">=</span> requireContext();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 初始化 NavController 的一些属性，并将 controller 设置给宿主</span></span><br><span class="line">    <span class="comment">// 包括关联 lifeCycler，返回键的监听属性等</span></span><br><span class="line">    mNavController = <span class="keyword">new</span> <span class="title class_">NavHostController</span>(context);</span><br><span class="line">    <span class="comment">// ... 省略一些属性设置代码</span></span><br><span class="line">    <span class="comment">// 在 onCreateNavController 方法中，给 controller 中的 NavigatorProvider 添加了</span></span><br><span class="line">    <span class="comment">// DialogFragmentNavigator 和 FragmentNavigator，这两个类具体实现了什么，先留点悬念，稍后解读</span></span><br><span class="line">    onCreateNavController(mNavController);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取 store 的状态，并判断是否要获取返回键控制</span></span><br><span class="line">    <span class="type">Bundle</span> <span class="variable">navState</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (savedInstanceState != <span class="literal">null</span>) &#123;</span><br><span class="line">        navState = savedInstanceState.getBundle(KEY_NAV_CONTROLLER_STATE);</span><br><span class="line">        <span class="keyword">if</span> (savedInstanceState.getBoolean(KEY_DEFAULT_NAV_HOST, <span class="literal">false</span>)) &#123;</span><br><span class="line">            mDefaultNavHost = <span class="literal">true</span>;</span><br><span class="line">            requireFragmentManager().beginTransaction()</span><br><span class="line">                    .setPrimaryNavigationFragment(<span class="built_in">this</span>)</span><br><span class="line">                    .commit();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">		</span><br><span class="line">    <span class="comment">// 将保存的状态设置回去</span></span><br><span class="line">    <span class="keyword">if</span> (navState != <span class="literal">null</span>) &#123;</span><br><span class="line">        mNavController.restoreState(navState);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 将映射的 navigation 布局设置给 controller</span></span><br><span class="line">    <span class="keyword">if</span> (mGraphId != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// Set from onInflate()</span></span><br><span class="line">        mNavController.setGraph(mGraphId);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// See if it was set by NavHostFragment.create()</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">Bundle</span> <span class="variable">args</span> <span class="operator">=</span> getArguments();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">int</span> <span class="variable">graphId</span> <span class="operator">=</span> args != <span class="literal">null</span> ? args.getInt(KEY_GRAPH_ID) : <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Bundle</span> <span class="variable">startDestinationArgs</span> <span class="operator">=</span> args != <span class="literal">null</span></span><br><span class="line">                ? args.getBundle(KEY_START_DESTINATION_ARGS)</span><br><span class="line">                : <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">if</span> (graphId != <span class="number">0</span>) &#123;</span><br><span class="line">            mNavController.setGraph(graphId, startDestinationArgs);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>通过上述的几个方法，将 <code>NavController</code>，<code>defaultNavHost</code>，<code>NavGraph</code> 的值初始化完成，在 <code>NavHostFragment</code> 中还有个非常重要的方法 <code>findNavController</code>，通过该方法，可以获取到 <code>Fragment</code> 的管理者 <code>NavController</code></p>
-<h5 id="findNavController"><a href="#findNavController" class="headerlink" title="findNavController"></a>findNavController</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NonNull</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> NavController <span class="title function_">findNavController</span><span class="params">(<span class="meta">@NonNull</span> Fragment fragment)</span> &#123;</span><br><span class="line">    <span class="type">Fragment</span> <span class="variable">findFragment</span> <span class="operator">=</span> fragment;</span><br><span class="line">    <span class="keyword">while</span> (findFragment != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果当前传入的 fragment 就是 NavHostFragment 则直接返回 onCreate 中初始化的 mNavController</span></span><br><span class="line">        <span class="keyword">if</span> (findFragment <span class="keyword">instanceof</span> NavHostFragment) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((NavHostFragment) findFragment).getNavController();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果不是则通过 onAttach / onCreate 方法中通过 setPrimaryNavigationFragment 方法</span></span><br><span class="line">        <span class="comment">// 设置的 fragment 并返回 mNavController</span></span><br><span class="line">        <span class="type">Fragment</span> <span class="variable">primaryNavFragment</span> <span class="operator">=</span> findFragment.requireFragmentManager()</span><br><span class="line">                .getPrimaryNavigationFragment();</span><br><span class="line">        <span class="keyword">if</span> (primaryNavFragment <span class="keyword">instanceof</span> NavHostFragment) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((NavHostFragment) primaryNavFragment).getNavController();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果上述都不成立，则获取父级的 Fragment，继续循环去判断获取</span></span><br><span class="line">        findFragment = findFragment.getParentFragment();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Try looking for one associated with the view instead, if applicable</span></span><br><span class="line">    <span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> fragment.getView();</span><br><span class="line">    <span class="keyword">if</span> (view != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> Navigation.findNavController(view);</span><br><span class="line">    &#125;</span><br><span class="line">   	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Fragment &quot;</span> + fragment</span><br><span class="line">            + <span class="string">&quot; does not have a NavController set&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="findNavController"><a href="#findNavController" class="headerlink" title="findNavController"></a>findNavController</h5><pre class="highlight"><span class="line"><span class="meta">@NonNull</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> NavController <span class="title function_">findNavController</span><span class="params">(<span class="meta">@NonNull</span> Fragment fragment)</span> &#123;</span><br><span class="line">    <span class="type">Fragment</span> <span class="variable">findFragment</span> <span class="operator">=</span> fragment;</span><br><span class="line">    <span class="keyword">while</span> (findFragment != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 如果当前传入的 fragment 就是 NavHostFragment 则直接返回 onCreate 中初始化的 mNavController</span></span><br><span class="line">        <span class="keyword">if</span> (findFragment <span class="keyword">instanceof</span> NavHostFragment) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((NavHostFragment) findFragment).getNavController();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果不是则通过 onAttach / onCreate 方法中通过 setPrimaryNavigationFragment 方法</span></span><br><span class="line">        <span class="comment">// 设置的 fragment 并返回 mNavController</span></span><br><span class="line">        <span class="type">Fragment</span> <span class="variable">primaryNavFragment</span> <span class="operator">=</span> findFragment.requireFragmentManager()</span><br><span class="line">                .getPrimaryNavigationFragment();</span><br><span class="line">        <span class="keyword">if</span> (primaryNavFragment <span class="keyword">instanceof</span> NavHostFragment) &#123;</span><br><span class="line">            <span class="keyword">return</span> ((NavHostFragment) primaryNavFragment).getNavController();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果上述都不成立，则获取父级的 Fragment，继续循环去判断获取</span></span><br><span class="line">        findFragment = findFragment.getParentFragment();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Try looking for one associated with the view instead, if applicable</span></span><br><span class="line">    <span class="type">View</span> <span class="variable">view</span> <span class="operator">=</span> fragment.getView();</span><br><span class="line">    <span class="keyword">if</span> (view != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> Navigation.findNavController(view);</span><br><span class="line">    &#125;</span><br><span class="line">   	<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Fragment &quot;</span> + fragment</span><br><span class="line">            + <span class="string">&quot; does not have a NavController set&quot;</span>);</span><br><span class="line">&#125;</span><br></pre>
 
 <p>所以，当我们封装 <code>Fragment</code> 基类的时候，即可通过该方法，为所有的 <code>Fragment</code> 寻找其对应的 <code>NavController</code></p>
 <p>在介绍 <code>NavHostFragment</code> 的时候，有个类 <code>NavController</code> 也出现了多次，该 <code>Fragment</code> 就是其宿主，接着就看下 <code>Controller</code> 里面做了什么操作</p>
 <h4 id="NavController"><a href="#NavController" class="headerlink" title="NavController"></a>NavController</h4><p><code>NavController</code> 作为整个 <code>App</code> 的 <code>Fragment</code> 管理者，有几个比较重要的方法，包括 <code>SetGraph</code> 设置「导航图」，<code>navigate</code> 跳转 <code>fragment</code> 界面，<code>navigateUp</code> 返回回退栈上个界面，<code>getNavInflater</code> 用于映射 <code>navigation.xml</code> 文件</p>
 <h5 id="setGraph"><a href="#setGraph" class="headerlink" title="setGraph"></a>setGraph</h5><p><code>setGraph</code> 重载的方法比较多，但最终会调用 <code>onGraphCreated</code> 方法</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">onGraphCreated</span><span class="params">(<span class="meta">@Nullable</span> Bundle startDestinationArgs)</span> &#123;</span><br><span class="line">	<span class="comment">// 获取之前保存的状态，并设置状态至 Navigator，Navgator 通过 name 存在 NavigatorProvider 中</span></span><br><span class="line">	<span class="comment">// 在 NavigatorProvider 中有个 HashMap 用来存储 Navigator</span></span><br><span class="line">    <span class="keyword">if</span> (mNavigatorStateToRestore != <span class="literal">null</span>) &#123;</span><br><span class="line">        ArrayList&lt;String&gt; navigatorNames = mNavigatorStateToRestore.getStringArrayList(</span><br><span class="line">                KEY_NAVIGATOR_STATE_NAMES);</span><br><span class="line">        <span class="keyword">if</span> (navigatorNames != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String name : navigatorNames) &#123;</span><br><span class="line">                Navigator&lt;?&gt; navigator = mNavigatorProvider.getNavigator(name);</span><br><span class="line">                <span class="type">Bundle</span> <span class="variable">bundle</span> <span class="operator">=</span> mNavigatorStateToRestore.getBundle(name);</span><br><span class="line">                <span class="keyword">if</span> (bundle != <span class="literal">null</span>) &#123;</span><br><span class="line">                    navigator.onRestoreState(bundle);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mBackStackToRestore != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Parcelable parcelable : mBackStackToRestore) &#123;</span><br><span class="line">            <span class="comment">// ... 省略一些获取属性的代码</span></span><br><span class="line">            <span class="comment">// ... 设置属性并压入回退栈</span></span><br><span class="line">            <span class="type">NavBackStackEntry</span> <span class="variable">entry</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NavBackStackEntry</span>(mContext, node, args,</span><br><span class="line">                    mLifecycleOwner, mViewModel,</span><br><span class="line">                    state.getUUID(), state.getSavedState());</span><br><span class="line">            mBackStack.add(entry);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 更新当前是否可以获取系统返回按钮的控制权</span></span><br><span class="line">        updateOnBackPressedCallbackEnabled();</span><br><span class="line">        mBackStackToRestore = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 当设置完「导航图」后，判断是否有 deepLink 属性，如果没有则显示第一个界面</span></span><br><span class="line">	<span class="comment">// deepLink 用于设置 url，可直接跳转指定的界面</span></span><br><span class="line">	<span class="comment">// 例如，当收到通知后需要跳转指定界面，则可以通过 deepLink 实现</span></span><br><span class="line">    <span class="keyword">if</span> (mGraph != <span class="literal">null</span> &amp;&amp; mBackStack.isEmpty()) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">deepLinked</span> <span class="operator">=</span> !mDeepLinkHandled &amp;&amp; mActivity != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; handleDeepLink(mActivity.getIntent());</span><br><span class="line">        <span class="keyword">if</span> (!deepLinked) &#123;</span><br><span class="line">            <span class="comment">// Navigate to the first destination in the graph</span></span><br><span class="line">            <span class="comment">// if we haven&#x27;t deep linked to a destination</span></span><br><span class="line">            navigate(mGraph, startDestinationArgs, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">onGraphCreated</span><span class="params">(<span class="meta">@Nullable</span> Bundle startDestinationArgs)</span> &#123;</span><br><span class="line">	<span class="comment">// 获取之前保存的状态，并设置状态至 Navigator，Navgator 通过 name 存在 NavigatorProvider 中</span></span><br><span class="line">	<span class="comment">// 在 NavigatorProvider 中有个 HashMap 用来存储 Navigator</span></span><br><span class="line">    <span class="keyword">if</span> (mNavigatorStateToRestore != <span class="literal">null</span>) &#123;</span><br><span class="line">        ArrayList&lt;String&gt; navigatorNames = mNavigatorStateToRestore.getStringArrayList(</span><br><span class="line">                KEY_NAVIGATOR_STATE_NAMES);</span><br><span class="line">        <span class="keyword">if</span> (navigatorNames != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">for</span> (String name : navigatorNames) &#123;</span><br><span class="line">                Navigator&lt;?&gt; navigator = mNavigatorProvider.getNavigator(name);</span><br><span class="line">                <span class="type">Bundle</span> <span class="variable">bundle</span> <span class="operator">=</span> mNavigatorStateToRestore.getBundle(name);</span><br><span class="line">                <span class="keyword">if</span> (bundle != <span class="literal">null</span>) &#123;</span><br><span class="line">                    navigator.onRestoreState(bundle);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (mBackStackToRestore != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (Parcelable parcelable : mBackStackToRestore) &#123;</span><br><span class="line">            <span class="comment">// ... 省略一些获取属性的代码</span></span><br><span class="line">            <span class="comment">// ... 设置属性并压入回退栈</span></span><br><span class="line">            <span class="type">NavBackStackEntry</span> <span class="variable">entry</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">NavBackStackEntry</span>(mContext, node, args,</span><br><span class="line">                    mLifecycleOwner, mViewModel,</span><br><span class="line">                    state.getUUID(), state.getSavedState());</span><br><span class="line">            mBackStack.add(entry);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 更新当前是否可以获取系统返回按钮的控制权</span></span><br><span class="line">        updateOnBackPressedCallbackEnabled();</span><br><span class="line">        mBackStackToRestore = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 当设置完「导航图」后，判断是否有 deepLink 属性，如果没有则显示第一个界面</span></span><br><span class="line">	<span class="comment">// deepLink 用于设置 url，可直接跳转指定的界面</span></span><br><span class="line">	<span class="comment">// 例如，当收到通知后需要跳转指定界面，则可以通过 deepLink 实现</span></span><br><span class="line">    <span class="keyword">if</span> (mGraph != <span class="literal">null</span> &amp;&amp; mBackStack.isEmpty()) &#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">deepLinked</span> <span class="operator">=</span> !mDeepLinkHandled &amp;&amp; mActivity != <span class="literal">null</span></span><br><span class="line">                &amp;&amp; handleDeepLink(mActivity.getIntent());</span><br><span class="line">        <span class="keyword">if</span> (!deepLinked) &#123;</span><br><span class="line">            <span class="comment">// Navigate to the first destination in the graph</span></span><br><span class="line">            <span class="comment">// if we haven&#x27;t deep linked to a destination</span></span><br><span class="line">            navigate(mGraph, startDestinationArgs, <span class="literal">null</span>, <span class="literal">null</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <h5 id="navigate"><a href="#navigate" class="headerlink" title="navigate"></a>navigate</h5><p><code>navigate</code> 用于跳转界面，重载的方法也较多，最终调用的内部私有方法 <code>navigate</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">navigate</span><span class="params">(<span class="meta">@NonNull</span> NavDestination node, <span class="meta">@Nullable</span> Bundle args,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> NavOptions navOptions, <span class="meta">@Nullable</span> Navigator.Extras navigatorExtras)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">popped</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">	<span class="comment">// navOptions 用于设置跳转的动画，pop 时候对应的界面等，具体可以查看 NavOptions 类</span></span><br><span class="line">    <span class="keyword">if</span> (navOptions != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (navOptions.getPopUpTo() != -<span class="number">1</span>) &#123;</span><br><span class="line">            popped = popBackStackInternal(navOptions.getPopUpTo(),</span><br><span class="line">                    navOptions.isPopUpToInclusive());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Navigator&lt;NavDestination&gt; navigator = mNavigatorProvider.getNavigator(</span><br><span class="line">            node.getNavigatorName());</span><br><span class="line">    <span class="type">Bundle</span> <span class="variable">finalArgs</span> <span class="operator">=</span> node.addInDefaultArgs(args);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 实际通过 Navigator.navigate 进行跳转</span></span><br><span class="line">	<span class="comment">// Navigator 是个抽象类，具体实现类有 ActivityNavigator，FragmentNavigator，	</span></span><br><span class="line">	<span class="comment">// DialogFragmentNavigator，NavGraphNavigator，NoOpNavigator等，且在类头部使用了 Name 注解，</span></span><br><span class="line">    <span class="comment">// 通过 Name 注解，能够在 NavigatorProvider 注册相应的 Navigator</span></span><br><span class="line">	<span class="comment">// 在 navigation.xml 布局中，通过 Name 对应的值，进行注册即可，</span></span><br><span class="line">    <span class="comment">// 例如注册 fragment 则直接使用 &lt;fragment&gt;&lt;/fragment&gt; 标签，</span></span><br><span class="line">    <span class="comment">// 同时还有 &lt;activity&gt;&lt;/activity&gt;，&lt;dialog&gt;&lt;/dialog&gt;，&lt;navigation&gt;&lt;/navigation&gt; 等标签</span></span><br><span class="line">    <span class="type">NavDestination</span> <span class="variable">newDest</span> <span class="operator">=</span> navigator.navigate(node, finalArgs,</span><br><span class="line">            navOptions, navigatorExtras);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (newDest != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!(newDest <span class="keyword">instanceof</span> FloatingWindow)) &#123;</span><br><span class="line">            <span class="comment">// 如果跳转的界面不是 FloatingWindow 则持续通过 popBackStackInternal 出栈，一直到满足条件</span></span><br><span class="line">            <span class="keyword">while</span> (!mBackStack.isEmpty()</span><br><span class="line">                    &amp;&amp; mBackStack.peekLast().getDestination() <span class="keyword">instanceof</span> FloatingWindow</span><br><span class="line">                    &amp;&amp; popBackStackInternal(</span><br><span class="line">                            mBackStack.peekLast().getDestination().getId(), <span class="literal">true</span>)) &#123;</span><br><span class="line">                <span class="comment">// Keep popping</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// ...  省略入栈部分，当跳转完成后，则通知监听</span></span><br><span class="line">    <span class="keyword">if</span> (popped || newDest != <span class="literal">null</span>) &#123;</span><br><span class="line">        dispatchOnDestinationChanged();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">navigate</span><span class="params">(<span class="meta">@NonNull</span> NavDestination node, <span class="meta">@Nullable</span> Bundle args,</span></span><br><span class="line"><span class="params">        <span class="meta">@Nullable</span> NavOptions navOptions, <span class="meta">@Nullable</span> Navigator.Extras navigatorExtras)</span> &#123;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">popped</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">	<span class="comment">// navOptions 用于设置跳转的动画，pop 时候对应的界面等，具体可以查看 NavOptions 类</span></span><br><span class="line">    <span class="keyword">if</span> (navOptions != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (navOptions.getPopUpTo() != -<span class="number">1</span>) &#123;</span><br><span class="line">            popped = popBackStackInternal(navOptions.getPopUpTo(),</span><br><span class="line">                    navOptions.isPopUpToInclusive());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    Navigator&lt;NavDestination&gt; navigator = mNavigatorProvider.getNavigator(</span><br><span class="line">            node.getNavigatorName());</span><br><span class="line">    <span class="type">Bundle</span> <span class="variable">finalArgs</span> <span class="operator">=</span> node.addInDefaultArgs(args);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 实际通过 Navigator.navigate 进行跳转</span></span><br><span class="line">	<span class="comment">// Navigator 是个抽象类，具体实现类有 ActivityNavigator，FragmentNavigator，	</span></span><br><span class="line">	<span class="comment">// DialogFragmentNavigator，NavGraphNavigator，NoOpNavigator等，且在类头部使用了 Name 注解，</span></span><br><span class="line">    <span class="comment">// 通过 Name 注解，能够在 NavigatorProvider 注册相应的 Navigator</span></span><br><span class="line">	<span class="comment">// 在 navigation.xml 布局中，通过 Name 对应的值，进行注册即可，</span></span><br><span class="line">    <span class="comment">// 例如注册 fragment 则直接使用 &lt;fragment&gt;&lt;/fragment&gt; 标签，</span></span><br><span class="line">    <span class="comment">// 同时还有 &lt;activity&gt;&lt;/activity&gt;，&lt;dialog&gt;&lt;/dialog&gt;，&lt;navigation&gt;&lt;/navigation&gt; 等标签</span></span><br><span class="line">    <span class="type">NavDestination</span> <span class="variable">newDest</span> <span class="operator">=</span> navigator.navigate(node, finalArgs,</span><br><span class="line">            navOptions, navigatorExtras);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (newDest != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!(newDest <span class="keyword">instanceof</span> FloatingWindow)) &#123;</span><br><span class="line">            <span class="comment">// 如果跳转的界面不是 FloatingWindow 则持续通过 popBackStackInternal 出栈，一直到满足条件</span></span><br><span class="line">            <span class="keyword">while</span> (!mBackStack.isEmpty()</span><br><span class="line">                    &amp;&amp; mBackStack.peekLast().getDestination() <span class="keyword">instanceof</span> FloatingWindow</span><br><span class="line">                    &amp;&amp; popBackStackInternal(</span><br><span class="line">                            mBackStack.peekLast().getDestination().getId(), <span class="literal">true</span>)) &#123;</span><br><span class="line">                <span class="comment">// Keep popping</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// ...  省略入栈部分，当跳转完成后，则通知监听</span></span><br><span class="line">    <span class="keyword">if</span> (popped || newDest != <span class="literal">null</span>) &#123;</span><br><span class="line">        dispatchOnDestinationChanged();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <h5 id="navigateUp"><a href="#navigateUp" class="headerlink" title="navigateUp"></a>navigateUp</h5><p><code>navigateUp</code> 用于回退上个界面，当调用该方法时，会通过回退栈中的数量进行不同处理，如果数量为 1 则会直接 <code>finish</code> 对应的 <code>activity</code>，否则调用 <code>popBackStack</code> 方法，而 <code>popBackStack</code> 最终会调用 <code>popBackStackInternal</code> 方法，该方法返回一个 <code>Boolean</code> 值，用于判断是否出栈成功</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">boolean</span> <span class="title function_">popBackStackInternal</span><span class="params">(<span class="meta">@IdRes</span> <span class="type">int</span> destinationId, <span class="type">boolean</span> inclusive)</span> &#123;</span><br><span class="line">         <span class="comment">// ...</span></span><br><span class="line">    	<span class="comment">// 列表用于存储需要出栈的 Navigator</span></span><br><span class="line">        ArrayList&lt;Navigator&lt;?&gt;&gt; popOperations = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Iterator&lt;NavBackStackEntry&gt; iterator = mBackStack.descendingIterator();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">foundDestination</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">// 遍历回退栈的，并将符合出栈条件的 Navigator 放入列表</span></span><br><span class="line">    	<span class="comment">// 如果已经找到了需要的 destination 则打断循环</span></span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            <span class="type">NavDestination</span> <span class="variable">destination</span> <span class="operator">=</span> iterator.next().getDestination();</span><br><span class="line">            Navigator&lt;?&gt; navigator = mNavigatorProvider.getNavigator(</span><br><span class="line">                    destination.getNavigatorName());</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (inclusive || destination.getId() != destinationId) &#123;</span><br><span class="line">                popOperations.add(navigator);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (destination.getId() == destinationId) &#123;</span><br><span class="line">                foundDestination = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//...对需要出栈的进行出栈处理</span></span><br><span class="line">        <span class="keyword">return</span> popped;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="type">boolean</span> <span class="title function_">popBackStackInternal</span><span class="params">(<span class="meta">@IdRes</span> <span class="type">int</span> destinationId, <span class="type">boolean</span> inclusive)</span> &#123;</span><br><span class="line">         <span class="comment">// ...</span></span><br><span class="line">    	<span class="comment">// 列表用于存储需要出栈的 Navigator</span></span><br><span class="line">        ArrayList&lt;Navigator&lt;?&gt;&gt; popOperations = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        Iterator&lt;NavBackStackEntry&gt; iterator = mBackStack.descendingIterator();</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">foundDestination</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">// 遍历回退栈的，并将符合出栈条件的 Navigator 放入列表</span></span><br><span class="line">    	<span class="comment">// 如果已经找到了需要的 destination 则打断循环</span></span><br><span class="line">        <span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">            <span class="type">NavDestination</span> <span class="variable">destination</span> <span class="operator">=</span> iterator.next().getDestination();</span><br><span class="line">            Navigator&lt;?&gt; navigator = mNavigatorProvider.getNavigator(</span><br><span class="line">                    destination.getNavigatorName());</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (inclusive || destination.getId() != destinationId) &#123;</span><br><span class="line">                popOperations.add(navigator);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> (destination.getId() == destinationId) &#123;</span><br><span class="line">                foundDestination = <span class="literal">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//...对需要出栈的进行出栈处理</span></span><br><span class="line">        <span class="keyword">return</span> popped;</span><br><span class="line">    &#125;</span><br></pre>
 
 <h5 id="getNavInflater"><a href="#getNavInflater" class="headerlink" title="getNavInflater"></a>getNavInflater</h5><p><code>getNavInflater</code> 通过将 <code>mNavigatorProvider</code> 传给 <code>NavInflater</code>，前面提到过，<code>NavigatorProvider</code> 是用来保存一系列的 <code>Navigator</code>，那么当传入到 <code>NavInflater</code> 中后，该类会对包含的 <code>Navigator</code> 进行解析成一个个 <code>Destination</code>，用于导航跳转，具体如何解析的有兴趣的朋友可以自己看</p>
 <p>在上面的 <code>navigate</code> 方法中，提到了实际跳转是通过 <code>Navigator #navigate</code> 进行跳转的，但是 <code>Navigator</code> 是个抽象类，具体的实现由子类完成，因为更多的会使用 <code>fragment</code>,所以我们只看下 <code>FragmentNavigator</code> 类下的 <code>navigate</code> 方法</p>
-<h4 id="FragmentNavigator"><a href="#FragmentNavigator" class="headerlink" title="FragmentNavigator"></a>FragmentNavigator</h4><h5 id="navigate-1"><a href="#navigate-1" class="headerlink" title="navigate"></a>navigate</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> NavDestination <span class="title function_">navigate</span><span class="params">(<span class="meta">@NonNull</span> Destination destination, <span class="meta">@Nullable</span> Bundle args,</span></span><br><span class="line"><span class="params">            <span class="meta">@Nullable</span> NavOptions navOptions, <span class="meta">@Nullable</span> Navigator.Extras navigatorExtras)</span> &#123;</span><br><span class="line">        </span><br><span class="line">    	<span class="comment">// ...</span></span><br><span class="line">    	<span class="comment">// 通过 destination 的 className 寻找相应的 Fragment，并设置一些传递的参数</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> destination.getClassName();</span><br><span class="line">        <span class="keyword">if</span> (className.charAt(<span class="number">0</span>) == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">            className = mContext.getPackageName() + className;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Fragment</span> <span class="variable">frag</span> <span class="operator">=</span> instantiateFragment(mContext, mFragmentManager,</span><br><span class="line">                className, args);</span><br><span class="line">        frag.setArguments(args);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">FragmentTransaction</span> <span class="variable">ft</span> <span class="operator">=</span> mFragmentManager.beginTransaction();</span><br><span class="line"></span><br><span class="line">       	<span class="comment">// ...设置一些动画等属性</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">        ft.replace(mContainerId, frag);</span><br><span class="line">        ft.setPrimaryNavigationFragment(frag);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="meta">@IdRes</span> <span class="type">int</span> <span class="variable">destId</span> <span class="operator">=</span> destination.getId();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">initialNavigation</span> <span class="operator">=</span> mBackStack.isEmpty();</span><br><span class="line">        <span class="comment">// TODO Build first class singleTop behavior for fragments</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">isSingleTopReplacement</span> <span class="operator">=</span> navOptions != <span class="literal">null</span> &amp;&amp; !initialNavigation</span><br><span class="line">                &amp;&amp; navOptions.shouldLaunchSingleTop()</span><br><span class="line">                &amp;&amp; mBackStack.peekLast() == destId;</span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> isAdded;</span><br><span class="line">    	</span><br><span class="line">    	<span class="comment">// 根据是否是 singleTop，做不同的入栈处理</span></span><br><span class="line">        <span class="keyword">if</span> (initialNavigation) &#123;</span><br><span class="line">            isAdded = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isSingleTopReplacement) &#123;</span><br><span class="line">            <span class="comment">// Single Top means we only want one instance on the back stack</span></span><br><span class="line">            <span class="keyword">if</span> (mBackStack.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                mFragmentManager.popBackStack(</span><br><span class="line">                        generateBackStackName(mBackStack.size(), mBackStack.peekLast()),</span><br><span class="line">                        FragmentManager.POP_BACK_STACK_INCLUSIVE);</span><br><span class="line">                ft.addToBackStack(generateBackStackName(mBackStack.size(), destId));</span><br><span class="line">            &#125;</span><br><span class="line">            isAdded = <span class="literal">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ft.addToBackStack(generateBackStackName(mBackStack.size() + <span class="number">1</span>, destId));</span><br><span class="line">            isAdded = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// ...设置一些共享元素</span></span><br><span class="line">    </span><br><span class="line">        ft.setReorderingAllowed(<span class="literal">true</span>);</span><br><span class="line">        ft.commit();</span><br><span class="line">        <span class="comment">// The commit succeeded, update our view of the world</span></span><br><span class="line">        <span class="keyword">if</span> (isAdded) &#123;</span><br><span class="line">            mBackStack.add(destId);</span><br><span class="line">            <span class="keyword">return</span> destination;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="FragmentNavigator"><a href="#FragmentNavigator" class="headerlink" title="FragmentNavigator"></a>FragmentNavigator</h4><h5 id="navigate-1"><a href="#navigate-1" class="headerlink" title="navigate"></a>navigate</h5><pre class="highlight"><span class="line"><span class="keyword">public</span> NavDestination <span class="title function_">navigate</span><span class="params">(<span class="meta">@NonNull</span> Destination destination, <span class="meta">@Nullable</span> Bundle args,</span></span><br><span class="line"><span class="params">            <span class="meta">@Nullable</span> NavOptions navOptions, <span class="meta">@Nullable</span> Navigator.Extras navigatorExtras)</span> &#123;</span><br><span class="line">        </span><br><span class="line">    	<span class="comment">// ...</span></span><br><span class="line">    	<span class="comment">// 通过 destination 的 className 寻找相应的 Fragment，并设置一些传递的参数</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> destination.getClassName();</span><br><span class="line">        <span class="keyword">if</span> (className.charAt(<span class="number">0</span>) == <span class="string">&#x27;.&#x27;</span>) &#123;</span><br><span class="line">            className = mContext.getPackageName() + className;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">Fragment</span> <span class="variable">frag</span> <span class="operator">=</span> instantiateFragment(mContext, mFragmentManager,</span><br><span class="line">                className, args);</span><br><span class="line">        frag.setArguments(args);</span><br><span class="line">        <span class="keyword">final</span> <span class="type">FragmentTransaction</span> <span class="variable">ft</span> <span class="operator">=</span> mFragmentManager.beginTransaction();</span><br><span class="line"></span><br><span class="line">       	<span class="comment">// ...设置一些动画等属性</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">        ft.replace(mContainerId, frag);</span><br><span class="line">        ft.setPrimaryNavigationFragment(frag);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> <span class="meta">@IdRes</span> <span class="type">int</span> <span class="variable">destId</span> <span class="operator">=</span> destination.getId();</span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">initialNavigation</span> <span class="operator">=</span> mBackStack.isEmpty();</span><br><span class="line">        <span class="comment">// TODO Build first class singleTop behavior for fragments</span></span><br><span class="line">        <span class="keyword">final</span> <span class="type">boolean</span> <span class="variable">isSingleTopReplacement</span> <span class="operator">=</span> navOptions != <span class="literal">null</span> &amp;&amp; !initialNavigation</span><br><span class="line">                &amp;&amp; navOptions.shouldLaunchSingleTop()</span><br><span class="line">                &amp;&amp; mBackStack.peekLast() == destId;</span><br><span class="line"></span><br><span class="line">        <span class="type">boolean</span> isAdded;</span><br><span class="line">    	</span><br><span class="line">    	<span class="comment">// 根据是否是 singleTop，做不同的入栈处理</span></span><br><span class="line">        <span class="keyword">if</span> (initialNavigation) &#123;</span><br><span class="line">            isAdded = <span class="literal">true</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (isSingleTopReplacement) &#123;</span><br><span class="line">            <span class="comment">// Single Top means we only want one instance on the back stack</span></span><br><span class="line">            <span class="keyword">if</span> (mBackStack.size() &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                mFragmentManager.popBackStack(</span><br><span class="line">                        generateBackStackName(mBackStack.size(), mBackStack.peekLast()),</span><br><span class="line">                        FragmentManager.POP_BACK_STACK_INCLUSIVE);</span><br><span class="line">                ft.addToBackStack(generateBackStackName(mBackStack.size(), destId));</span><br><span class="line">            &#125;</span><br><span class="line">            isAdded = <span class="literal">false</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ft.addToBackStack(generateBackStackName(mBackStack.size() + <span class="number">1</span>, destId));</span><br><span class="line">            isAdded = <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        <span class="comment">// ...设置一些共享元素</span></span><br><span class="line">    </span><br><span class="line">        ft.setReorderingAllowed(<span class="literal">true</span>);</span><br><span class="line">        ft.commit();</span><br><span class="line">        <span class="comment">// The commit succeeded, update our view of the world</span></span><br><span class="line">        <span class="keyword">if</span> (isAdded) &#123;</span><br><span class="line">            mBackStack.add(destId);</span><br><span class="line">            <span class="keyword">return</span> destination;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre>
 
 <h4 id="NavAction-amp-amp-NavDestination"><a href="#NavAction-amp-amp-NavDestination" class="headerlink" title="NavAction &amp;&amp; NavDestination"></a>NavAction &amp;&amp; NavDestination</h4><p>除了上述的几个类以外，<code>Navigation</code> 还有比较重要的就是 <code>NavAction</code> 和 <code>NavDestination</code>，<code>NavAction</code> 中指定了跳转的 <code>DestinationId</code>，额外的携带参数等，可以简单的看成一个实体类，<code>NavDestination</code> 中则包含了各种 <code>NavAction</code>，<code>DeepLink</code> 等多种属性，构成了「导航图」上的一个个点。</p>
 <h4 id="解决重新创建-Fragment-的坑"><a href="#解决重新创建-Fragment-的坑" class="headerlink" title="解决重新创建 Fragment 的坑"></a>解决重新创建 <code>Fragment</code> 的坑</h4><p><code>Navigation</code> 目前比较大的一个坑就是存在 <code>Fragment</code> 在重新回到界面上的时候会重新创建，既然是坑，那就得解决啊，这边我们借助 <code>ViewModel + LiveData</code> 来完成，封装一个基类</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseFragment</span>&lt;<span class="type">VB : ViewDataBinding</span>&gt; : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">var</span> mBinding: VB? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        retainInstance = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 保证只会创建一次 view，然后通过 ViewModel + LiveData 对 view 显示内容进行控制</span></span><br><span class="line">        <span class="keyword">if</span> (mBinding == <span class="literal">null</span>) &#123; </span><br><span class="line">            mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, <span class="literal">false</span>)</span><br><span class="line">            actionsOnViewInflate()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mBinding?.root</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该方法完整走完一个生命周期只会走一次，可用于该页面进入时网络请求</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">actionsOnViewInflate</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">getLayoutId</span><span class="params">()</span></span>: <span class="built_in">Int</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseFragment</span>&lt;<span class="type">VB : ViewDataBinding</span>&gt; : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">var</span> mBinding: VB? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        retainInstance = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 保证只会创建一次 view，然后通过 ViewModel + LiveData 对 view 显示内容进行控制</span></span><br><span class="line">        <span class="keyword">if</span> (mBinding == <span class="literal">null</span>) &#123; </span><br><span class="line">            mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, <span class="literal">false</span>)</span><br><span class="line">            actionsOnViewInflate()</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> mBinding?.root</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 该方法完整走完一个生命周期只会走一次，可用于该页面进入时网络请求</span></span><br><span class="line">    <span class="keyword">open</span> <span class="function"><span class="keyword">fun</span> <span class="title">actionsOnViewInflate</span><span class="params">()</span></span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">abstract</span> <span class="function"><span class="keyword">fun</span> <span class="title">getLayoutId</span><span class="params">()</span></span>: <span class="built_in">Int</span></span><br><span class="line">&#125;</span><br></pre>
 
 <p>但是按照这么封装，在使用 <code>ViewPager + Fragment</code> 的时候会出现重复添加的问题，再做下修改，将添加的先从父布局移除，再添加，就可以完美解决 <code>Navigation</code> 留下的坑</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseFragment</span>&lt;<span class="type">VB : ViewDataBinding</span>&gt; : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">var</span> mBinding: VB? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        retainInstance = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mBinding == <span class="literal">null</span>) &#123;</span><br><span class="line">            mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, <span class="literal">false</span>)</span><br><span class="line">            actionsOnViewInflate()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 解决 ViewPager + Fragment 情况下重复添加的问题</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">if</span> (mBinding != <span class="literal">null</span>) &#123; </span><br><span class="line">            mBinding!!.root.apply &#123; (parent <span class="keyword">as</span>? ViewGroup)?.removeView(<span class="keyword">this</span>) &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">super</span>.onCreateView(inflater, container, savedInstanceState)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">BaseFragment</span>&lt;<span class="type">VB : ViewDataBinding</span>&gt; : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">var</span> mBinding: VB? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        retainInstance = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (mBinding == <span class="literal">null</span>) &#123;</span><br><span class="line">            mBinding = DataBindingUtil.inflate(inflater, getLayoutId(), container, <span class="literal">false</span>)</span><br><span class="line">            actionsOnViewInflate()</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 解决 ViewPager + Fragment 情况下重复添加的问题</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">if</span> (mBinding != <span class="literal">null</span>) &#123; </span><br><span class="line">            mBinding!!.root.apply &#123; (parent <span class="keyword">as</span>? ViewGroup)?.removeView(<span class="keyword">this</span>) &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">super</span>.onCreateView(inflater, container, savedInstanceState)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <h4 id="一张图总结"><a href="#一张图总结" class="headerlink" title="一张图总结"></a>一张图总结</h4><p>看了那么多源码，最后用一张比较形象的图来结束吧</p>
-<p><img src="https://s2.ax1x.com/2019/09/02/nClj9s.png" alt="nClj9s.png"></p>
+<p><img src="https://s2.ax1x.com/2019/09/02/nClj9s.png" alt="nClj9s.png" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://s2.ax1x.com/2019/09/02/nClj9s.png" class="lozad post-image"></p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/" data-id="cl0ukmc2s001ipn1g7sj65xx9" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
-
-    </footer>
   </div>
-  
+  <div>
     
-<nav id="article-nav">
-  
-    <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          初识 JNI
-        
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            kuky
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">
+            http://example.com/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
       </div>
-    </a>
-  
-  
-    <a href="/2019/05/13/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-15/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Flutter Guide(15) -- 我和原生是好朋友，如何与 Android 交互</div>
-    </a>
-  
-</nav>
-
-  
+    
+  </div>
 </article>
-
-</section>
-        
-          <aside id="sidebar">
+<div class="nav">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    <div class="nav-item-prev">
+      <a 
+        href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">初识 JNI </div>
+          
+        </div>
+      </a>
     </div>
-  </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2019/05/13/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-15/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Flutter Guide(15) -- 我和原生是好朋友，如何与 Android 交互 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
     </div>
-  </div>
-
-
   
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E5%B8%83%E5%B1%80%E5%85%A5%E6%89%8B"><span class="toc-text">从布局入手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavHostFragment-amp-amp-NavHost"><span class="toc-text">NavHostFragment &amp;&amp; NavHost</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#onInflate"><span class="toc-text">onInflate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onAttach"><span class="toc-text">onAttach</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onViewCreated"><span class="toc-text">onViewCreated</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreateView"><span class="toc-text">onCreateView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreate"><span class="toc-text">onCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#findNavController"><span class="toc-text">findNavController</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavController"><span class="toc-text">NavController</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#setGraph"><span class="toc-text">setGraph</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate"><span class="toc-text">navigate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigateUp"><span class="toc-text">navigateUp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getNavInflater"><span class="toc-text">getNavInflater</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FragmentNavigator"><span class="toc-text">FragmentNavigator</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate-1"><span class="toc-text">navigate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavAction-amp-amp-NavDestination"><span class="toc-text">NavAction &amp;&amp; NavDestination</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%87%8D%E6%96%B0%E5%88%9B%E5%BB%BA-Fragment-%E7%9A%84%E5%9D%91"><span class="toc-text">解决重新创建 Fragment 的坑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E5%BC%A0%E5%9B%BE%E6%80%BB%E7%BB%93"><span class="toc-text">一张图总结</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">kuky</p>
+<p class="author-description">啊哈！</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>23</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>5</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>14</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E5%B8%83%E5%B1%80%E5%85%A5%E6%89%8B"><span class="toc-text">从布局入手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavHostFragment-amp-amp-NavHost"><span class="toc-text">NavHostFragment &amp;&amp; NavHost</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#onInflate"><span class="toc-text">onInflate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onAttach"><span class="toc-text">onAttach</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onViewCreated"><span class="toc-text">onViewCreated</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreateView"><span class="toc-text">onCreateView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreate"><span class="toc-text">onCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#findNavController"><span class="toc-text">findNavController</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavController"><span class="toc-text">NavController</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#setGraph"><span class="toc-text">setGraph</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate"><span class="toc-text">navigate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigateUp"><span class="toc-text">navigateUp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getNavInflater"><span class="toc-text">getNavInflater</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FragmentNavigator"><span class="toc-text">FragmentNavigator</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate-1"><span class="toc-text">navigate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavAction-amp-amp-NavDestination"><span class="toc-text">NavAction &amp;&amp; NavDestination</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%87%8D%E6%96%B0%E5%88%9B%E5%BB%BA-Fragment-%E7%9A%84%E5%9D%91"><span class="toc-text">解决重新创建 Fragment 的坑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E5%BC%A0%E5%9B%BE%E6%80%BB%E7%BB%93"><span class="toc-text">一张图总结</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
-    </div>
-  </div>
-
-  
+      <a href="/categories/Android/">
+        <div class="categories-list-item">
+          Android
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
+      <a href="/categories/FFmpeg/">
+        <div class="categories-list-item">
+          FFmpeg
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
-          </li>
-        
-      </ul>
-    </div>
+      <a href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">
+        <div class="categories-list-item">
+          跨平台
+          <span class="categories-list-item-badge">16</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%88%AC%E8%99%AB-Spider/">
+        <div class="categories-list-item">
+          爬虫-Spider
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JNI/">
+        <div class="categories-list-item">
+          JNI
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
   </div>
-
+</div>
+  </article>
   
-</aside>
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/Android/" 
+        title="Android">
+        <div class="tags-list-item">Android</div>
+      </a>
+    
+      <a 
+        href="/tags/Flutter/" 
+        title="Flutter">
+        <div class="tags-list-item">Flutter</div>
+      </a>
+    
+      <a 
+        href="/tags/C/" 
+        title="C++">
+        <div class="tags-list-item">C++</div>
+      </a>
+    
+      <a 
+        href="/tags/Dart/" 
+        title="Dart">
+        <div class="tags-list-item">Dart</div>
+      </a>
+    
+      <a 
+        href="/tags/FFmpeg/" 
+        title="FFmpeg">
+        <div class="tags-list-item">FFmpeg</div>
+      </a>
+    
+      <a 
+        href="/tags/%E4%BB%BF-iOS/" 
+        title="仿 iOS">
+        <div class="tags-list-item">仿 iOS</div>
+      </a>
+    
+      <a 
+        href="/tags/Kotlin/" 
+        title="Kotlin">
+        <div class="tags-list-item">Kotlin</div>
+      </a>
+    
+      <a 
+        href="/tags/JNI/" 
+        title="JNI">
+        <div class="tags-list-item">JNI</div>
+      </a>
+    
+      <a 
+        href="/tags/Scrapy/" 
+        title="Scrapy">
+        <div class="tags-list-item">Scrapy</div>
+      </a>
+    
+      <a 
+        href="/tags/Python/" 
+        title="Python">
+        <div class="tags-list-item">Python</div>
+      </a>
+    
+      <a 
+        href="/tags/fish-redux/" 
+        title="fish_redux">
+        <div class="tags-list-item">fish_redux</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+        title="源码分析">
+        <div class="tags-list-item">源码分析</div>
+      </a>
+    
+      <a 
+        href="/tags/Jetpack/" 
+        title="Jetpack">
+        <div class="tags-list-item">Jetpack</div>
+      </a>
+    
+      <a 
+        href="/tags/SDL/" 
+        title="SDL">
+        <div class="tags-list-item">SDL</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8E%E5%B8%83%E5%B1%80%E5%85%A5%E6%89%8B"><span class="toc-text">从布局入手</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavHostFragment-amp-amp-NavHost"><span class="toc-text">NavHostFragment &amp;&amp; NavHost</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#onInflate"><span class="toc-text">onInflate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onAttach"><span class="toc-text">onAttach</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onViewCreated"><span class="toc-text">onViewCreated</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreateView"><span class="toc-text">onCreateView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#onCreate"><span class="toc-text">onCreate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#findNavController"><span class="toc-text">findNavController</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavController"><span class="toc-text">NavController</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#setGraph"><span class="toc-text">setGraph</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate"><span class="toc-text">navigate</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#navigateUp"><span class="toc-text">navigateUp</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#getNavInflater"><span class="toc-text">getNavInflater</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#FragmentNavigator"><span class="toc-text">FragmentNavigator</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#navigate-1"><span class="toc-text">navigate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NavAction-amp-amp-NavDestination"><span class="toc-text">NavAction &amp;&amp; NavDestination</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E9%87%8D%E6%96%B0%E5%88%9B%E5%BB%BA-Fragment-%E7%9A%84%E5%9D%91"><span class="toc-text">解决重新创建 Fragment 的坑</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E5%BC%A0%E5%9B%BE%E6%80%BB%E7%BB%93"><span class="toc-text">一张图总结</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-02-19</div>
+        <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/"><div class="recent-posts-item-content">fish_redux 「食用指南」</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-22</div>
+        <a href="/2019/10/22/FFmpeg-002/"><div class="recent-posts-item-content">初识 SDL2</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-16</div>
+        <a href="/2019/10/16/FFmpeg-001/"><div class="recent-posts-item-content">FFmpeg 配置</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-09</div>
+        <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/"><div class="recent-posts-item-content">初识 JNI</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020
+          
+          
+                - 
+                2022
+          
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          Kukyxs
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
     
+    
+    
+    
+</footer>
+ 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
 </html>

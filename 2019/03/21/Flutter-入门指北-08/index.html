@@ -1,171 +1,398 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+  <title>Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族</title>
   
-
+    
+      <meta 
+        property="og:title" 
+        content="Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2019-03-21">
+      <meta 
+        property="og:article:modified_time" 
+        content="2019-08-28">
+      <meta 
+        property="og:article:author" 
+        content="kuky">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="Android">
+        
+          <meta 
+            property="og:article:tag" 
+            content="Flutter">
+        
+      
+    
   
-  <title>Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="上节最后留了个坑到这节来解决，因为涉及部件比较多，所以留到这边来继续讲，不然写太多了怕小伙伴看不下去 在上节最后，给小伙伴们展示了 SliveGrid 和 SliverFixedExtentList 的用法，基本上和 GridView 和 ListView 的用法差不多，所以这边就不多讲这两个部件了。 SliverAppBar相信很多 Android 开发的小伙伴会用到 MaterialDesig">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族">
-<meta property="og:url" content="http://example.com/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="上节最后留了个坑到这节来解决，因为涉及部件比较多，所以留到这边来继续讲，不然写太多了怕小伙伴看不下去 在上节最后，给小伙伴们展示了 SliveGrid 和 SliverFixedExtentList 的用法，基本上和 GridView 和 ListView 的用法差不多，所以这边就不多讲这两个部件了。 SliverAppBar相信很多 Android 开发的小伙伴会用到 MaterialDesig">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-f444ffb5001f50dd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-8e86360f3005b43d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-ea541a1a1b880d2e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-12bdb77ffa822d0c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="article:published_time" content="2019-03-21T12:40:28.000Z">
-<meta property="article:modified_time" content="2019-08-28T13:14:46.926Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="Flutter">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-f444ffb5001f50dd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
   
   
-    <link rel="icon" href="/favicon.png">
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
   
   
-<link rel="stylesheet" href="/css/style.css">
-
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">Kukyxs</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
         
-          <a class="main-nav-link" href="/">Home</a>
+          Home
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
         
-      </nav>
-      <nav id="sub-nav">
+          Archive
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          Friends
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-Flutter-入门指北-08" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/" class="article-date">
-  <time datetime="2019-03-21T12:40:28.000Z" itemprop="datePublished">2019-03-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
       Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族
     </h1>
-  
-
-      </header>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-03-21T12:40:28.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2019-03-21</span>
+    </time>
     
-    <div class="article-entry" itemprop="articleBody">
+      <span class="dot"></span>
       
-        <p>上节最后留了个坑到这节来解决，因为涉及部件比较多，所以留到这边来继续讲，不然写太多了怕小伙伴看不下去</p>
+        <a 
+          href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/" 
+          class="post-meta-link">
+          跨平台
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>3.1k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/Android/" 
+            class="post-meta-link">
+            Android
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/Flutter/" 
+            class="post-meta-link">
+            Flutter
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>上节最后留了个坑到这节来解决，因为涉及部件比较多，所以留到这边来继续讲，不然写太多了怕小伙伴看不下去</p>
 <p>在上节最后，给小伙伴们展示了 <code>SliveGrid</code> 和 <code>SliverFixedExtentList</code> 的用法，基本上和 <code>GridView</code> 和 <code>ListView</code> 的用法差不多，所以这边就不多讲这两个部件了。</p>
 <h4 id="SliverAppBar"><a href="#SliverAppBar" class="headerlink" title="SliverAppBar"></a>SliverAppBar</h4><p>相信很多 <code>Android</code> 开发的小伙伴会用到 <code>MaterialDesign</code> 的 <code>CollapsingToolbarLayout</code> 来实现折叠头部，既然 <code>Android</code> 有的，那么 <code>Flutter</code> 也不会少，毕竟 <code>Flutter</code> 主打的也是 <code>MaterialDesign</code> 啊。首先看下 <code>SliverAppBar</code> 的源码吧，其实和 <code>AppBar</code> 的参数差不多，只是多了一些比较特殊的属性</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverAppBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.leading,</span><br><span class="line">    <span class="keyword">this</span>.automaticallyImplyLeading = <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">this</span>.title,</span><br><span class="line">    <span class="keyword">this</span>.actions,</span><br><span class="line">    <span class="keyword">this</span>.flexibleSpace, <span class="comment">// 通过这个来设置背景</span></span><br><span class="line">    <span class="keyword">this</span>.bottom,</span><br><span class="line">    <span class="keyword">this</span>.elevation,</span><br><span class="line">    <span class="keyword">this</span>.forceElevated = <span class="keyword">false</span>, <span class="comment">// 是否显示层次感</span></span><br><span class="line">    <span class="keyword">this</span>.backgroundColor,</span><br><span class="line">    <span class="keyword">this</span>.brightness,</span><br><span class="line">    <span class="keyword">this</span>.iconTheme,</span><br><span class="line">    <span class="keyword">this</span>.textTheme,</span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">this</span>.centerTitle,</span><br><span class="line">    <span class="keyword">this</span>.titleSpacing = NavigationToolbar.kMiddleSpacing,</span><br><span class="line">    <span class="keyword">this</span>.expandedHeight, <span class="comment">// 展开的高度</span></span><br><span class="line">    <span class="comment">// 以下三个等例子再讲</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>, </span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.snap = <span class="keyword">false</span>,</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">const</span> SliverAppBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.leading,</span><br><span class="line">    <span class="keyword">this</span>.automaticallyImplyLeading = <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">this</span>.title,</span><br><span class="line">    <span class="keyword">this</span>.actions,</span><br><span class="line">    <span class="keyword">this</span>.flexibleSpace, <span class="comment">// 通过这个来设置背景</span></span><br><span class="line">    <span class="keyword">this</span>.bottom,</span><br><span class="line">    <span class="keyword">this</span>.elevation,</span><br><span class="line">    <span class="keyword">this</span>.forceElevated = <span class="keyword">false</span>, <span class="comment">// 是否显示层次感</span></span><br><span class="line">    <span class="keyword">this</span>.backgroundColor,</span><br><span class="line">    <span class="keyword">this</span>.brightness,</span><br><span class="line">    <span class="keyword">this</span>.iconTheme,</span><br><span class="line">    <span class="keyword">this</span>.textTheme,</span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">this</span>.centerTitle,</span><br><span class="line">    <span class="keyword">this</span>.titleSpacing = NavigationToolbar.kMiddleSpacing,</span><br><span class="line">    <span class="keyword">this</span>.expandedHeight, <span class="comment">// 展开的高度</span></span><br><span class="line">    <span class="comment">// 以下三个等例子再讲</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>, </span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.snap = <span class="keyword">false</span>,</span><br><span class="line">  &#125;)</span><br></pre>
 
 <p>别的参数应该不陌生吧，都是 <code>AppBar</code> 的，那么直接来看个例子吧，还是通过上节说的 <code>CustomScrollView</code> 来包裹 <code>Sliver</code> 部件</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliverDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        body: CustomScrollView(slivers: &lt;Widget&gt;[</span><br><span class="line">      SliverAppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Sliver Demo&#x27;</span>),</span><br><span class="line">        centerTitle: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 展开的高度</span></span><br><span class="line">        expandedHeight: <span class="number">300.0</span>,</span><br><span class="line">        <span class="comment">// 强制显示阴影</span></span><br><span class="line">        forceElevated: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 设置该属性，当有下滑手势的时候，就会显示 AppBar</span></span><br><span class="line"><span class="comment">//        floating: true,</span></span><br><span class="line">        <span class="comment">// 该属性只有在 floating 为 true 的情况下使用，不然会报错</span></span><br><span class="line">        <span class="comment">// 当上滑到一定的比例，会自动把 AppBar 收缩（不知道是不是 bug，当 AppBar 下面的部件没有被 AppBar 覆盖的时候，不会自动收缩）</span></span><br><span class="line">        <span class="comment">// 当下滑到一定比例，会自动把 AppBar 展开</span></span><br><span class="line"><span class="comment">//        snap: true,</span></span><br><span class="line">        <span class="comment">// 设置该属性使 Appbar 折叠后不消失</span></span><br><span class="line"><span class="comment">//        pinned: true,</span></span><br><span class="line">        <span class="comment">// 通过这个属性设置 AppBar 的背景</span></span><br><span class="line">        flexibleSpace: FlexibleSpaceBar(</span><br><span class="line"><span class="comment">//          title: Text(&#x27;Expanded Title&#x27;),</span></span><br><span class="line">          <span class="comment">// 背景折叠动画</span></span><br><span class="line">          collapseMode: CollapseMode.parallax,</span><br><span class="line">          background: Image.asset(<span class="string">&#x27;images/timg.jpg&#x27;</span>, fit: BoxFit.cover),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 这个部件一般用于最后填充用的，会占有一个屏幕的高度，</span></span><br><span class="line">      <span class="comment">// 可以在 child 属性加入需要展示的部件</span></span><br><span class="line">      SliverFillRemaining(</span><br><span class="line">        child: Center(child: Text(<span class="string">&#x27;FillRemaining&#x27;</span>, style: TextStyle(fontSize: <span class="number">30.0</span>))),</span><br><span class="line">      ),</span><br><span class="line">    ]));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliverDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        body: CustomScrollView(slivers: &lt;Widget&gt;[</span><br><span class="line">      SliverAppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Sliver Demo&#x27;</span>),</span><br><span class="line">        centerTitle: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 展开的高度</span></span><br><span class="line">        expandedHeight: <span class="number">300.0</span>,</span><br><span class="line">        <span class="comment">// 强制显示阴影</span></span><br><span class="line">        forceElevated: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 设置该属性，当有下滑手势的时候，就会显示 AppBar</span></span><br><span class="line"><span class="comment">//        floating: true,</span></span><br><span class="line">        <span class="comment">// 该属性只有在 floating 为 true 的情况下使用，不然会报错</span></span><br><span class="line">        <span class="comment">// 当上滑到一定的比例，会自动把 AppBar 收缩（不知道是不是 bug，当 AppBar 下面的部件没有被 AppBar 覆盖的时候，不会自动收缩）</span></span><br><span class="line">        <span class="comment">// 当下滑到一定比例，会自动把 AppBar 展开</span></span><br><span class="line"><span class="comment">//        snap: true,</span></span><br><span class="line">        <span class="comment">// 设置该属性使 Appbar 折叠后不消失</span></span><br><span class="line"><span class="comment">//        pinned: true,</span></span><br><span class="line">        <span class="comment">// 通过这个属性设置 AppBar 的背景</span></span><br><span class="line">        flexibleSpace: FlexibleSpaceBar(</span><br><span class="line"><span class="comment">//          title: Text(&#x27;Expanded Title&#x27;),</span></span><br><span class="line">          <span class="comment">// 背景折叠动画</span></span><br><span class="line">          collapseMode: CollapseMode.parallax,</span><br><span class="line">          background: Image.asset(<span class="string">&#x27;images/timg.jpg&#x27;</span>, fit: BoxFit.cover),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 这个部件一般用于最后填充用的，会占有一个屏幕的高度，</span></span><br><span class="line">      <span class="comment">// 可以在 child 属性加入需要展示的部件</span></span><br><span class="line">      SliverFillRemaining(</span><br><span class="line">        child: Center(child: Text(<span class="string">&#x27;FillRemaining&#x27;</span>, style: TextStyle(fontSize: <span class="number">30.0</span>))),</span><br><span class="line">      ),</span><br><span class="line">    ]));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>这里分别给出不同的动图来查看三个属性的影响</p>
 <p>如果设置了 <code>floating</code> 属性，当有下拉动作时，会显示 <code>AppBar</code></p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-f444ffb5001f50dd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-f444ffb5001f50dd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-f444ffb5001f50dd.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>如果设置了 <code>snap</code> 属性，滑动距离达到一定值后，会根据滑动方向收缩或者展开</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-8e86360f3005b43d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-8e86360f3005b43d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-8e86360f3005b43d.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>如果设置了 <code>pinned</code> 属性，那么 <code>AppBar</code> 就会在界面上不会消失</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-9f97890198d77eff.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>以上的效果图把 <code>SliverFillRemaining</code> 换成列表 <code>SliverFixedExtentList</code> 效果可能会更加明显，这边给小伙伴自己替换测试吧。</p>
 <h4 id="SliverFillViewport"><a href="#SliverFillViewport" class="headerlink" title="SliverFillViewport"></a>SliverFillViewport</h4><p>这边提到了 <code>SliverFillRemaining</code> 用来填充视图，那么顺带提下 <code>SliverFillViewport</code> 这个部件</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverFillViewport(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> SliverChildDelegate delegate, <span class="comment">// 这个 delegate 同 SliverGrid </span></span><br><span class="line">    <span class="keyword">this</span>.viewportFraction = <span class="number">1.0</span>, <span class="comment">// 同屏幕的比例值，1.0 为一个屏幕大小</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">const</span> SliverFillViewport(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> SliverChildDelegate delegate, <span class="comment">// 这个 delegate 同 SliverGrid </span></span><br><span class="line">    <span class="keyword">this</span>.viewportFraction = <span class="number">1.0</span>, <span class="comment">// 同屏幕的比例值，1.0 为一个屏幕大小</span></span><br><span class="line">  &#125;)</span><br></pre>
 
 <p>如果一个滑动列表，每个 <code>item</code> 需要占满一个屏幕或者更大，可以使用该部件生成列表，但是如果 <code>item</code> 的高度小于一个屏幕高度，那就不太推荐了，在首尾会用空白 <code>item</code> 来把未填满的补上，就是首尾都会留空白。我们使用 <code>SliverFillViewport</code> 对 <code>SliverFillRemaning</code> 进行替换</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">SliverFillViewport(</span><br><span class="line">          viewportFraction: <span class="number">1.0</span>,</span><br><span class="line">          delegate: SliverChildBuilderDelegate(</span><br><span class="line">              (_, index) =&gt; Container(child: Text(<span class="string">&#x27;Item <span class="subst">$index</span>&#x27;</span>), alignment: Alignment.center, color: colors[index % <span class="number">4</span>]),</span><br><span class="line">              childCount: <span class="number">10</span>))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">SliverFillViewport(</span><br><span class="line">          viewportFraction: <span class="number">1.0</span>,</span><br><span class="line">          delegate: SliverChildBuilderDelegate(</span><br><span class="line">              (_, index) =&gt; Container(child: Text(<span class="string">&#x27;Item <span class="subst">$index</span>&#x27;</span>), alignment: Alignment.center, color: colors[index % <span class="number">4</span>]),</span><br><span class="line">              childCount: <span class="number">10</span>))</span><br></pre>
 
 <p>效果就不展示了，可自行运行查看。</p>
 <h4 id="SliverToBoxAdapter"><a href="#SliverToBoxAdapter" class="headerlink" title="SliverToBoxAdapter"></a>SliverToBoxAdapter</h4><p>还记得上节最后的代码中，有使用 <code>SliverToBoxAdapter</code> 这个部件吗，这个部件只需要传入一个 <code>child</code> 属性。因为在 <code>CustomScrollView</code> 中只允许传入 <code>Sliver</code> 部件，那么类似 <code>Container</code> 等普通部件就不可以使用了，那么这样就需要更多的 <code>Sliver</code> 组件才能完成视图，所以为了方便，直接通过 <code>SliverToBoxAdapter</code> 对普通部件进行包裹，这样就成为一个 <code>Sliver</code> 部件了。总结下 <code>SliverToBoxAdapter</code> 的功能就是 <strong>把一个普通部件包裹成为 <code>Sliver</code> 部件</strong>，例子就不举了，上节已经有了。</p>
 <h4 id="SliverPadding"><a href="#SliverPadding" class="headerlink" title="SliverPadding"></a>SliverPadding</h4><p>那么在 <code>CustomScrollView</code> 中部件之间如何设置间距呢，可能你会想到用 <code>SliverToBoxAdapter</code> 包裹一个 <code>Padding</code> 来处理，当然没问题。不过 <code>Flutter</code> 也提供了专门的部件 <code>SliverPadding</code> 使用方式同 <code>Padding</code>，但是需要传入一个 <code>sliver</code> 作为子类。</p>
 <h4 id="SliverPersistentHeader"><a href="#SliverPersistentHeader" class="headerlink" title="SliverPersistentHeader"></a>SliverPersistentHeader</h4><p><code>Flutter</code> 中，为我们提供了这么一个作为头部的部件 <code>SliverPersistentHeader</code>，这个部件可以根据滚动的距离缩小高度，有点类似 <code>SliverAppBar</code> 的背景效果。</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SliverPersistentHeader(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> <span class="keyword">this</span>.delegate, <span class="comment">// SliverPersistentHeaderDelegate，用来创建展示内容</span></span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>, <span class="comment">// 同 SliverAppBar 属性</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>,</span><br><span class="line">  &#125;) </span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">const</span> SliverPersistentHeader(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> <span class="keyword">this</span>.delegate, <span class="comment">// SliverPersistentHeaderDelegate，用来创建展示内容</span></span><br><span class="line">    <span class="keyword">this</span>.pinned = <span class="keyword">false</span>, <span class="comment">// 同 SliverAppBar 属性</span></span><br><span class="line">    <span class="keyword">this</span>.floating = <span class="keyword">false</span>,</span><br><span class="line">  &#125;) </span><br></pre>
 
 <h5 id="SliverPersistentHeaderDelegate"><a href="#SliverPersistentHeaderDelegate" class="headerlink" title="SliverPersistentHeaderDelegate"></a>SliverPersistentHeaderDelegate</h5><p>这个代理比较特殊，是个抽象类，也就是需要我们自己进行继承后再实现方法。<code>SliverPersistentHeaderDelegate</code> 需要提供一个最大值，最小值，展示内容，以及更新部件条件</p>
 <p>比如我们需要展示一个最大高度 300，最小高度 100，居中的文字，那么我们可以这么写这个代理类</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoHeader</span> <span class="keyword">extends</span> <span class="title">SliverPersistentHeaderDelegate</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context, <span class="built_in">double</span> shrinkOffset, <span class="built_in">bool</span> overlapsContent) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">        color: Colors.pink,</span><br><span class="line">        alignment: Alignment.center,</span><br><span class="line">        child: Text(<span class="string">&#x27;我是一个头部部件&#x27;</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>)));</span><br><span class="line">  &#125; <span class="comment">// 头部展示内容</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> maxExtent =&gt; <span class="number">300.0</span>; <span class="comment">// 最大高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> minExtent =&gt; <span class="number">100.0</span>; <span class="comment">// 最小高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">bool</span> shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) =&gt; <span class="keyword">false</span>; <span class="comment">// 因为所有的内容都是固定的，所以不需要更新</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoHeader</span> <span class="keyword">extends</span> <span class="title">SliverPersistentHeaderDelegate</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context, <span class="built_in">double</span> shrinkOffset, <span class="built_in">bool</span> overlapsContent) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">        color: Colors.pink,</span><br><span class="line">        alignment: Alignment.center,</span><br><span class="line">        child: Text(<span class="string">&#x27;我是一个头部部件&#x27;</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>)));</span><br><span class="line">  &#125; <span class="comment">// 头部展示内容</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> maxExtent =&gt; <span class="number">300.0</span>; <span class="comment">// 最大高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> minExtent =&gt; <span class="number">100.0</span>; <span class="comment">// 最小高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">bool</span> shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) =&gt; <span class="keyword">false</span>; <span class="comment">// 因为所有的内容都是固定的，所以不需要更新</span></span><br><span class="line">&#125;</span><br></pre>
 
 <p>使用 <code>SliverPersistentHeader</code> 代替 <code>SliverAppBar</code>，看下效果</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliverDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        body: CustomScrollView(slivers: &lt;Widget&gt;[</span><br><span class="line">        SliverPersistentHeader(delegate: DemoHeader(), pinned: <span class="keyword">true</span>),</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 这个部件一般用于最后填充用的，会占有一个屏幕的高度，</span></span><br><span class="line">      <span class="comment">// 可以在 child 属性加入需要展示的部件</span></span><br><span class="line">          SliverFillRemaining(</span><br><span class="line">            child: Center(child: Text(<span class="string">&#x27;FillRemaining&#x27;</span>, style: TextStyle(fontSize: <span class="number">30.0</span>))),</span><br><span class="line">          ),</span><br><span class="line">    ]));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SliverDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        body: CustomScrollView(slivers: &lt;Widget&gt;[</span><br><span class="line">        SliverPersistentHeader(delegate: DemoHeader(), pinned: <span class="keyword">true</span>),</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 这个部件一般用于最后填充用的，会占有一个屏幕的高度，</span></span><br><span class="line">      <span class="comment">// 可以在 child 属性加入需要展示的部件</span></span><br><span class="line">          SliverFillRemaining(</span><br><span class="line">            child: Center(child: Text(<span class="string">&#x27;FillRemaining&#x27;</span>, style: TextStyle(fontSize: <span class="number">30.0</span>))),</span><br><span class="line">          ),</span><br><span class="line">    ]));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>最后的效果图</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-ea541a1a1b880d2e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-ea541a1a1b880d2e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-ea541a1a1b880d2e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>当然，为了方便扩展，需要重新封装下 <code>Delegate</code> ，通过外部传入范围和展示内容</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义 SliverPersistentHeaderDelegate</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomSliverPersistentHeaderDelegate</span> <span class="keyword">extends</span> <span class="title">SliverPersistentHeaderDelegate</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">double</span> max; <span class="comment">// 最大高度</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">double</span> min; <span class="comment">// 最小高度</span></span><br><span class="line">  <span class="keyword">final</span> Widget child; <span class="comment">// 需要展示的内容</span></span><br><span class="line"></span><br><span class="line">  CustomSliverPersistentHeaderDelegate(&#123;<span class="meta">@required</span> <span class="keyword">this</span>.max, <span class="meta">@required</span> <span class="keyword">this</span>.min, <span class="meta">@required</span> <span class="keyword">this</span>.child&#125;)</span><br><span class="line">      <span class="comment">// 如果 assert 内部条件不成立，会报错</span></span><br><span class="line">      : <span class="keyword">assert</span>(max != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(min != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(child != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(min &lt;= max),</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回展示的内容，如果内容固定可以直接在这定义，如果需要可扩展，这边通过传入值来定义</span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context, <span class="built_in">double</span> shrinkOffset, <span class="built_in">bool</span> overlapsContent) =&gt; child;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> maxExtent =&gt; max; <span class="comment">// 返回最大高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> minExtent =&gt; min; <span class="comment">// 返回最小高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">bool</span> shouldRebuild(CustomSliverPersistentHeaderDelegate oldDelegate) &#123;</span><br><span class="line">    <span class="comment">// 是否需要更新，这里我们定义当高度范围和展示内容被替换的时候进行刷新界面</span></span><br><span class="line">    <span class="keyword">return</span> max != oldDelegate.max || min != oldDelegate.min || child != oldDelegate.child;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// 自定义 SliverPersistentHeaderDelegate</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomSliverPersistentHeaderDelegate</span> <span class="keyword">extends</span> <span class="title">SliverPersistentHeaderDelegate</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">double</span> max; <span class="comment">// 最大高度</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">double</span> min; <span class="comment">// 最小高度</span></span><br><span class="line">  <span class="keyword">final</span> Widget child; <span class="comment">// 需要展示的内容</span></span><br><span class="line"></span><br><span class="line">  CustomSliverPersistentHeaderDelegate(&#123;<span class="meta">@required</span> <span class="keyword">this</span>.max, <span class="meta">@required</span> <span class="keyword">this</span>.min, <span class="meta">@required</span> <span class="keyword">this</span>.child&#125;)</span><br><span class="line">      <span class="comment">// 如果 assert 内部条件不成立，会报错</span></span><br><span class="line">      : <span class="keyword">assert</span>(max != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(min != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(child != <span class="keyword">null</span>),</span><br><span class="line">        <span class="keyword">assert</span>(min &lt;= max),</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 返回展示的内容，如果内容固定可以直接在这定义，如果需要可扩展，这边通过传入值来定义</span></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context, <span class="built_in">double</span> shrinkOffset, <span class="built_in">bool</span> overlapsContent) =&gt; child;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> maxExtent =&gt; max; <span class="comment">// 返回最大高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">double</span> <span class="keyword">get</span> minExtent =&gt; min; <span class="comment">// 返回最小高度</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">bool</span> shouldRebuild(CustomSliverPersistentHeaderDelegate oldDelegate) &#123;</span><br><span class="line">    <span class="comment">// 是否需要更新，这里我们定义当高度范围和展示内容被替换的时候进行刷新界面</span></span><br><span class="line">    <span class="keyword">return</span> max != oldDelegate.max || min != oldDelegate.min || child != oldDelegate.child;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>然后我们就可以愉快的使用了，不需要每个 <code>Delegate</code> 都重新写一遍，例如替换下刚才写死的 <code>DemoHeader</code></p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SliverPersistentHeader(</span><br><span class="line">        <span class="comment">// 属性同 SliverAppBar</span></span><br><span class="line">        pinned: <span class="keyword">true</span>,</span><br><span class="line">        floating: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 因为 SliverPersistentHeaderDelegate 是一个抽象类，所以需要自定义</span></span><br><span class="line">        delegate: CustomSliverPersistentHeaderDelegate(</span><br><span class="line">            max: <span class="number">300.0</span>, min: <span class="number">100.0</span>, child: Text(<span class="string">&#x27;我是一个头部部件&#x27;</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>))),</span><br><span class="line">      ),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">SliverPersistentHeader(</span><br><span class="line">        <span class="comment">// 属性同 SliverAppBar</span></span><br><span class="line">        pinned: <span class="keyword">true</span>,</span><br><span class="line">        floating: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 因为 SliverPersistentHeaderDelegate 是一个抽象类，所以需要自定义</span></span><br><span class="line">        delegate: CustomSliverPersistentHeaderDelegate(</span><br><span class="line">            max: <span class="number">300.0</span>, min: <span class="number">100.0</span>, child: Text(<span class="string">&#x27;我是一个头部部件&#x27;</span>, style: TextStyle(color: Colors.white, fontSize: <span class="number">30.0</span>))),</span><br><span class="line">      ),</span><br></pre>
 
 <p>例如需要替换成一张图片，直接将 <code>Text</code> 修改成 <code>Image</code> 即可。</p>
 <p><em>以上部分代码查看 <code>sliver_main.dart</code> 文件</em></p>
 <h4 id="NestedScrollView"><a href="#NestedScrollView" class="headerlink" title="NestedScrollView"></a>NestedScrollView</h4><p>讲到这了，不得不提下 <code>Scrollable</code> 中比较重要的一员 <code>NestedScrollView</code>，先看下官方的解释</p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">A scrolling view inside of which can be nested other scrolling views, with</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">their scroll positions being intrinsically linked.</span></span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">A scrolling view inside of which can be nested other scrolling views, with</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">their scroll positions being intrinsically linked.</span></span></span><br></pre>
 </blockquote>
 <p>糟透了的翻译 X 1：一个内部能够嵌套其他滚动部件，并使其滚动位置联结到一起的滚动部件</p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">The most common use case for this widget is a scrollable view with a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">flexible [SliverAppBar] containing a [TabBar] in the header (build by</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[headerSliverBuilder], and with a [TabBarView] in the [body], such that the</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">scrollable view&#x27;s contents vary based on which tab is visible.</span></span></span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">The most common use case for this widget is a scrollable view with a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">flexible [SliverAppBar] containing a [TabBar] in the header (build by</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[headerSliverBuilder], and with a [TabBarView] in the [body], such that the</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">scrollable view&#x27;s contents vary based on which tab is visible.</span></span></span><br></pre>
 </blockquote>
 <p>糟透了的翻译 X 2：最常用的情况，就是在其 <code>headerSliverBuilder</code> 中使用携带 <code>TabBar</code> 的 <code>SliverAppBar</code>（就是使用 <code>SliverAppBar</code> 的 <code>bottom</code> 属性添加 <code>tab</code> 切换也），其 <code>body</code> 属性使用 <code>TabBarView</code> 来展示 <code>Tab</code> 页的内容，这样通过切换 <code>Tab</code> 页就能展示该页下的展示内容。</p>
 <p>看下 <code>headerSliverBuilder</code> 的定义</p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">Signature used by [NestedScrollView] for building its header.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The <span class="code">`innerBoxIsScrolled`</span> argument is typically used to control the</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverAppBar.forceElevated] property to ensure that the app bar shows a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">shadow, since it would otherwise not necessarily be aware that it had</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">content ostensibly below it.</span></span></span><br><span class="line"><span class="keyword">typedef</span> NestedScrollViewHeaderSliversBuilder = <span class="built_in">List</span>&lt;Widget&gt; <span class="built_in">Function</span>(BuildContext context, <span class="built_in">bool</span> innerBoxIsScrolled);</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">Signature used by [NestedScrollView] for building its header.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The <span class="code">`innerBoxIsScrolled`</span> argument is typically used to control the</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverAppBar.forceElevated] property to ensure that the app bar shows a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">shadow, since it would otherwise not necessarily be aware that it had</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">content ostensibly below it.</span></span></span><br><span class="line"><span class="keyword">typedef</span> NestedScrollViewHeaderSliversBuilder = <span class="built_in">List</span>&lt;Widget&gt; <span class="built_in">Function</span>(BuildContext context, <span class="built_in">bool</span> innerBoxIsScrolled);</span><br></pre>
 </blockquote>
 <p>糟透了的翻译 X 3：用于构建 <code>NestScrollView</code> 的头部部件，<code>innerBoxIsScrolled</code> 主要用来控制 <code>SliverAppBar</code> 的 <code>forceElevated</code> 属性，当内部内容滚动时，显示 <code>SliverAppbar</code> 的阴影，主要用来提醒内部的内容低于 <code>SliverAppBar</code> （相当于给人一种物理层次感，否则很容易被认为，头部和内容是连接在一起的）</p>
 <p>接下来看下 <code>NestedScrollView</code> 内部个人觉得有点重要的一个方法 <code>sliverOverlapAbsorberHandleFor</code></p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">Returns the [SliverOverlapAbsorberHandle] of the nearest ancestor</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[NestedScrollView].</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">This is necessary to configure the [SliverOverlapAbsorber] and</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverOverlapInjector] widgets.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">For sample code showing how to use this method, see the [NestedScrollView]</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">documentation.</span></span></span><br><span class="line"><span class="keyword">static</span> SliverOverlapAbsorberHandle sliverOverlapAbsorberHandleFor(BuildContext context) &#123;</span><br><span class="line"><span class="keyword">final</span> _InheritedNestedScrollView target = context.inheritFromWidgetOfExactType(_InheritedNestedScrollView);</span><br><span class="line"><span class="keyword">assert</span>(target != <span class="keyword">null</span>, <span class="string">&#x27;NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.&#x27;</span>);</span><br><span class="line"><span class="keyword">return</span> target.state._absorberHandle;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">Returns the [SliverOverlapAbsorberHandle] of the nearest ancestor</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[NestedScrollView].</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">This is necessary to configure the [SliverOverlapAbsorber] and</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverOverlapInjector] widgets.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">For sample code showing how to use this method, see the [NestedScrollView]</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">documentation.</span></span></span><br><span class="line"><span class="keyword">static</span> SliverOverlapAbsorberHandle sliverOverlapAbsorberHandleFor(BuildContext context) &#123;</span><br><span class="line"><span class="keyword">final</span> _InheritedNestedScrollView target = context.inheritFromWidgetOfExactType(_InheritedNestedScrollView);</span><br><span class="line"><span class="keyword">assert</span>(target != <span class="keyword">null</span>, <span class="string">&#x27;NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.&#x27;</span>);</span><br><span class="line"><span class="keyword">return</span> target.state._absorberHandle;</span><br><span class="line">&#125;</span><br></pre>
 </blockquote>
 <p>请注意到中间的注释</p>
 <p>糟透了的翻译 X 4：这个方法返回的值对于 <code>SliverOverlapAbsorber</code> 和 <code>SliverOverlapInjector</code> 部件是非常重要的参数</p>
@@ -174,18 +401,18 @@
 <p>#####SliverOverlapAbsorber</p>
 <p>这边又引入了两个部件 <code>SliverOverlapAbsorber</code> + <code>SliverOverlapInjector</code> 还是看源码的解释吧</p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">Creates a sliver that absorbs overlap and reports it to a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverOverlapAbsorberHandle].</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [handle] must not be null.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [child] must be a sliver.</span></span></span><br><span class="line"><span class="keyword">const</span> SliverOverlapAbsorber(&#123;</span><br><span class="line">Key key,</span><br><span class="line"><span class="meta">@required</span> <span class="keyword">this</span>.handle,</span><br><span class="line">Widget child,</span><br><span class="line">&#125;) </span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">Creates a sliver that absorbs overlap and reports it to a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[SliverOverlapAbsorberHandle].</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [handle] must not be null.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [child] must be a sliver.</span></span></span><br><span class="line"><span class="keyword">const</span> SliverOverlapAbsorber(&#123;</span><br><span class="line">Key key,</span><br><span class="line"><span class="meta">@required</span> <span class="keyword">this</span>.handle,</span><br><span class="line">Widget child,</span><br><span class="line">&#125;) </span><br></pre>
 </blockquote>
 <p>糟透了的翻译 X 6：一个 <code>sliver</code> 部件，用于把部件重叠的高度反馈给 <code>SliverOverlapAbsorberHandle</code>，而且指明了 <code>handle</code> 不能空，可以通过 <code>NestedScrollView</code> 的 <code>sliverOverlapAbsorberHandleFor</code> 方法来赋值，并且 <code>child</code> 必须是个 <code>sliver</code> 部件，也就是说我们的 <code>SliverAppBar</code> 需要放到 <code>SliverOverlapAbsorber</code> 里面。</p>
 <p>#####SliverOverlapInjector</p>
 <blockquote>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">Creates a sliver that is as tall as the value of the given [handle]&#x27;s</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">layout extent.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [handle] must not be null.</span></span></span><br><span class="line"><span class="keyword">const</span> SliverOverlapInjector(&#123;</span><br><span class="line">Key key,</span><br><span class="line"><span class="meta">@required</span> <span class="keyword">this</span>.handle,</span><br><span class="line">Widget child,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">/// <span class="language-markdown">Creates a sliver that is as tall as the value of the given [handle]&#x27;s</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">layout extent.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The [handle] must not be null.</span></span></span><br><span class="line"><span class="keyword">const</span> SliverOverlapInjector(&#123;</span><br><span class="line">Key key,</span><br><span class="line"><span class="meta">@required</span> <span class="keyword">this</span>.handle,</span><br><span class="line">Widget child,</span><br><span class="line">&#125;)</span><br></pre>
 </blockquote>
 <p>糟透了的翻译 X 7：创建一个和指定的 <code>handle</code> 一样高度的 <code>sliver</code> 部件，这个 <code>handle</code> 同 <code>SliverOverlapAbsorber</code> 的 <code>handle</code> 保持一致即可。</p>
 <p>分析完源码后，例子的目标很明确，使用 <code>SliverAppBar</code> + <code>TabBar</code> + <code>TabBarView</code>，先看下最后的效果图吧</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-12bdb77ffa822d0c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-12bdb77ffa822d0c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-12bdb77ffa822d0c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NestedScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> _tabs = &lt;<span class="built_in">String</span>&gt;[<span class="string">&#x27;TabA&#x27;</span>, <span class="string">&#x27;TabB&#x27;</span>];</span><br><span class="line">  <span class="keyword">final</span> colors = &lt;Color&gt;[Colors.red, Colors.green, Colors.blue, Colors.pink, Colors.yellow, Colors.deepPurple];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      body: DefaultTabController(</span><br><span class="line">          length: _tabs.length,</span><br><span class="line">          child: NestedScrollView(</span><br><span class="line">              headerSliverBuilder: (context, innerScrolled) =&gt; &lt;Widget&gt;[</span><br><span class="line">                    SliverOverlapAbsorber(</span><br><span class="line">                      <span class="comment">// 传入 handle 值，直接通过 `sliverOverlapAbsorberHandleFor` 获取即可</span></span><br><span class="line">                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),</span><br><span class="line">                      child: SliverAppBar(</span><br><span class="line">                        pinned: <span class="keyword">true</span>,</span><br><span class="line">                        title: Text(<span class="string">&#x27;NestedScroll Demo&#x27;</span>),</span><br><span class="line">                        expandedHeight: <span class="number">200.0</span>,</span><br><span class="line">                        flexibleSpace: FlexibleSpaceBar(background: Image.asset(<span class="string">&#x27;images/timg.jpg&#x27;</span>, fit: BoxFit.cover)),</span><br><span class="line">                        bottom: TabBar(tabs: _tabs.map((tab) =&gt; Text(tab, style: TextStyle(fontSize: <span class="number">18.0</span>))).toList()),</span><br><span class="line">                        forceElevated: innerScrolled,</span><br><span class="line">                      ),</span><br><span class="line">                    )</span><br><span class="line">                  ],</span><br><span class="line">              body: TabBarView(</span><br><span class="line">                  children: _tabs</span><br><span class="line">                      <span class="comment">// 这边需要通过 Builder 来创建 TabBarView 的内容，否则会报错</span></span><br><span class="line">                      <span class="comment">// NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.</span></span><br><span class="line">                      .map((tab) =&gt; Builder(</span><br><span class="line">                            builder: (context) =&gt; CustomScrollView(</span><br><span class="line">                                  <span class="comment">// key 保证唯一性</span></span><br><span class="line">                                  key: PageStorageKey&lt;<span class="built_in">String</span>&gt;(tab),</span><br><span class="line">                                  slivers: &lt;Widget&gt;[</span><br><span class="line">                                    <span class="comment">// 将子部件同 `SliverAppBar` 重叠部分顶出来，否则会被遮挡</span></span><br><span class="line">                                    SliverOverlapInjector(</span><br><span class="line">                                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),</span><br><span class="line">                                    SliverGrid(</span><br><span class="line">                                        delegate: SliverChildBuilderDelegate(</span><br><span class="line">                                            (_, index) =&gt; Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>),</span><br><span class="line">                                            childCount: <span class="number">8</span>),</span><br><span class="line">                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">                                            crossAxisCount: <span class="number">4</span>, mainAxisSpacing: <span class="number">10.0</span>, crossAxisSpacing: <span class="number">10.0</span>)),</span><br><span class="line">                                    SliverFixedExtentList(</span><br><span class="line">                                        delegate: SliverChildBuilderDelegate(</span><br><span class="line">                                            (_, index) =&gt; Container(</span><br><span class="line">                                                child: Text(<span class="string">&#x27;<span class="subst">$tab</span> - item<span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>,</span><br><span class="line">                                                    style: TextStyle(fontSize: <span class="number">20.0</span>, color: colors[index % <span class="number">6</span>])),</span><br><span class="line">                                                alignment: Alignment.center),</span><br><span class="line">                                            childCount: <span class="number">15</span>),</span><br><span class="line">                                        itemExtent: <span class="number">50.0</span>)</span><br><span class="line">                                  ],</span><br><span class="line">                                ),</span><br><span class="line">                          ))</span><br><span class="line">                      .toList()))),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NestedScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> _tabs = &lt;<span class="built_in">String</span>&gt;[<span class="string">&#x27;TabA&#x27;</span>, <span class="string">&#x27;TabB&#x27;</span>];</span><br><span class="line">  <span class="keyword">final</span> colors = &lt;Color&gt;[Colors.red, Colors.green, Colors.blue, Colors.pink, Colors.yellow, Colors.deepPurple];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      body: DefaultTabController(</span><br><span class="line">          length: _tabs.length,</span><br><span class="line">          child: NestedScrollView(</span><br><span class="line">              headerSliverBuilder: (context, innerScrolled) =&gt; &lt;Widget&gt;[</span><br><span class="line">                    SliverOverlapAbsorber(</span><br><span class="line">                      <span class="comment">// 传入 handle 值，直接通过 `sliverOverlapAbsorberHandleFor` 获取即可</span></span><br><span class="line">                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),</span><br><span class="line">                      child: SliverAppBar(</span><br><span class="line">                        pinned: <span class="keyword">true</span>,</span><br><span class="line">                        title: Text(<span class="string">&#x27;NestedScroll Demo&#x27;</span>),</span><br><span class="line">                        expandedHeight: <span class="number">200.0</span>,</span><br><span class="line">                        flexibleSpace: FlexibleSpaceBar(background: Image.asset(<span class="string">&#x27;images/timg.jpg&#x27;</span>, fit: BoxFit.cover)),</span><br><span class="line">                        bottom: TabBar(tabs: _tabs.map((tab) =&gt; Text(tab, style: TextStyle(fontSize: <span class="number">18.0</span>))).toList()),</span><br><span class="line">                        forceElevated: innerScrolled,</span><br><span class="line">                      ),</span><br><span class="line">                    )</span><br><span class="line">                  ],</span><br><span class="line">              body: TabBarView(</span><br><span class="line">                  children: _tabs</span><br><span class="line">                      <span class="comment">// 这边需要通过 Builder 来创建 TabBarView 的内容，否则会报错</span></span><br><span class="line">                      <span class="comment">// NestedScrollView.sliverOverlapAbsorberHandleFor must be called with a context that contains a NestedScrollView.</span></span><br><span class="line">                      .map((tab) =&gt; Builder(</span><br><span class="line">                            builder: (context) =&gt; CustomScrollView(</span><br><span class="line">                                  <span class="comment">// key 保证唯一性</span></span><br><span class="line">                                  key: PageStorageKey&lt;<span class="built_in">String</span>&gt;(tab),</span><br><span class="line">                                  slivers: &lt;Widget&gt;[</span><br><span class="line">                                    <span class="comment">// 将子部件同 `SliverAppBar` 重叠部分顶出来，否则会被遮挡</span></span><br><span class="line">                                    SliverOverlapInjector(</span><br><span class="line">                                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context)),</span><br><span class="line">                                    SliverGrid(</span><br><span class="line">                                        delegate: SliverChildBuilderDelegate(</span><br><span class="line">                                            (_, index) =&gt; Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>),</span><br><span class="line">                                            childCount: <span class="number">8</span>),</span><br><span class="line">                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">                                            crossAxisCount: <span class="number">4</span>, mainAxisSpacing: <span class="number">10.0</span>, crossAxisSpacing: <span class="number">10.0</span>)),</span><br><span class="line">                                    SliverFixedExtentList(</span><br><span class="line">                                        delegate: SliverChildBuilderDelegate(</span><br><span class="line">                                            (_, index) =&gt; Container(</span><br><span class="line">                                                child: Text(<span class="string">&#x27;<span class="subst">$tab</span> - item<span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>,</span><br><span class="line">                                                    style: TextStyle(fontSize: <span class="number">20.0</span>, color: colors[index % <span class="number">6</span>])),</span><br><span class="line">                                                alignment: Alignment.center),</span><br><span class="line">                                            childCount: <span class="number">15</span>),</span><br><span class="line">                                        itemExtent: <span class="number">50.0</span>)</span><br><span class="line">                                  ],</span><br><span class="line">                                ),</span><br><span class="line">                          ))</span><br><span class="line">                      .toList()))),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>使用的部件和之前讲的没啥大区别，就是多了 <code>SliverOverlapAbsorber</code> 和 <code>SliverOverlapInjector</code> 没啥难度</p>
 <p><em>以上部分代码查看 <code>nested_scroll_main.dart</code> 文件</em></p>
@@ -201,153 +428,482 @@
 </ol>
 <p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/" data-id="cl0ukmc2o000mpn1ghsah9d8t" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
-
-    </footer>
   </div>
-  
+  <div>
     
-<nav id="article-nav">
-  
-    <a href="/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Flutter Guide(09) -- 了解 Flutter 的友好提示
-        
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            kuky
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/">
+            http://example.com/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
       </div>
-    </a>
-  
-  
-    <a href="/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Flutter Guide(07) -- 内容太多怎么办，列表来帮你</div>
-    </a>
-  
-</nav>
-
-  
+    
+  </div>
 </article>
-
-</section>
-        
-          <aside id="sidebar">
+<div class="nav">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    <div class="nav-item-prev">
+      <a 
+        href="/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Flutter Guide(09) -- 了解 Flutter 的友好提示 </div>
+          
+        </div>
+      </a>
     </div>
-  </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Flutter Guide(07) -- 内容太多怎么办，列表来帮你 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
     </div>
-  </div>
-
-
   
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverAppBar"><span class="toc-text">SliverAppBar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverFillViewport"><span class="toc-text">SliverFillViewport</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverToBoxAdapter"><span class="toc-text">SliverToBoxAdapter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPadding"><span class="toc-text">SliverPadding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPersistentHeader"><span class="toc-text">SliverPersistentHeader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SliverPersistentHeaderDelegate"><span class="toc-text">SliverPersistentHeaderDelegate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NestedScrollView"><span class="toc-text">NestedScrollView</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">kuky</p>
+<p class="author-description">啊哈！</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>23</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>5</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>14</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverAppBar"><span class="toc-text">SliverAppBar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverFillViewport"><span class="toc-text">SliverFillViewport</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverToBoxAdapter"><span class="toc-text">SliverToBoxAdapter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPadding"><span class="toc-text">SliverPadding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPersistentHeader"><span class="toc-text">SliverPersistentHeader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SliverPersistentHeaderDelegate"><span class="toc-text">SliverPersistentHeaderDelegate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NestedScrollView"><span class="toc-text">NestedScrollView</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
-    </div>
-  </div>
-
-  
+      <a href="/categories/Android/">
+        <div class="categories-list-item">
+          Android
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
+      <a href="/categories/FFmpeg/">
+        <div class="categories-list-item">
+          FFmpeg
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
-          </li>
-        
-      </ul>
-    </div>
+      <a href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">
+        <div class="categories-list-item">
+          跨平台
+          <span class="categories-list-item-badge">16</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%88%AC%E8%99%AB-Spider/">
+        <div class="categories-list-item">
+          爬虫-Spider
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JNI/">
+        <div class="categories-list-item">
+          JNI
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
   </div>
-
+</div>
+  </article>
   
-</aside>
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/Android/" 
+        title="Android">
+        <div class="tags-list-item">Android</div>
+      </a>
+    
+      <a 
+        href="/tags/Flutter/" 
+        title="Flutter">
+        <div class="tags-list-item">Flutter</div>
+      </a>
+    
+      <a 
+        href="/tags/C/" 
+        title="C++">
+        <div class="tags-list-item">C++</div>
+      </a>
+    
+      <a 
+        href="/tags/Dart/" 
+        title="Dart">
+        <div class="tags-list-item">Dart</div>
+      </a>
+    
+      <a 
+        href="/tags/FFmpeg/" 
+        title="FFmpeg">
+        <div class="tags-list-item">FFmpeg</div>
+      </a>
+    
+      <a 
+        href="/tags/%E4%BB%BF-iOS/" 
+        title="仿 iOS">
+        <div class="tags-list-item">仿 iOS</div>
+      </a>
+    
+      <a 
+        href="/tags/Kotlin/" 
+        title="Kotlin">
+        <div class="tags-list-item">Kotlin</div>
+      </a>
+    
+      <a 
+        href="/tags/JNI/" 
+        title="JNI">
+        <div class="tags-list-item">JNI</div>
+      </a>
+    
+      <a 
+        href="/tags/Scrapy/" 
+        title="Scrapy">
+        <div class="tags-list-item">Scrapy</div>
+      </a>
+    
+      <a 
+        href="/tags/Python/" 
+        title="Python">
+        <div class="tags-list-item">Python</div>
+      </a>
+    
+      <a 
+        href="/tags/fish-redux/" 
+        title="fish_redux">
+        <div class="tags-list-item">fish_redux</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+        title="源码分析">
+        <div class="tags-list-item">源码分析</div>
+      </a>
+    
+      <a 
+        href="/tags/Jetpack/" 
+        title="Jetpack">
+        <div class="tags-list-item">Jetpack</div>
+      </a>
+    
+      <a 
+        href="/tags/SDL/" 
+        title="SDL">
+        <div class="tags-list-item">SDL</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverAppBar"><span class="toc-text">SliverAppBar</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverFillViewport"><span class="toc-text">SliverFillViewport</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverToBoxAdapter"><span class="toc-text">SliverToBoxAdapter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPadding"><span class="toc-text">SliverPadding</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SliverPersistentHeader"><span class="toc-text">SliverPersistentHeader</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SliverPersistentHeaderDelegate"><span class="toc-text">SliverPersistentHeaderDelegate</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NestedScrollView"><span class="toc-text">NestedScrollView</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-02-19</div>
+        <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/"><div class="recent-posts-item-content">fish_redux 「食用指南」</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-22</div>
+        <a href="/2019/10/22/FFmpeg-002/"><div class="recent-posts-item-content">初识 SDL2</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-16</div>
+        <a href="/2019/10/16/FFmpeg-001/"><div class="recent-posts-item-content">FFmpeg 配置</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-09</div>
+        <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/"><div class="recent-posts-item-content">初识 JNI</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020
+          
+          
+                - 
+                2022
+          
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          Kukyxs
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
     
+    
+    
+    
+</footer>
+ 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
 </html>

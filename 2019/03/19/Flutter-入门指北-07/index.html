@@ -1,119 +1,344 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta 
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta 
+    http-equiv="X-UA-Compatible" 
+    content="ie=edge">
+  <meta 
+    name="theme-color" 
+    content="#fff" 
+    id="theme-color">
+  <meta 
+    name="description" 
+    content="Hexo">
+  <link 
+    rel="icon" 
+    href="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+  <title>Flutter Guide(07) -- 内容太多怎么办，列表来帮你</title>
   
-
+    
+      <meta 
+        property="og:title" 
+        content="Flutter Guide(07) -- 内容太多怎么办，列表来帮你">
+    
+    
+      <meta 
+        property="og:url" 
+        content="http://example.com/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/index.html">
+    
+    
+      <meta 
+        property="og:img" 
+        content="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg">
+    
+    
+    
+      <meta 
+        property="og:type" 
+        content="article">
+      <meta 
+        property="og:article:published_time" 
+        content="2019-03-19">
+      <meta 
+        property="og:article:modified_time" 
+        content="2019-08-28">
+      <meta 
+        property="og:article:author" 
+        content="kuky">
+      
+        
+          <meta 
+            property="og:article:tag" 
+            content="Android">
+        
+          <meta 
+            property="og:article:tag" 
+            content="Flutter">
+        
+      
+    
   
-  <title>Flutter Guide(07) -- 内容太多怎么办，列表来帮你 | Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前面的小节基本上讲完了常用的部件和容器部件，也可以完成很多的界面，但是又一个问题，假如我们要显示一段文字，比如将 一段又臭又长的文字 在界面上显示 1000 次，不难完成吧 12&#x2F;&#x2F; ..省略一些无关代码body: Text(&amp;#x27;一段又臭又长的文字&amp;#x27; * 1000, softWrap: true)  很简单，运行到手机…「诶诶诶，**，怎么只显示了一部分，剩下的怎么画不下去」 日">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Flutter Guide(07) -- 内容太多怎么办，列表来帮你">
-<meta property="og:url" content="http://example.com/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前面的小节基本上讲完了常用的部件和容器部件，也可以完成很多的界面，但是又一个问题，假如我们要显示一段文字，比如将 一段又臭又长的文字 在界面上显示 1000 次，不难完成吧 12&#x2F;&#x2F; ..省略一些无关代码body: Text(&amp;#x27;一段又臭又长的文字&amp;#x27; * 1000, softWrap: true)  很简单，运行到手机…「诶诶诶，**，怎么只显示了一部分，剩下的怎么画不下去」 日">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-92530f99f0a374e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/341/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-7b1f3fc522369188.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-c00e56d33cb9a1c9.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-4fcbc01a60f02eb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-70145635ae27bf9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-2522ab8b726c0bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-3752cd0adad5ac5a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
-<meta property="article:published_time" content="2019-03-19T13:25:24.000Z">
-<meta property="article:modified_time" content="2019-08-28T13:16:43.157Z">
-<meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="Flutter">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-92530f99f0a374e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/341/format/webp">
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    function loadCSS(href, data, attr) {
+      var sheet = document.createElement('link');
+      sheet.ref = 'stylesheet';
+      sheet.href = href;
+      sheet.dataset[data] = attr;
+      document.head.appendChild(sheet);
+    }
+    function changeCSS(cssFile, data, attr) {
+      var oldlink = document.querySelector(data);
+      var newlink = document.createElement("link");
+      newlink.setAttribute("rel", "stylesheet");
+      newlink.setAttribute("href", cssFile);
+      newlink.dataset.prism = attr;
+      document.head.replaceChild(newlink, oldlink);
+    }
+  </script>
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+  
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+  </script>
+  
+    <script>
+      var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+        document.getElementById('theme-color').dataset.mode = setting;
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+        document.getElementById('theme-color').dataset.mode = getCssMediaQuery();
+      }
+    };
+    setDarkmode();
+    </script>
   
   
-    <link rel="icon" href="/favicon.png">
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.js" as="script">
+    <link rel="preload" href="/js/lib/lightbox/baguetteBox.min.css" as="style" >
   
   
-<link rel="stylesheet" href="/css/style.css">
-
+    <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_i1kgafibvw.css">
+  
+  <link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+  
+    <link rel="stylesheet" href="/js/lib/lightbox/baguetteBox.min.css">
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
 
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
+  <body>
+    <div class="wrapper">
+       
+      <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
       
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
+        <img 
+          class="navbar-logo-img"
+          width="32"
+          height="32"
+          src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+          alt="blog logo">
+      
+      <span class="navbar-logo-dsc">Kukyxs</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+      <a 
+        href="/" 
+        class="navbar-menu-item">
         
-          <a class="main-nav-link" href="/">Home</a>
+          Home
         
-          <a class="main-nav-link" href="/archives">Archives</a>
+      </a>
+    
+      <a 
+        href="/archives" 
+        class="navbar-menu-item">
         
-      </nav>
-      <nav id="sub-nav">
+          Archive
         
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+      </a>
+    
+      <a 
+        href="/tags" 
+        class="navbar-menu-item">
         
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+          Tags
+        
+      </a>
+    
+      <a 
+        href="/categories" 
+        class="navbar-menu-item">
+        
+          Categories
+        
+      </a>
+    
+      <a 
+        href="/about" 
+        class="navbar-menu-item">
+        
+          About
+        
+      </a>
+    
+      <a 
+        href="/links" 
+        class="navbar-menu-item">
+        
+          Friends
+        
+      </a>
+    
+    <a 
+      class="navbar-menu-item darknavbar" 
+      id="dark">
+      <i class="iconfont icon-weather"></i>
+    </a>
+    <a 
+      class="navbar-menu-item searchnavbar" 
+      id="search">
+      <i 
+        class="iconfont icon-search" 
+        style="font-size: 1.2rem; font-weight: 400;">
+      </i>
+    </a>
+  </div>
+</nav> 
+      
+      <div 
+        id="local-search" 
+        style="display: none">
+        <input
+          class="navbar-menu-item"
+          id="search-input"
+          placeholder="请输入搜索内容..." />
+        <div id="search-content"></div>
       </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main"><article id="post-Flutter-入门指北-07" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/" class="article-date">
-  <time datetime="2019-03-19T13:25:24.000Z" itemprop="datePublished">2019-03-19</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="article-title" itemprop="name">
+      
+      <div class="section-wrap">
+        <div class="container">
+          <div class="columns">
+            <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
       Flutter Guide(07) -- 内容太多怎么办，列表来帮你
     </h1>
-  
-
-      </header>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-03-19T13:25:24.000Z">
+      <i 
+        class="iconfont icon-calendar" 
+        style="margin-right: 2px;">
+      </i>
+      <span>2019-03-19</span>
+    </time>
     
-    <div class="article-entry" itemprop="articleBody">
+      <span class="dot"></span>
       
-        <p>前面的小节基本上讲完了常用的部件和容器部件，也可以完成很多的界面，但是又一个问题，假如我们要显示一段文字，比如将 <code>一段又臭又长的文字</code> 在界面上显示 1000 次，不难完成吧</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ..省略一些无关代码</span></span><br><span class="line">body: Text(<span class="string">&#x27;一段又臭又长的文字&#x27;</span> * <span class="number">1000</span>, softWrap: <span class="keyword">true</span>)</span><br></pre></td></tr></table></figure>
+        <a 
+          href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/" 
+          class="post-meta-link">
+          跨平台
+        </a>
+      
+    
+    
+      <span class="dot"></span>
+      <span>3.7k words</span>
+    
+  </div>
+  
+    <div 
+      class="post-meta post-show-meta" 
+      style="margin-top: -10px;">
+      <div style="display: flex; align-items: center;">
+        <i 
+          class="iconfont icon-biaoqian" 
+          style="margin-right: 2px; font-size: 1.15rem;">
+        </i>
+        
+          
+          <a 
+            href="/tags/Android/" 
+            class="post-meta-link">
+            Android
+          </a>
+        
+          
+            <span class="dot"></span>
+          
+          <a 
+            href="/tags/Flutter/" 
+            class="post-meta-link">
+            Flutter
+          </a>
+        
+      </div>
+    </div>
+  
+  </header>
+  <div 
+    id="section" 
+    class="post-content">
+    <p>前面的小节基本上讲完了常用的部件和容器部件，也可以完成很多的界面，但是又一个问题，假如我们要显示一段文字，比如将 <code>一段又臭又长的文字</code> 在界面上显示 1000 次，不难完成吧</p>
+<pre class="highlight"><span class="line"><span class="comment">// ..省略一些无关代码</span></span><br><span class="line">body: Text(<span class="string">&#x27;一段又臭又长的文字&#x27;</span> * <span class="number">1000</span>, softWrap: <span class="keyword">true</span>)</span><br></pre>
 
 <p>很简单，运行到手机…「诶诶诶，**，怎么只显示了一部分，剩下的怎么画不下去」</p>
 <p>日常开发中，会遇到很多这种情况，许多界面不是一页就能够显示完的。那么这里提下可滑动的容器部件</p>
 <h4 id="SingleChildScrollView"><a href="#SingleChildScrollView" class="headerlink" title="SingleChildScrollView"></a>SingleChildScrollView</h4><p>这个部件非常简单，不贴源码了。最简单的使用方式只需要提供一个 <code>child</code> 即可。现在给前面写的 <code>Text</code> 包裹上一层 <code>SingleChildScrollView</code> 然后再运行，文字全部都展示出来了。</p>
 <p>如果需要实现一个垂直的滚动列表，可以直接通过 <code>SingleChildScrollView</code> 包裹 <code>Column</code> 来实现，列表内容全部塞到 <code>Column</code> 即可</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleChildScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">/// <span class="language-markdown">letters 自由发挥吧...一定要大量，大量，大量</span></span></span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [......];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Single Child Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: SingleChildScrollView(</span><br><span class="line">          child: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          children: <span class="built_in">List</span>.generate(</span><br><span class="line">              letters.length,</span><br><span class="line">              (index) =&gt; Padding(</span><br><span class="line">                    padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">4.0</span>),</span><br><span class="line">                    child: Text(letters[index], style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                  )),</span><br><span class="line">        ),</span><br><span class="line">      )),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SingleChildScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">/// <span class="language-markdown">letters 自由发挥吧...一定要大量，大量，大量</span></span></span><br><span class="line">    <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [......];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Single Child Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: SingleChildScrollView(</span><br><span class="line">          child: Center(</span><br><span class="line">        child: Column(</span><br><span class="line">          children: <span class="built_in">List</span>.generate(</span><br><span class="line">              letters.length,</span><br><span class="line">              (index) =&gt; Padding(</span><br><span class="line">                    padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">4.0</span>),</span><br><span class="line">                    child: Text(letters[index], style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                  )),</span><br><span class="line">        ),</span><br><span class="line">      )),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>运行结果会根据你的 <code>letters</code> 不同而不同，这边就不贴效果图了，反正你可以看到一串列表…</p>
 <p>那么如果需要实现横向滚动列表呢，稍稍做下修改就行了</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">body: SingleChildScrollView(</span><br><span class="line">    <span class="comment">// 设置滚动方向</span></span><br><span class="line">	scrollDirection: Axis.horizontal,</span><br><span class="line">    child: Center(</span><br><span class="line">      <span class="comment">// 修改为 `Row` 即可</span></span><br><span class="line">	  child: Row(</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">        	letters.length,</span><br><span class="line">            <span class="comment">// 如果你的 letters 数量比较少，推荐加个 `Container` 把宽度指定大点</span></span><br><span class="line">            (index) =&gt; Container(</span><br><span class="line">            	child: Padding(</span><br><span class="line">                	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">4.0</span>, horizontal: <span class="number">6.0</span>),</span><br><span class="line">                    child: Text(letters[index], style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                    ),</span><br><span class="line">                    width: <span class="number">30.0</span>)),</span><br><span class="line">      ),</span><br><span class="line">    ))</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: SingleChildScrollView(</span><br><span class="line">    <span class="comment">// 设置滚动方向</span></span><br><span class="line">	scrollDirection: Axis.horizontal,</span><br><span class="line">    child: Center(</span><br><span class="line">      <span class="comment">// 修改为 `Row` 即可</span></span><br><span class="line">	  child: Row(</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">        	letters.length,</span><br><span class="line">            <span class="comment">// 如果你的 letters 数量比较少，推荐加个 `Container` 把宽度指定大点</span></span><br><span class="line">            (index) =&gt; Container(</span><br><span class="line">            	child: Padding(</span><br><span class="line">                	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">4.0</span>, horizontal: <span class="number">6.0</span>),</span><br><span class="line">                    child: Text(letters[index], style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                    ),</span><br><span class="line">                    width: <span class="number">30.0</span>)),</span><br><span class="line">      ),</span><br><span class="line">    ))</span><br></pre>
 
 <p>效果图也不贴了，都比较简单。</p>
 <p>该部分代码查看 <code>single_child_scroll_main.dart</code> 文件*</p>
@@ -126,38 +351,38 @@
 <li>通过 <code>ListView.separated</code> 实现带分割线列表</li>
 </ol>
 <h5 id="ListView-children"><a href="#ListView-children" class="headerlink" title="ListView children"></a>ListView children</h5><p>第一种方法实现列表，和通过 <code>SingleChildScrollView</code> + <code>Column</code> &#x2F; <code>Row</code> 的方法比较类似，不过可以直接通过指定 <code>ListView</code> 的 <code>scrollDirection</code> 就可以了。</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">body: ListView(</span><br><span class="line">    <span class="comment">// 通过修改滑动方向设置水平或者垂直方向滚动</span></span><br><span class="line">    scrollDirection: Axis.vertical,</span><br><span class="line">    <span class="comment">// 通过 iterable.map().toList 和 List.generate 方法效果是一样的</span></span><br><span class="line">    children: letters</span><br><span class="line">    	.map((s) =&gt;</span><br><span class="line">        Padding(</span><br><span class="line">        	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">8.0</span>),</span><br><span class="line">            child: Center(</span><br><span class="line">            	child: Text(s))))</span><br><span class="line">        .toList()),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: ListView(</span><br><span class="line">    <span class="comment">// 通过修改滑动方向设置水平或者垂直方向滚动</span></span><br><span class="line">    scrollDirection: Axis.vertical,</span><br><span class="line">    <span class="comment">// 通过 iterable.map().toList 和 List.generate 方法效果是一样的</span></span><br><span class="line">    children: letters</span><br><span class="line">    	.map((s) =&gt;</span><br><span class="line">        Padding(</span><br><span class="line">        	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">8.0</span>),</span><br><span class="line">            child: Center(</span><br><span class="line">            	child: Text(s))))</span><br><span class="line">        .toList()),</span><br></pre>
 
-<h5 id="ListView-custom"><a href="#ListView-custom" class="headerlink" title="ListView.custom"></a>ListView.custom</h5><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">body: ListView.custom(</span><br><span class="line">    <span class="comment">// 指定 item 的高度，可以加快渲染的速度</span></span><br><span class="line">    itemExtent: <span class="number">40.0</span>,</span><br><span class="line">    <span class="comment">// item 代理</span></span><br><span class="line">    childrenDelegate: SliverChildBuilderDelegate(</span><br><span class="line">      <span class="comment">// IndexedWidgetBuilder，根据 index 设置 item 中需要变化的数据</span></span><br><span class="line">      (_, index) =&gt; Center(child: Text(letters[index], style: TextStyle(color: Colors.red))),</span><br><span class="line">      <span class="comment">// 指定 item 的数量</span></span><br><span class="line">      childCount: letters.length,</span><br><span class="line">    )),</span><br></pre></td></tr></table></figure>
+<h5 id="ListView-custom"><a href="#ListView-custom" class="headerlink" title="ListView.custom"></a>ListView.custom</h5><pre class="highlight"><span class="line">body: ListView.custom(</span><br><span class="line">    <span class="comment">// 指定 item 的高度，可以加快渲染的速度</span></span><br><span class="line">    itemExtent: <span class="number">40.0</span>,</span><br><span class="line">    <span class="comment">// item 代理</span></span><br><span class="line">    childrenDelegate: SliverChildBuilderDelegate(</span><br><span class="line">      <span class="comment">// IndexedWidgetBuilder，根据 index 设置 item 中需要变化的数据</span></span><br><span class="line">      (_, index) =&gt; Center(child: Text(letters[index], style: TextStyle(color: Colors.red))),</span><br><span class="line">      <span class="comment">// 指定 item 的数量</span></span><br><span class="line">      childCount: letters.length,</span><br><span class="line">    )),</span><br></pre>
 
 <p>如果每个 <code>item</code> 的高度可以确定，那么推荐通过 <code>itemExtent</code> 来设置 <code>item</code> 的高度&#x2F;宽度，能够加快 <code>ListView</code> 的渲染速度。如果不指定高度&#x2F;宽度，<code>ListView</code> 需要根据每个 <code>item</code> 来计算 <code>ListView</code> 的高度，这个计算过程是需要消耗时间和资源的</p>
 <h5 id="ListView-builder"><a href="#ListView-builder" class="headerlink" title="ListView.builder"></a>ListView.builder</h5><p>该方法同 <code>custom</code> 类似，<code>custom</code> 需要通过一个 <code>Delegate</code> 生成 <code>item</code>，该方法直接通过 <code>builder</code> 生成，同时也可以直接指定 <code>item</code> 的高度</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">body: ListView.builder(</span><br><span class="line">    itemBuilder: (_, index) =&gt; Center(child: Text(letters[index], style: TextStyle(color: Colors.green))),</span><br><span class="line">    itemExtent: <span class="number">40.0</span>,</span><br><span class="line">    itemCount: letters.length),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: ListView.builder(</span><br><span class="line">    itemBuilder: (_, index) =&gt; Center(child: Text(letters[index], style: TextStyle(color: Colors.green))),</span><br><span class="line">    itemExtent: <span class="number">40.0</span>,</span><br><span class="line">    itemCount: letters.length),</span><br></pre>
 
 <p>相对比较简单，代码也比较少…就冲这点，我也愿意用这个方法</p>
 <h5 id="ListView-separated"><a href="#ListView-separated" class="headerlink" title="ListView.separated"></a>ListView.separated</h5><p>如果需要在每个 <code>item</code> 之间添加分割线，那么通过以上的方式实现就比较困难了，所以 <code>Flutter</code> 提供了 <code>separated</code> 方法用来快速构建带有分割线的 <code>ListView</code></p>
 <p>加入我们的 <code>item</code> 之间的分割线需要如下样式：奇数位和偶数位之间用黑色分割线，偶数位和奇数位之间用红色分割线</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 需要分割线的时候才使用，不能指定 item 的高度</span></span><br><span class="line">body: ListView.separated(</span><br><span class="line">	itemBuilder: (_, index) =&gt; Padding(</span><br><span class="line">    	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">20.0</span>),</span><br><span class="line">        child: Center(child: Text(letters[index], style: TextStyle(color: Colors.blue))),</span><br><span class="line">      ),</span><br><span class="line">    <span class="comment">// 这里用来定义分割线</span></span><br><span class="line">    separatorBuilder: (_, index) =&gt; Divider(height: <span class="number">1.0</span>, color: index % <span class="number">2</span> == <span class="number">0</span> ? Colors.black : Colors.red),</span><br><span class="line">    itemCount: letters.length),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// 需要分割线的时候才使用，不能指定 item 的高度</span></span><br><span class="line">body: ListView.separated(</span><br><span class="line">	itemBuilder: (_, index) =&gt; Padding(</span><br><span class="line">    	padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">20.0</span>),</span><br><span class="line">        child: Center(child: Text(letters[index], style: TextStyle(color: Colors.blue))),</span><br><span class="line">      ),</span><br><span class="line">    <span class="comment">// 这里用来定义分割线</span></span><br><span class="line">    separatorBuilder: (_, index) =&gt; Divider(height: <span class="number">1.0</span>, color: index % <span class="number">2</span> == <span class="number">0</span> ? Colors.black : Colors.red),</span><br><span class="line">    itemCount: letters.length),</span><br></pre>
 
 <p>最终的效果如下</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-92530f99f0a374e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/341/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-92530f99f0a374e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/341/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-92530f99f0a374e6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/341/format/webp" class="lozad post-image">
 
 <p><em>以上代码查看 <code>listview_main.dart</code> 文件</em></p>
 <p>总结下：<strong>如果 <code>item</code> 的高度能够准确获取，一定要指定 <code>itemExtent</code> 的值，这样会更加高效</strong>，至于要通过哪种方式来生成，完全看个人喜好吧。</p>
 <h4 id="ExpansionTile"><a href="#ExpansionTile" class="headerlink" title="ExpansionTile"></a>ExpansionTile</h4><p>既然讲到了 <code>ListView</code>，在日常开发中，折叠列表也是一个比较常用的，所以这边要提下 <code>ExpansionTile</code> 这个部件，因为相对比较简单，所以直接上代码了</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExpansionTilesDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;ExpansionTile Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: ExpansionTile(</span><br><span class="line">        <span class="comment">// 最前面的 widget</span></span><br><span class="line">        leading: Icon(Icons.phone_android),</span><br><span class="line">        <span class="comment">// 替换默认箭头</span></span><br><span class="line"><span class="comment">//        trailing: Icon(Icons.phone_iphone),</span></span><br><span class="line">        title: Text(<span class="string">&#x27;Parent&#x27;</span>),</span><br><span class="line">        <span class="comment">// 默认是否展开</span></span><br><span class="line">        initiallyExpanded: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 展开时候的背景色</span></span><br><span class="line">        backgroundColor: Colors.yellow[<span class="number">100</span>],</span><br><span class="line">        <span class="comment">// 展开或者收缩的回调，true 表示展开</span></span><br><span class="line">        onExpansionChanged: (expanded) =&gt; <span class="built_in">print</span>(<span class="string">&#x27;ExpansionTile is <span class="subst">$&#123;expanded ? <span class="string">&#x27;expanded&#x27;</span> : <span class="string">&#x27;collapsed&#x27;</span>&#125;</span>&#x27;</span>),</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            <span class="number">10</span>,</span><br><span class="line">                (position) =&gt;</span><br><span class="line">                Container(</span><br><span class="line">                  padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">80.0</span>),</span><br><span class="line">                  child: Text(<span class="string">&#x27;Children <span class="subst">$&#123;position + <span class="number">1</span>&#125;</span>&#x27;</span>),</span><br><span class="line">                  height: <span class="number">50.0</span>,</span><br><span class="line">                  alignment: Alignment.centerLeft,</span><br><span class="line">                )),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ExpansionTilesDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;ExpansionTile Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: ExpansionTile(</span><br><span class="line">        <span class="comment">// 最前面的 widget</span></span><br><span class="line">        leading: Icon(Icons.phone_android),</span><br><span class="line">        <span class="comment">// 替换默认箭头</span></span><br><span class="line"><span class="comment">//        trailing: Icon(Icons.phone_iphone),</span></span><br><span class="line">        title: Text(<span class="string">&#x27;Parent&#x27;</span>),</span><br><span class="line">        <span class="comment">// 默认是否展开</span></span><br><span class="line">        initiallyExpanded: <span class="keyword">true</span>,</span><br><span class="line">        <span class="comment">// 展开时候的背景色</span></span><br><span class="line">        backgroundColor: Colors.yellow[<span class="number">100</span>],</span><br><span class="line">        <span class="comment">// 展开或者收缩的回调，true 表示展开</span></span><br><span class="line">        onExpansionChanged: (expanded) =&gt; <span class="built_in">print</span>(<span class="string">&#x27;ExpansionTile is <span class="subst">$&#123;expanded ? <span class="string">&#x27;expanded&#x27;</span> : <span class="string">&#x27;collapsed&#x27;</span>&#125;</span>&#x27;</span>),</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            <span class="number">10</span>,</span><br><span class="line">                (position) =&gt;</span><br><span class="line">                Container(</span><br><span class="line">                  padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">80.0</span>),</span><br><span class="line">                  child: Text(<span class="string">&#x27;Children <span class="subst">$&#123;position + <span class="number">1</span>&#125;</span>&#x27;</span>),</span><br><span class="line">                  height: <span class="number">50.0</span>,</span><br><span class="line">                  alignment: Alignment.centerLeft,</span><br><span class="line">                )),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>这样就完成了一个折叠部件，看下最后的效果</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-7b1f3fc522369188.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-7b1f3fc522369188.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-7b1f3fc522369188.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>那么实现折叠列表也就是通过 <code>ListView</code> 创建一个 <code>ExpansionTile</code> 列表即可，先准备下模拟的数据</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> _keys = [<span class="string">&#x27;ParentA&#x27;</span>, <span class="string">&#x27;ParentB&#x27;</span>, <span class="string">&#x27;ParentC&#x27;</span>, <span class="string">&#x27;ParentD&#x27;</span>, <span class="string">&#x27;ParentE&#x27;</span>, <span class="string">&#x27;ParentF&#x27;</span>];</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt; _data = &#123;</span><br><span class="line">    <span class="string">&#x27;ParentA&#x27;</span>: [<span class="string">&#x27;Child A0&#x27;</span>, <span class="string">&#x27;Child A1&#x27;</span>, <span class="string">&#x27;Child A2&#x27;</span>, <span class="string">&#x27;Child A3&#x27;</span>, <span class="string">&#x27;Child A4&#x27;</span>, <span class="string">&#x27;Child A5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentB&#x27;</span>: [<span class="string">&#x27;Child B0&#x27;</span>, <span class="string">&#x27;Child B1&#x27;</span>, <span class="string">&#x27;Child B2&#x27;</span>, <span class="string">&#x27;Child B3&#x27;</span>, <span class="string">&#x27;Child B4&#x27;</span>, <span class="string">&#x27;Child B5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentC&#x27;</span>: [<span class="string">&#x27;Child C0&#x27;</span>, <span class="string">&#x27;Child C1&#x27;</span>, <span class="string">&#x27;Child C2&#x27;</span>, <span class="string">&#x27;Child C3&#x27;</span>, <span class="string">&#x27;Child C4&#x27;</span>, <span class="string">&#x27;Child C5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentD&#x27;</span>: [<span class="string">&#x27;Child D0&#x27;</span>, <span class="string">&#x27;Child D1&#x27;</span>, <span class="string">&#x27;Child D2&#x27;</span>, <span class="string">&#x27;Child D3&#x27;</span>, <span class="string">&#x27;Child D4&#x27;</span>, <span class="string">&#x27;Child D5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentE&#x27;</span>: [<span class="string">&#x27;Child E0&#x27;</span>, <span class="string">&#x27;Child E1&#x27;</span>, <span class="string">&#x27;Child E2&#x27;</span>, <span class="string">&#x27;Child E3&#x27;</span>, <span class="string">&#x27;Child E4&#x27;</span>, <span class="string">&#x27;Child E5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentF&#x27;</span>: [<span class="string">&#x27;Child F0&#x27;</span>, <span class="string">&#x27;Child F1&#x27;</span>, <span class="string">&#x27;Child F2&#x27;</span>, <span class="string">&#x27;Child F3&#x27;</span>, <span class="string">&#x27;Child F4&#x27;</span>, <span class="string">&#x27;Child F5&#x27;</span>]</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="keyword">final</span> _keys = [<span class="string">&#x27;ParentA&#x27;</span>, <span class="string">&#x27;ParentB&#x27;</span>, <span class="string">&#x27;ParentC&#x27;</span>, <span class="string">&#x27;ParentD&#x27;</span>, <span class="string">&#x27;ParentE&#x27;</span>, <span class="string">&#x27;ParentF&#x27;</span>];</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">Map</span>&lt;<span class="built_in">String</span>, <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt;&gt; _data = &#123;</span><br><span class="line">    <span class="string">&#x27;ParentA&#x27;</span>: [<span class="string">&#x27;Child A0&#x27;</span>, <span class="string">&#x27;Child A1&#x27;</span>, <span class="string">&#x27;Child A2&#x27;</span>, <span class="string">&#x27;Child A3&#x27;</span>, <span class="string">&#x27;Child A4&#x27;</span>, <span class="string">&#x27;Child A5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentB&#x27;</span>: [<span class="string">&#x27;Child B0&#x27;</span>, <span class="string">&#x27;Child B1&#x27;</span>, <span class="string">&#x27;Child B2&#x27;</span>, <span class="string">&#x27;Child B3&#x27;</span>, <span class="string">&#x27;Child B4&#x27;</span>, <span class="string">&#x27;Child B5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentC&#x27;</span>: [<span class="string">&#x27;Child C0&#x27;</span>, <span class="string">&#x27;Child C1&#x27;</span>, <span class="string">&#x27;Child C2&#x27;</span>, <span class="string">&#x27;Child C3&#x27;</span>, <span class="string">&#x27;Child C4&#x27;</span>, <span class="string">&#x27;Child C5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentD&#x27;</span>: [<span class="string">&#x27;Child D0&#x27;</span>, <span class="string">&#x27;Child D1&#x27;</span>, <span class="string">&#x27;Child D2&#x27;</span>, <span class="string">&#x27;Child D3&#x27;</span>, <span class="string">&#x27;Child D4&#x27;</span>, <span class="string">&#x27;Child D5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentE&#x27;</span>: [<span class="string">&#x27;Child E0&#x27;</span>, <span class="string">&#x27;Child E1&#x27;</span>, <span class="string">&#x27;Child E2&#x27;</span>, <span class="string">&#x27;Child E3&#x27;</span>, <span class="string">&#x27;Child E4&#x27;</span>, <span class="string">&#x27;Child E5&#x27;</span>],</span><br><span class="line">    <span class="string">&#x27;ParentF&#x27;</span>: [<span class="string">&#x27;Child F0&#x27;</span>, <span class="string">&#x27;Child F1&#x27;</span>, <span class="string">&#x27;Child F2&#x27;</span>, <span class="string">&#x27;Child F3&#x27;</span>, <span class="string">&#x27;Child F4&#x27;</span>, <span class="string">&#x27;Child F5&#x27;</span>]</span><br><span class="line">  &#125;;</span><br></pre>
 
 <p>在平时开发过程中，后台返回的数据应该是列表嵌套列表的形式比较多，我这边主要就是为了偷懒就随便弄了，接着修改下 <code>body</code> 的代码</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">body: ListView(</span><br><span class="line">          children: _keys</span><br><span class="line">              .map((key) =&gt; ExpansionTile(</span><br><span class="line">                    title: Text(key),</span><br><span class="line">                    children: _data[key]</span><br><span class="line">                        .map((value) =&gt; InkWell(</span><br><span class="line">                            child: Container(</span><br><span class="line">                              child: Text(value),</span><br><span class="line">                              padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">80.0</span>),</span><br><span class="line">                              height: <span class="number">50.0</span>,</span><br><span class="line">                              alignment: Alignment.centerLeft,</span><br><span class="line">                            ),</span><br><span class="line">                            onTap: () &#123;&#125;))</span><br><span class="line">                        .toList(),</span><br><span class="line">                  ))</span><br><span class="line">              .toList()),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: ListView(</span><br><span class="line">          children: _keys</span><br><span class="line">              .map((key) =&gt; ExpansionTile(</span><br><span class="line">                    title: Text(key),</span><br><span class="line">                    children: _data[key]</span><br><span class="line">                        .map((value) =&gt; InkWell(</span><br><span class="line">                            child: Container(</span><br><span class="line">                              child: Text(value),</span><br><span class="line">                              padding: <span class="keyword">const</span> EdgeInsets.only(left: <span class="number">80.0</span>),</span><br><span class="line">                              height: <span class="number">50.0</span>,</span><br><span class="line">                              alignment: Alignment.centerLeft,</span><br><span class="line">                            ),</span><br><span class="line">                            onTap: () &#123;&#125;))</span><br><span class="line">                        .toList(),</span><br><span class="line">                  ))</span><br><span class="line">              .toList()),</span><br></pre>
 
 <p>最终的效果就是个折叠列表了</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-c00e56d33cb9a1c9.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-c00e56d33cb9a1c9.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-c00e56d33cb9a1c9.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p><em>该部分代码查看 <code>expansion_tile_main.dart</code> 文件</em></p>
 <p>当然了，只要数据到位，别说两层折叠，三层，四层甚至更多层都能够实现，源码中有实现四层的 <code>demo</code>，这边就不贴代码了，有需要的小伙伴可以查看源码</p>
@@ -168,48 +393,48 @@
 <li><code>SliverGridDelegateWithMaxCrossAxisExtent</code> 这个是设置最大宽度&#x2F;高度，在这个值范围内取最大值，比如一排能给你排下 6 个，但是远不到设置的最大值，它绝不给你排 6 个</li>
 </ol>
 <p>那么接下来的使用就比较简单了</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GridViewDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 自行设置</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [ ..... ];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 用于区分网格单元</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;GridView Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">        body: GridView(</span><br><span class="line">        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">            crossAxisCount: <span class="number">5</span>, <span class="comment">// 单行的个数</span></span><br><span class="line">            mainAxisSpacing: <span class="number">10.0</span>, <span class="comment">// 同 scrollDirection 挂钩，item 之间在主轴方向的间隔</span></span><br><span class="line">            crossAxisSpacing: <span class="number">10.0</span>, <span class="comment">// item 之间在副轴方法的间隔</span></span><br><span class="line">            childAspectRatio: <span class="number">1.0</span> <span class="comment">// item 的宽高比</span></span><br><span class="line">            ),</span><br><span class="line">        <span class="comment">// 需要根据 index 设置不同背景色，所以使用 List.generate，如果不设置背景色，也可用 iterable.map().toList</span></span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            letters.length,</span><br><span class="line">            (index) =&gt; Container(</span><br><span class="line">                  alignment: Alignment.center,</span><br><span class="line">                  child: Text(letters[index]),</span><br><span class="line">                  color: colors[index % <span class="number">4</span>],</span><br><span class="line">                )),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GridViewDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 自行设置</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [ ..... ];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 用于区分网格单元</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;GridView Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">        body: GridView(</span><br><span class="line">        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">            crossAxisCount: <span class="number">5</span>, <span class="comment">// 单行的个数</span></span><br><span class="line">            mainAxisSpacing: <span class="number">10.0</span>, <span class="comment">// 同 scrollDirection 挂钩，item 之间在主轴方向的间隔</span></span><br><span class="line">            crossAxisSpacing: <span class="number">10.0</span>, <span class="comment">// item 之间在副轴方法的间隔</span></span><br><span class="line">            childAspectRatio: <span class="number">1.0</span> <span class="comment">// item 的宽高比</span></span><br><span class="line">            ),</span><br><span class="line">        <span class="comment">// 需要根据 index 设置不同背景色，所以使用 List.generate，如果不设置背景色，也可用 iterable.map().toList</span></span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            letters.length,</span><br><span class="line">            (index) =&gt; Container(</span><br><span class="line">                  alignment: Alignment.center,</span><br><span class="line">                  child: Text(letters[index]),</span><br><span class="line">                  color: colors[index % <span class="number">4</span>],</span><br><span class="line">                )),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>关键地方已经添加了注释，跑下运行效果</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-4fcbc01a60f02eb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-4fcbc01a60f02eb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-4fcbc01a60f02eb2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp" class="lozad post-image">
 
 <p>接下来换一种 <code>delegate</code> 试试效果，当然这个最大值可以根据个人喜好来设置</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">body: GridView(</span><br><span class="line">       <span class="comment">// 通过设置 `maxCrossAxisExtent` 来指定最大的宽度，在这个值范围内，会选取相对较大的值</span></span><br><span class="line">       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(</span><br><span class="line">           maxCrossAxisExtent: <span class="number">60.0</span>, crossAxisSpacing: <span class="number">10.0</span>, mainAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">       children: <span class="built_in">List</span>.generate(</span><br><span class="line">           letters.length,</span><br><span class="line">           (index) =&gt; Container(</span><br><span class="line">                 alignment: Alignment.center,</span><br><span class="line">                 child: Text(letters[index]),</span><br><span class="line">                 color: colors[index % <span class="number">4</span>],</span><br><span class="line">               )),</span><br><span class="line">     )</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: GridView(</span><br><span class="line">       <span class="comment">// 通过设置 `maxCrossAxisExtent` 来指定最大的宽度，在这个值范围内，会选取相对较大的值</span></span><br><span class="line">       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(</span><br><span class="line">           maxCrossAxisExtent: <span class="number">60.0</span>, crossAxisSpacing: <span class="number">10.0</span>, mainAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">       children: <span class="built_in">List</span>.generate(</span><br><span class="line">           letters.length,</span><br><span class="line">           (index) =&gt; Container(</span><br><span class="line">                 alignment: Alignment.center,</span><br><span class="line">                 child: Text(letters[index]),</span><br><span class="line">                 color: colors[index % <span class="number">4</span>],</span><br><span class="line">               )),</span><br><span class="line">     )</span><br></pre>
 
 <p>最后效果：</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-70145635ae27bf9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-70145635ae27bf9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-70145635ae27bf9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" class="lozad post-image">
 
 <p>为了方便写法呢，<code>Flutter</code> 对以上的两种方式进行了封装，省略了 <code>delegate</code></p>
 <h5 id="GridView-count-x2F-GridView-extent"><a href="#GridView-count-x2F-GridView-extent" class="headerlink" title="GridView.count&#x2F;GridView.extent"></a>GridView.count&#x2F;GridView.extent</h5><p>直接看下如何修改</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这种情况简化了 `GridView` 使用 `SliverGridDelegateWithFixedCrossAxisCount` 代理的方法</span></span><br><span class="line">body: GridView.count(</span><br><span class="line">         crossAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">         mainAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">         childAspectRatio: <span class="number">1.0</span>,</span><br><span class="line">         crossAxisCount: <span class="number">5</span>,</span><br><span class="line">         childAspectRatio: <span class="number">2.0</span>,</span><br><span class="line">         children: <span class="built_in">List</span>.generate(</span><br><span class="line">             letters.length,</span><br><span class="line">             (index) =&gt; Container(</span><br><span class="line">                   alignment: Alignment.center,</span><br><span class="line">                   color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   child: Text(letters[index]),</span><br><span class="line">                 ))),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// 这种情况简化了 `GridView` 使用 `SliverGridDelegateWithFixedCrossAxisCount` 代理的方法</span></span><br><span class="line">body: GridView.count(</span><br><span class="line">         crossAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">         mainAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">         childAspectRatio: <span class="number">1.0</span>,</span><br><span class="line">         crossAxisCount: <span class="number">5</span>,</span><br><span class="line">         childAspectRatio: <span class="number">2.0</span>,</span><br><span class="line">         children: <span class="built_in">List</span>.generate(</span><br><span class="line">             letters.length,</span><br><span class="line">             (index) =&gt; Container(</span><br><span class="line">                   alignment: Alignment.center,</span><br><span class="line">                   color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   child: Text(letters[index]),</span><br><span class="line">                 ))),</span><br></pre>
 
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这种情况简化了 `GridView` 使用 `SliverGridDelegateWithMaxCrossAxisExtent` 代理的方法</span></span><br><span class="line">   body: GridView.extent(</span><br><span class="line">       crossAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">       mainAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">       childAspectRatio: <span class="number">1.0</span>,</span><br><span class="line">       maxCrossAxisExtent: <span class="number">60.0</span>,</span><br><span class="line">       children: <span class="built_in">List</span>.generate(</span><br><span class="line">           letters.length,</span><br><span class="line">               (index) =&gt;</span><br><span class="line">               Container(</span><br><span class="line">                 alignment: Alignment.center,</span><br><span class="line">                 color: colors[index % <span class="number">4</span>],</span><br><span class="line">                 child: Text(letters[index]),</span><br><span class="line">               ))),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// 这种情况简化了 `GridView` 使用 `SliverGridDelegateWithMaxCrossAxisExtent` 代理的方法</span></span><br><span class="line">   body: GridView.extent(</span><br><span class="line">       crossAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">       mainAxisSpacing: <span class="number">10.0</span>,</span><br><span class="line">       childAspectRatio: <span class="number">1.0</span>,</span><br><span class="line">       maxCrossAxisExtent: <span class="number">60.0</span>,</span><br><span class="line">       children: <span class="built_in">List</span>.generate(</span><br><span class="line">           letters.length,</span><br><span class="line">               (index) =&gt;</span><br><span class="line">               Container(</span><br><span class="line">                 alignment: Alignment.center,</span><br><span class="line">                 color: colors[index % <span class="number">4</span>],</span><br><span class="line">                 child: Text(letters[index]),</span><br><span class="line">               ))),</span><br></pre>
 
 <p>运行的效果入和前面的相同</p>
 <h5 id="GridView-custom"><a href="#GridView-custom" class="headerlink" title="GridView.custom"></a>GridView.custom</h5><p>这种生成方式，比 <code>GridView</code> 多了一个 <code>childrenDelegate</code>，<code>childrenDelegate</code> 主要分为两种，一种是通过 <code>IndexedWidgetBuilder</code> 来构建 <code>item</code> 的 <code>SliverChildBuilderDelegate</code>，还有一种是通过 <code>List</code> 来构建 <code>item</code> 的 <code>SliverChildListDelegate</code>，所以…这边直接有 4 中生成方式，当然，我们只需要了解 <code>childrenDelegate</code> 如何使用即可</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">body: GridView.custom(</span><br><span class="line">         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">             crossAxisCount: <span class="number">5</span>, mainAxisSpacing: <span class="number">10.0</span>, </span><br><span class="line">             crossAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">         <span class="comment">// item 通过 delegate 来生成，内部实现还是 `IndexedWidgetBuilder`</span></span><br><span class="line">         childrenDelegate: SliverChildBuilderDelegate(</span><br><span class="line">             (_, index) =&gt; Container(</span><br><span class="line">                   alignment: Alignment.center,</span><br><span class="line">                   color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   child: Text(letters[index]),</span><br><span class="line">                 ),</span><br><span class="line">             childCount: letters.length)),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: GridView.custom(</span><br><span class="line">         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">             crossAxisCount: <span class="number">5</span>, mainAxisSpacing: <span class="number">10.0</span>, </span><br><span class="line">             crossAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">         <span class="comment">// item 通过 delegate 来生成，内部实现还是 `IndexedWidgetBuilder`</span></span><br><span class="line">         childrenDelegate: SliverChildBuilderDelegate(</span><br><span class="line">             (_, index) =&gt; Container(</span><br><span class="line">                   alignment: Alignment.center,</span><br><span class="line">                   color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   child: Text(letters[index]),</span><br><span class="line">                 ),</span><br><span class="line">             childCount: letters.length)),</span><br></pre>
 
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">body: GridView.custom(</span><br><span class="line">         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">             crossAxisCount: <span class="number">5</span>, mainAxisSpacing: <span class="number">10.0</span>, </span><br><span class="line">             crossAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">         <span class="comment">// 内部通过返回控件列表实现</span></span><br><span class="line">         childrenDelegate: SliverChildListDelegate(</span><br><span class="line">           <span class="built_in">List</span>.generate(</span><br><span class="line">               letters.length,</span><br><span class="line">               (index) =&gt; Container(</span><br><span class="line">                     child: Text(letters[index]),</span><br><span class="line">                     alignment: Alignment.center,</span><br><span class="line">                     color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   )),</span><br><span class="line">         )),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line">body: GridView.custom(</span><br><span class="line">         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">             crossAxisCount: <span class="number">5</span>, mainAxisSpacing: <span class="number">10.0</span>, </span><br><span class="line">             crossAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">         <span class="comment">// 内部通过返回控件列表实现</span></span><br><span class="line">         childrenDelegate: SliverChildListDelegate(</span><br><span class="line">           <span class="built_in">List</span>.generate(</span><br><span class="line">               letters.length,</span><br><span class="line">               (index) =&gt; Container(</span><br><span class="line">                     child: Text(letters[index]),</span><br><span class="line">                     alignment: Alignment.center,</span><br><span class="line">                     color: colors[index % <span class="number">4</span>],</span><br><span class="line">                   )),</span><br><span class="line">         )),</span><br></pre>
 
 <p>运行效果也同上面，不多帖了。</p>
 <h5 id="GridView-builder"><a href="#GridView-builder" class="headerlink" title="GridView.builder"></a>GridView.builder</h5><p>前面介绍的方法中，生成 <code>item</code> 的方式基本上是通过 <code>List</code> 进行转换的，在 <code>custom</code> 提到了 <code>IndexWidgetBuilder</code> 的生成方式，当然，在 <code>ListView</code> 的时候也用到了这种生成方式，当然 <code>GridView</code> 也有啊，要「雨露均沾」你说是吧</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过 `IndexedWidgetBuilder` 来构建 item，别的参数同上</span></span><br><span class="line">      body: GridView.builder(</span><br><span class="line">          <span class="comment">// 这里又需要分两种 `gridDelegate`</span></span><br><span class="line">          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">              crossAxisCount: <span class="number">5</span>, crossAxisSpacing: <span class="number">10.0</span>, mainAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">          itemCount: letters.length,</span><br><span class="line">          itemBuilder: (_, index) =&gt;</span><br><span class="line">              Container(color: colors[index % <span class="number">4</span>], child: Text(letters[index]), alignment: Alignment.center)),</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="comment">// 通过 `IndexedWidgetBuilder` 来构建 item，别的参数同上</span></span><br><span class="line">      body: GridView.builder(</span><br><span class="line">          <span class="comment">// 这里又需要分两种 `gridDelegate`</span></span><br><span class="line">          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">              crossAxisCount: <span class="number">5</span>, crossAxisSpacing: <span class="number">10.0</span>, mainAxisSpacing: <span class="number">10.0</span>, childAspectRatio: <span class="number">1.0</span>),</span><br><span class="line">          itemCount: letters.length,</span><br><span class="line">          itemBuilder: (_, index) =&gt;</span><br><span class="line">              Container(color: colors[index % <span class="number">4</span>], child: Text(letters[index]), alignment: Alignment.center)),</span><br></pre>
 
 <p>到这 10 种方式就说完了。终于可以歇一口气了。</p>
 <p><em>该部分代码查看 <code>gridview_main.dart</code> 文件</em></p>
 <h4 id="CustomScrollView"><a href="#CustomScrollView" class="headerlink" title="CustomScrollView"></a>CustomScrollView</h4><p>在平时的开发中，应该会遇到这么种情况，头部是一个 <code>GridView</code> 接下来拼接一些别的部件，然后再拼接一个列表，例如下图</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-2522ab8b726c0bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-2522ab8b726c0bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-2522ab8b726c0bb9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" class="lozad post-image">
 
 <p>因为 <code>GridView</code>  和 <code>ListView</code> 亮着都是可滑动的部件，直接拼接肯定会有「滑动冲突」，所以 <code>Flutter</code> 就提供了一个粘合剂，<code>CustomScrollView</code>，那么 <code>Flutter</code> 如何实现呢，因为会涉及到 <code>Sliver</code> 系列部件，所以这边先看下大概的代码，下节会补充 <code>Sliver</code> 系列部件的内容</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 这边用的 A-Z 字母</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [ ..... ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink, Colors.yellow, Colors.deepPurple];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;CustomScrollDemo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: CustomScrollView(</span><br><span class="line">        <span class="comment">// 这里需要传入 `Sliver` 部件，下节课填坑</span></span><br><span class="line">        slivers: &lt;Widget&gt;[</span><br><span class="line">          <span class="comment">// SliverGrid 实现同 GridView 实现方式一样</span></span><br><span class="line">          <span class="comment">// 同样 SliverGrid 有提供 `count`, `entent` 方法便于快速生成 SliverGrid</span></span><br><span class="line">          SliverGrid(</span><br><span class="line">              delegate: SliverChildBuilderDelegate(</span><br><span class="line">                  (_, index) =&gt; InkWell(</span><br><span class="line">                        child: Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>),</span><br><span class="line">                        onTap: () &#123;&#125;,</span><br><span class="line">                      ),</span><br><span class="line">                  childCount: <span class="number">8</span>),</span><br><span class="line">              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">                  crossAxisCount: <span class="number">4</span>, mainAxisSpacing: <span class="number">10.0</span>, crossAxisSpacing: <span class="number">10.0</span>)),</span><br><span class="line">          <span class="comment">// 这里下节讲</span></span><br><span class="line">          SliverToBoxAdapter(</span><br><span class="line">              child: Container(</span><br><span class="line">                  color: Colors.black12,</span><br><span class="line">                  margin: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">10.0</span>),</span><br><span class="line">                  child: Column(children: &lt;Widget&gt;[</span><br><span class="line">                    Divider(height: <span class="number">2.0</span>, color: Colors.black54),</span><br><span class="line">                    Stack(</span><br><span class="line">                      alignment: Alignment.center,</span><br><span class="line">                      children: &lt;Widget&gt;[</span><br><span class="line">                        Image.asset(<span class="string">&#x27;images/app_bar_hor.jpg&#x27;</span>, fit: BoxFit.cover),</span><br><span class="line">                        Text(<span class="string">&#x27;我是一些别的东西..例如广告&#x27;</span>, textScaleFactor: <span class="number">1.5</span>, style: TextStyle(color: Colors.red))</span><br><span class="line">                      ],</span><br><span class="line">                    ),</span><br><span class="line">                    Divider(height: <span class="number">2.0</span>, color: Colors.black54),</span><br><span class="line">                  ], mainAxisAlignment: MainAxisAlignment.spaceBetween),</span><br><span class="line">                  alignment: Alignment.center)),</span><br><span class="line">          <span class="comment">// SliverFixedExtentList 实现同 List.custom 实现类似</span></span><br><span class="line">          SliverFixedExtentList(</span><br><span class="line">              delegate: SliverChildBuilderDelegate(</span><br><span class="line">                  (_, index) =&gt; InkWell(</span><br><span class="line">                        child: Container(</span><br><span class="line">                          child: Text(letters[index] * <span class="number">10</span>,</span><br><span class="line">                              style: TextStyle(color: colors[index % colors.length], letterSpacing: <span class="number">2.0</span>),</span><br><span class="line">                              textScaleFactor: <span class="number">1.5</span>),</span><br><span class="line">                          alignment: Alignment.center,</span><br><span class="line">                        ),</span><br><span class="line">                        onTap: () &#123;&#125;,</span><br><span class="line">                      ),</span><br><span class="line">                  childCount: letters.length),</span><br><span class="line">              itemExtent: <span class="number">60.0</span>)</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomScrollDemoPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="comment">// 这边用的 A-Z 字母</span></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;<span class="built_in">String</span>&gt; letters = [ ..... ];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Color&gt; colors = [Colors.red, Colors.green, Colors.blue, Colors.pink, Colors.yellow, Colors.deepPurple];</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;CustomScrollDemo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: CustomScrollView(</span><br><span class="line">        <span class="comment">// 这里需要传入 `Sliver` 部件，下节课填坑</span></span><br><span class="line">        slivers: &lt;Widget&gt;[</span><br><span class="line">          <span class="comment">// SliverGrid 实现同 GridView 实现方式一样</span></span><br><span class="line">          <span class="comment">// 同样 SliverGrid 有提供 `count`, `entent` 方法便于快速生成 SliverGrid</span></span><br><span class="line">          SliverGrid(</span><br><span class="line">              delegate: SliverChildBuilderDelegate(</span><br><span class="line">                  (_, index) =&gt; InkWell(</span><br><span class="line">                        child: Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>),</span><br><span class="line">                        onTap: () &#123;&#125;,</span><br><span class="line">                      ),</span><br><span class="line">                  childCount: <span class="number">8</span>),</span><br><span class="line">              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(</span><br><span class="line">                  crossAxisCount: <span class="number">4</span>, mainAxisSpacing: <span class="number">10.0</span>, crossAxisSpacing: <span class="number">10.0</span>)),</span><br><span class="line">          <span class="comment">// 这里下节讲</span></span><br><span class="line">          SliverToBoxAdapter(</span><br><span class="line">              child: Container(</span><br><span class="line">                  color: Colors.black12,</span><br><span class="line">                  margin: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">10.0</span>),</span><br><span class="line">                  child: Column(children: &lt;Widget&gt;[</span><br><span class="line">                    Divider(height: <span class="number">2.0</span>, color: Colors.black54),</span><br><span class="line">                    Stack(</span><br><span class="line">                      alignment: Alignment.center,</span><br><span class="line">                      children: &lt;Widget&gt;[</span><br><span class="line">                        Image.asset(<span class="string">&#x27;images/app_bar_hor.jpg&#x27;</span>, fit: BoxFit.cover),</span><br><span class="line">                        Text(<span class="string">&#x27;我是一些别的东西..例如广告&#x27;</span>, textScaleFactor: <span class="number">1.5</span>, style: TextStyle(color: Colors.red))</span><br><span class="line">                      ],</span><br><span class="line">                    ),</span><br><span class="line">                    Divider(height: <span class="number">2.0</span>, color: Colors.black54),</span><br><span class="line">                  ], mainAxisAlignment: MainAxisAlignment.spaceBetween),</span><br><span class="line">                  alignment: Alignment.center)),</span><br><span class="line">          <span class="comment">// SliverFixedExtentList 实现同 List.custom 实现类似</span></span><br><span class="line">          SliverFixedExtentList(</span><br><span class="line">              delegate: SliverChildBuilderDelegate(</span><br><span class="line">                  (_, index) =&gt; InkWell(</span><br><span class="line">                        child: Container(</span><br><span class="line">                          child: Text(letters[index] * <span class="number">10</span>,</span><br><span class="line">                              style: TextStyle(color: colors[index % colors.length], letterSpacing: <span class="number">2.0</span>),</span><br><span class="line">                              textScaleFactor: <span class="number">1.5</span>),</span><br><span class="line">                          alignment: Alignment.center,</span><br><span class="line">                        ),</span><br><span class="line">                        onTap: () &#123;&#125;,</span><br><span class="line">                      ),</span><br><span class="line">                  childCount: letters.length),</span><br><span class="line">              itemExtent: <span class="number">60.0</span>)</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p><em>该部分代码查看 <code>custom_scroll_main.dart</code> 文件</em></p>
 <p>滑动部件其实还有好几个，但是以上介绍的在平时开发过程中够用了，如果后期发现还需要别的部件，我会继续补上。在结束前，我们再说下如何通过 <code>ScrollController</code> 来控制 <code>Scrollable</code> 的滚动位置。例如我们需要实现，当滚动的距离大于一定距离的时候显示一个回到顶部的按钮，有了 <code>ScrollController</code> 就能够非常方便的实现</p>
 <h4 id="ScrollController"><a href="#ScrollController" class="headerlink" title="ScrollController"></a>ScrollController</h4><p>因为需要根据滑动的距离显示回到顶部按钮，那么就需要通过一个状态位来控制按钮显隐</p>
-<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollControllerDemoPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _ScrollControllerDemoPageState createState() =&gt; _ScrollControllerDemoPageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_ScrollControllerDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">ScrollControllerDemoPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _scrollController = ScrollController();</span><br><span class="line">  <span class="keyword">var</span> _showBackTop = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对 scrollController 进行监听</span></span><br><span class="line">    _scrollController.addListener(() &#123;</span><br><span class="line">      <span class="comment">// _scrollController.position.pixels 获取当前滚动部件滚动的距离</span></span><br><span class="line">      <span class="comment">// window.physicalSize.height 获取屏幕高度</span></span><br><span class="line">      <span class="comment">// 当滚动距离大于 800 后，显示回到顶部按钮</span></span><br><span class="line">      setState(() =&gt; _showBackTop = _scrollController.position.pixels &gt;= <span class="number">800</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="comment">// 记得销毁对象</span></span><br><span class="line">    _scrollController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;ScrollController Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: ListView(</span><br><span class="line">        controller: _scrollController,</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            <span class="number">20</span>, (index) =&gt; Container(height: <span class="number">50.0</span>, alignment: Alignment.center, child: Text(<span class="string">&#x27;Item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>))),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: _showBackTop <span class="comment">// 当需要显示的时候展示按钮，不需要的时候隐藏，设置 null</span></span><br><span class="line">          ? FloatingActionButton(</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                <span class="comment">// scrollController 通过 animateTo 方法滚动到某个具体高度</span></span><br><span class="line">                <span class="comment">// duration 表示动画的时长，curve 表示动画的运行方式，flutter 在 Curves 提供了许多方式</span></span><br><span class="line">                _scrollController.animateTo(<span class="number">0.0</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">500</span>), curve: Curves.decelerate);</span><br><span class="line">              &#125;,</span><br><span class="line">              child: Icon(Icons.vertical_align_top),</span><br><span class="line">            )</span><br><span class="line">          : <span class="keyword">null</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre class="highlight"><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollControllerDemoPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _ScrollControllerDemoPageState createState() =&gt; _ScrollControllerDemoPageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_ScrollControllerDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">ScrollControllerDemoPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> _scrollController = ScrollController();</span><br><span class="line">  <span class="keyword">var</span> _showBackTop = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对 scrollController 进行监听</span></span><br><span class="line">    _scrollController.addListener(() &#123;</span><br><span class="line">      <span class="comment">// _scrollController.position.pixels 获取当前滚动部件滚动的距离</span></span><br><span class="line">      <span class="comment">// window.physicalSize.height 获取屏幕高度</span></span><br><span class="line">      <span class="comment">// 当滚动距离大于 800 后，显示回到顶部按钮</span></span><br><span class="line">      setState(() =&gt; _showBackTop = _scrollController.position.pixels &gt;= <span class="number">800</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="comment">// 记得销毁对象</span></span><br><span class="line">    _scrollController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;ScrollController Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: ListView(</span><br><span class="line">        controller: _scrollController,</span><br><span class="line">        children: <span class="built_in">List</span>.generate(</span><br><span class="line">            <span class="number">20</span>, (index) =&gt; Container(height: <span class="number">50.0</span>, alignment: Alignment.center, child: Text(<span class="string">&#x27;Item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>))),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton: _showBackTop <span class="comment">// 当需要显示的时候展示按钮，不需要的时候隐藏，设置 null</span></span><br><span class="line">          ? FloatingActionButton(</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                <span class="comment">// scrollController 通过 animateTo 方法滚动到某个具体高度</span></span><br><span class="line">                <span class="comment">// duration 表示动画的时长，curve 表示动画的运行方式，flutter 在 Curves 提供了许多方式</span></span><br><span class="line">                _scrollController.animateTo(<span class="number">0.0</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">500</span>), curve: Curves.decelerate);</span><br><span class="line">              &#125;,</span><br><span class="line">              child: Icon(Icons.vertical_align_top),</span><br><span class="line">            )</span><br><span class="line">          : <span class="keyword">null</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
 
 <p>最后的效果图</p>
-<img src="https://upload-images.jianshu.io/upload_images/2888797-3752cd0adad5ac5a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-3752cd0adad5ac5a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/ srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://upload-images.jianshu.io/upload_images/2888797-3752cd0adad5ac5a.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" class="lozad post-image">
 
 <p>好啦，这节就到这，下节继续填这节课留下的坑。</p>
 <p>最后代码的地址还是要的：</p>
@@ -223,153 +448,482 @@
 </ol>
 <p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
 
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/" data-id="cl0ukmc2n000gpn1g0xeldfxp" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
-
-    </footer>
   </div>
-  
+  <div>
     
-<nav id="article-nav">
-  
-    <a href="/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族
-        
+      <div 
+        class="post-note note-warning copyright" 
+        style="margin-top: 42px">
+        <p>
+          <span style="font-weight: bold;">作者：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="/about">
+            kuky
+          </a>
+        </p>
+        <p>
+          <span style="font-weight: bold;">文章链接：</span><a 
+            target="_blank" 
+            rel="nofollow noopener noreferrer" 
+            href="http://example.com/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/">
+            http://example.com/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/
+          </a>
+        </p>
+        <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
       </div>
-    </a>
-  
-  
-    <a href="/2019/03/17/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-06/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Flutter Guide(06) -- 了解 Flutter 的界面交互</div>
-    </a>
-  
-</nav>
-
-  
+    
+  </div>
 </article>
-
-</section>
-        
-          <aside id="sidebar">
+<div class="nav">
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    <div class="nav-item-prev">
+      <a 
+        href="/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/" 
+        class="nav-link">
+        <i class="iconfont icon-left nav-prev-icon"></i>
+        <div>
+          <div class="nav-label">Prev</div>
+          
+            <div class="nav-title">Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族 </div>
+          
+        </div>
+      </a>
     </div>
-  </div>
-
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+  
+    <div class="nav-item-next">
+      <a 
+        href="/2019/03/17/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-06/" 
+        class="nav-link">
+        <div>
+          <div class="nav-label">Next</div>
+          
+            <div class="nav-title">Flutter Guide(06) -- 了解 Flutter 的界面交互 </div>
+          
+        </div>
+        <i class="iconfont icon-right nav-next-icon"></i>
+      </a>
     </div>
-  </div>
-
-
   
+</div>
+
+<div 
+  class="card card-content toc-card" 
+  id="mobiletoc">
+  <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SingleChildScrollView"><span class="toc-text">SingleChildScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ListView"><span class="toc-text">ListView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-children"><span class="toc-text">ListView children</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-custom"><span class="toc-text">ListView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-builder"><span class="toc-text">ListView.builder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-separated"><span class="toc-text">ListView.separated</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ExpansionTile"><span class="toc-text">ExpansionTile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GridView"><span class="toc-text">GridView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-1"><span class="toc-text">GridView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-count-x2F-GridView-extent"><span class="toc-text">GridView.count&#x2F;GridView.extent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-custom"><span class="toc-text">GridView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-builder"><span class="toc-text">GridView.builder</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CustomScrollView"><span class="toc-text">CustomScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ScrollController"><span class="toc-text">ScrollController</span></a></li></ol>
+</div></main>
+            <aside class="left-column">
+              
+              <div class="card card-author">
+                
+  <img 
+    src="https://s1.ax1x.com/2022/03/17/qCFtTH.jpg" 
+    class="author-img"
+    width="88"
+    height="88"
+    alt="author avatar">
+
+<p class="author-name">kuky</p>
+<p class="author-description">啊哈！</p>
+<div class="author-message">
+  <a 
+    class="author-posts-count" 
+    href="/archives">
+    <span>23</span>
+    <span>Posts</span>
+  </a>
+  <a 
+    class="author-categories-count" 
+    href="/categories">
+    <span>5</span>
+    <span>Categories</span>
+  </a>
+  <a 
+    class="author-tags-count" 
+    href="/tags">
+    <span>14</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+              </div>
+               <div class="sticky-tablet">
+  
+  
+    <article class="display-when-two-columns spacer">
+      <div class="card card-content toc-card">
+        <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SingleChildScrollView"><span class="toc-text">SingleChildScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ListView"><span class="toc-text">ListView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-children"><span class="toc-text">ListView children</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-custom"><span class="toc-text">ListView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-builder"><span class="toc-text">ListView.builder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-separated"><span class="toc-text">ListView.separated</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ExpansionTile"><span class="toc-text">ExpansionTile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GridView"><span class="toc-text">GridView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-1"><span class="toc-text">GridView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-count-x2F-GridView-extent"><span class="toc-text">GridView.count&#x2F;GridView.extent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-custom"><span class="toc-text">GridView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-builder"><span class="toc-text">GridView.builder</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CustomScrollView"><span class="toc-text">CustomScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ScrollController"><span class="toc-text">ScrollController</span></a></li></ol>
+      </div>
+    </article>
+  
+  
+  <article class="card card-content categories-widget">
+    <div class="categories-card">
+  <div class="categories-header">
+    <i 
+      class="iconfont icon-fenlei" 
+      style="padding-right: 2px;">
+    </i>Categories
+  </div>
+  <div class="categories-list">
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
-    </div>
-  </div>
-
-  
+      <a href="/categories/Android/">
+        <div class="categories-list-item">
+          Android
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
-    </div>
-  </div>
-
-
-  
+      <a href="/categories/FFmpeg/">
+        <div class="categories-list-item">
+          FFmpeg
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
     
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
-          </li>
-        
-          <li>
-            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
-          </li>
-        
-          <li>
-            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
-          </li>
-        
-      </ul>
-    </div>
+      <a href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">
+        <div class="categories-list-item">
+          跨平台
+          <span class="categories-list-item-badge">16</span>
+        </div>
+      </a>
+    
+      <a href="/categories/%E7%88%AC%E8%99%AB-Spider/">
+        <div class="categories-list-item">
+          爬虫-Spider
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/JNI/">
+        <div class="categories-list-item">
+          JNI
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
   </div>
-
+</div>
+  </article>
   
-</aside>
+  <article class="card card-content tags-widget">
+    <div class="tags-card">
+  <div class="tags-header">
+    <i 
+      class="iconfont icon-biaoqian" 
+      style="padding-right: 2px;">
+    </i>hot tags
+  </div>
+  <div class="tags-list">
+    
+      <a 
+        href="/tags/Android/" 
+        title="Android">
+        <div class="tags-list-item">Android</div>
+      </a>
+    
+      <a 
+        href="/tags/Flutter/" 
+        title="Flutter">
+        <div class="tags-list-item">Flutter</div>
+      </a>
+    
+      <a 
+        href="/tags/C/" 
+        title="C++">
+        <div class="tags-list-item">C++</div>
+      </a>
+    
+      <a 
+        href="/tags/Dart/" 
+        title="Dart">
+        <div class="tags-list-item">Dart</div>
+      </a>
+    
+      <a 
+        href="/tags/FFmpeg/" 
+        title="FFmpeg">
+        <div class="tags-list-item">FFmpeg</div>
+      </a>
+    
+      <a 
+        href="/tags/%E4%BB%BF-iOS/" 
+        title="仿 iOS">
+        <div class="tags-list-item">仿 iOS</div>
+      </a>
+    
+      <a 
+        href="/tags/Kotlin/" 
+        title="Kotlin">
+        <div class="tags-list-item">Kotlin</div>
+      </a>
+    
+      <a 
+        href="/tags/JNI/" 
+        title="JNI">
+        <div class="tags-list-item">JNI</div>
+      </a>
+    
+      <a 
+        href="/tags/Scrapy/" 
+        title="Scrapy">
+        <div class="tags-list-item">Scrapy</div>
+      </a>
+    
+      <a 
+        href="/tags/Python/" 
+        title="Python">
+        <div class="tags-list-item">Python</div>
+      </a>
+    
+      <a 
+        href="/tags/fish-redux/" 
+        title="fish_redux">
+        <div class="tags-list-item">fish_redux</div>
+      </a>
+    
+      <a 
+        href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" 
+        title="源码分析">
+        <div class="tags-list-item">源码分析</div>
+      </a>
+    
+      <a 
+        href="/tags/Jetpack/" 
+        title="Jetpack">
+        <div class="tags-list-item">Jetpack</div>
+      </a>
+    
+      <a 
+        href="/tags/SDL/" 
+        title="SDL">
+        <div class="tags-list-item">SDL</div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+            <aside class="right-column">
+              <div class="sticky-widescreen">
+  
+  
+    <article class="card card-content toc-card">
+      <div class="toc-header">
+  <i 
+    class="iconfont icon-menu" 
+    style="padding-right: 2px;">
+  </i>TOC
+</div>
+<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#SingleChildScrollView"><span class="toc-text">SingleChildScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ListView"><span class="toc-text">ListView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-children"><span class="toc-text">ListView children</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-custom"><span class="toc-text">ListView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-builder"><span class="toc-text">ListView.builder</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListView-separated"><span class="toc-text">ListView.separated</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ExpansionTile"><span class="toc-text">ExpansionTile</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GridView"><span class="toc-text">GridView</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-1"><span class="toc-text">GridView</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-count-x2F-GridView-extent"><span class="toc-text">GridView.count&#x2F;GridView.extent</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-custom"><span class="toc-text">GridView.custom</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#GridView-builder"><span class="toc-text">GridView.builder</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CustomScrollView"><span class="toc-text">CustomScrollView</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ScrollController"><span class="toc-text">ScrollController</span></a></li></ol>
+    </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header">
+    <i 
+      class="iconfont icon-wenzhang_huaban" 
+      style="padding-right: 2px;">
+    </i>Recent Posts
+  </div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2020-02-19</div>
+        <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/"><div class="recent-posts-item-content">fish_redux 「食用指南」</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-22</div>
+        <a href="/2019/10/22/FFmpeg-002/"><div class="recent-posts-item-content">初识 SDL2</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-10-16</div>
+        <a href="/2019/10/16/FFmpeg-001/"><div class="recent-posts-item-content">FFmpeg 配置</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2019-09-09</div>
+        <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/"><div class="recent-posts-item-content">初识 JNI</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+            </aside>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+    <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>
+          Copyright ©
+          
+            2020
+          
+          
+                - 
+                2022
+          
+        </span>
+        &nbsp;
+        <a 
+          href="/" 
+          class="footer-link">
+          Kukyxs
+        </a>
+      </div>
+    </div>
+
+    
+      <div class="footer-dsc">
+        
+          Powered by
+          <a 
+            href="https://hexo.io/" 
+            class="footer-link" 
+            target="_blank" 
+            rel="nofollow noopener noreferrer">
+            &nbsp;Hexo
+          </a>
+        
+        
+          <span>&nbsp;|&nbsp;</span>
+        
+        
+          Theme -
+          <a 
+            href="https://github.com/theme-kaze" 
+            class="footer-link" 
+            target="_blank"
+            rel="nofollow noopener noreferrer">
+            &nbsp;Kaze
+          </a>
         
       </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2022 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
     
+    
+    
+    
+</footer>
+ 
+    
+  <a 
+    role="button" 
+    id="scrollbutton" 
+    class="basebutton" 
+    aria-label="回到顶部">
+    <i class="iconfont icon-arrowleft button-icon"></i>
+  </a>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-
-  
-<script src="/fancybox/jquery.fancybox.pack.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-  </div>
-</body>
+<a 
+  role="button" 
+  id="menubutton"
+  aria-label="menu button"
+  class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="popbutton" 
+  class="basebutton" 
+  aria-label="控制中心">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="darkbutton" 
+  class="basebutton darkwidget" 
+  aria-label="夜色模式">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+<a 
+  role="button" 
+  id="searchbutton" 
+  class="basebutton searchwidget" 
+  aria-label="搜索">
+  <i class="iconfont icon-search button-icon"></i>
+</a> 
+     
+     
+     
+      <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img')
+    var i
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a')
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'))
+      wrapper.setAttribute('aria-label', 'illustration')
+      wrapper.style.cssText =
+        'width: 100%; display: flex; justify-content: center;'
+      if (img[i].alt) wrapper.dataset.caption = img[i].alt
+      wrapper.dataset.nolink = true
+      img[i].before(wrapper)
+      wrapper.append(img[i])
+      var divWrap = document.createElement('div')
+      divWrap.classList.add('gallery')
+      wrapper.before(divWrap)
+      divWrap.append(wrapper)
+    }
+    baguetteBox.run('.gallery')
+  }
+</script>
+<script>
+  loadScript(
+    "/js/lib/lightbox/baguetteBox.min.js",
+    addImgLayout
+  )
+</script>
+ 
+     
+     
+    <script src="/js/main.js"></script> 
+     
+    
+      <script>
+        var addLazyload = function () {
+          var observer = lozad('.lozad', {
+            load: function (el) {
+              el.srcset = el.getAttribute('data-src')
+            },
+            loaded: function (el) {
+              el.classList.add('loaded')
+            },
+          })
+          observer.observe()
+        }
+      </script>
+      <script>
+        loadScript('/js/lib/lozad.min.js', addLazyload)
+      </script>
+     
+    
+    
+  </body>
 </html>
