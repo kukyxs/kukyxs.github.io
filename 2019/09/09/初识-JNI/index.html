@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>初识 JNI | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="JNI 作为 Java&#x2F;Kotlin(原生端) 同 C&#x2F;C++ 端交互的工具，是学习 ffmpeg 的一个前提，这边做一个学习过程中的记录。通过 Android Studio 可以快速创建一个 JNI 项目(创建时候选择 Native C++ 即可，会自动配置 CMakeList 等文件)，该文基于 AS 3.5  loadLiabrysrc 文件夹下相比一般的 AS 项目多了 cpp 文件夹，该">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识 JNI">
+<meta property="og:url" content="http://example.com/2019/09/09/%E5%88%9D%E8%AF%86-JNI/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="JNI 作为 Java&#x2F;Kotlin(原生端) 同 C&#x2F;C++ 端交互的工具，是学习 ffmpeg 的一个前提，这边做一个学习过程中的记录。通过 Android Studio 可以快速创建一个 JNI 项目(创建时候选择 Native C++ 即可，会自动配置 CMakeList 等文件)，该文基于 AS 3.5  loadLiabrysrc 文件夹下相比一般的 AS 项目多了 cpp 文件夹，该">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-09-09T07:10:24.000Z">
+<meta property="article:modified_time" content="2020-04-27T08:42:32.045Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="JNI">
+<meta property="article:tag" content="Kotlin">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-初识-JNI" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" class="article-date">
+  <time datetime="2019-09-09T07:10:24.000Z" itemprop="datePublished">2019-09-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/JNI/">JNI</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识 JNI
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><code>JNI</code> 作为 <code>Java/Kotlin</code>(原生端) 同 <code>C/C++</code> 端交互的工具，是学习 <code>ffmpeg</code> 的一个前提，这边做一个学习过程中的记录。通过 <code>Android Studio</code> 可以快速创建一个 <code>JNI</code> 项目(创建时候选择 <code>Native C++</code> 即可，会自动配置 <code>CMakeList</code> 等文件)，该文基于 <code>AS 3.5</code> </p>
+<h4 id="loadLiabry"><a href="#loadLiabry" class="headerlink" title="loadLiabry"></a>loadLiabry</h4><p><code>src</code> 文件夹下相比一般的 <code>AS</code> 项目多了 <code>cpp</code> 文件夹，该文件夹下有一个 <code>.cpp</code> 文件和 <code>CMakeLists.txt</code> 文件，<code>.cpp</code> 文件用来写 <code>native</code> 端实现的方法，<code>CMakeLists</code> 用来做些 <code>cpp</code> 的配置，目前可以忽略</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">│  AndroidManifest.xml</span><br><span class="line">├─<span class="built_in">cpp</span></span><br><span class="line">│      native<span class="literal">-lib</span>.cpp</span><br><span class="line">│      CMakeLists.txt</span><br><span class="line">├─java</span><br><span class="line">│</span><br><span class="line">├─res</span><br></pre></td></tr></table></figure>
+
+<p>接着在 <code>MainActivity</code> 中有这么一行代码</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">       <span class="keyword">init</span> &#123;</span><br><span class="line">           System.loadLibrary(<span class="string">&quot;native-lib&quot;</span>)</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>loadLibrary</code> 方法，加载编译的链接 <code>so</code> 库，<code>so</code> 库的源码就是前面提到的 <code>native-lib.cpp</code> 文件了</p>
+<h4 id="原生调用-cpp-方法"><a href="#原生调用-cpp-方法" class="headerlink" title="原生调用 cpp 方法"></a>原生调用 cpp 方法</h4><p>那么在 <code>Kotlin</code> 中如何调用 <code>cpp</code> 的方法呢，可以看到 <code>MainActivity</code> 中有一个使用 <code>external</code> 修饰的方法(如果是 <code>java</code> 则使用 <code>native</code> 关键词修饰)</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">stringFromJNI</span><span class="params">()</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>通过该方法，会去调用 <code>cpp</code> 层的 <code>native</code> 方法，可以看下 <code>native-lib.cpp</code> 文件，内部定义了一个方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jstring JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_MainActivity_stringFromJNI</span><span class="params">(JNIEnv *env, jobject<span class="comment">/*this*/</span>)</span> </span>&#123;</span><br><span class="line">	std:string hello = <span class="string">&quot;Hello from c++&quot;</span>;</span><br><span class="line">	<span class="keyword">return</span> env-&gt;<span class="built_in">NewStringUTF</span>(hello.<span class="built_in">c_str</span>());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到该方法的命名方式为 <code>Java_包名_类名_方法名</code>(包名的 <code>.</code> 替换成 <code>_</code> 即可)，通过这种命名方式来查找 <code>Kotlin</code> 层的调用方法，该方法中 <code>extern &quot;C&quot;</code> 的作用是让 <code>C++</code> 支持 <code>C</code> 的方法，<code>JNIEXPORT xxx JNICALL</code> 代表这是一个 <code>JNI</code> 方法，<code>xxx</code> 表示返回的方法类型，在 <code>JNI</code> 中，都有 <code>Kotlin</code> 对应的数据类型</p>
+<h4 id="JNI-数据类型"><a href="#JNI-数据类型" class="headerlink" title="JNI 数据类型"></a>JNI 数据类型</h4><p><code>JNI</code> 对应 <code>Java</code> 的数据类型如下，也可以直接查看 <code>jni.h</code> 头文件</p>
+<table>
+<thead>
+<tr>
+<th align="center">JNI类型</th>
+<th align="center">Java类型</th>
+<th align="center">类型描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">jboolean</td>
+<td align="center">boolean</td>
+<td align="center">无符号8位</td>
+</tr>
+<tr>
+<td align="center">jbyte</td>
+<td align="center">byte</td>
+<td align="center">无符号8位</td>
+</tr>
+<tr>
+<td align="center">jchar</td>
+<td align="center">char</td>
+<td align="center">无符号16位</td>
+</tr>
+<tr>
+<td align="center">jshort</td>
+<td align="center">short</td>
+<td align="center">有符号16位</td>
+</tr>
+<tr>
+<td align="center">jint</td>
+<td align="center">int</td>
+<td align="center">有符号32位</td>
+</tr>
+<tr>
+<td align="center">jlong</td>
+<td align="center">long</td>
+<td align="center">有符号64位</td>
+</tr>
+<tr>
+<td align="center">jfloat</td>
+<td align="center">float</td>
+<td align="center">有符号32位</td>
+</tr>
+<tr>
+<td align="center">jdouble</td>
+<td align="center">double</td>
+<td align="center">有符号64位</td>
+</tr>
+</tbody></table>
+<p>因为 <code>String</code> 不属于基本类型，所以不定义在这，需要返回 <code>jsrting</code> 类型，只能通过 <code>char *</code> 进行相应的转换，所以上述的函数中，使用 <code>env-&gt;NewStringUTF(hello.c_str())</code> 方法，生成 <code>jstring</code> 并返回，然后在 <code>Kotlin</code> 层通过调用 <code>stringFromJNI</code> 方法就可以将 <code>native</code> 层返回的字符串显示出来，<code>JNI</code> 的基本使用就这么多啦，接着通过一些使用，熟悉一些方法，比如实现字符串的拼接</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">stringCat</span><span class="params">(a: <span class="type">String</span>, b: <span class="type">String</span>)</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>回到 <code>c++</code> 层做具体的实现，前面提到因为在 <code>C++</code> 中字符串拼接不能直接通过 <code>jstring</code> 相加实现，需要通过 <code>char *</code>  进行拼接，所以就需要封装一个 <code>jstring2Char</code> 的方法进行转换</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">char</span> *<span class="title">jstring2Char</span><span class="params">(JNIEnv *env, jstring jstr)</span> </span>&#123;</span><br><span class="line">    <span class="type">char</span> *rtn = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    jclass clazz = env-&gt;<span class="built_in">FindClass</span>(<span class="string">&quot;java/lang/String&quot;</span>);</span><br><span class="line">    jstring strenCode = env-&gt;<span class="built_in">NewStringUTF</span>(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">    jmethodID mid = env-&gt;<span class="built_in">GetMethodID</span>(clazz, <span class="string">&quot;getBytes&quot;</span>, <span class="string">&quot;(Ljava/lang/String;)[B&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> barr = (jbyteArray) (env-&gt;<span class="built_in">CallObjectMethod</span>(jstr, mid, strenCode));</span><br><span class="line">    jsize alen = env-&gt;<span class="built_in">GetArrayLength</span>(barr);</span><br><span class="line">    jbyte *ba = env-&gt;<span class="built_in">GetByteArrayElements</span>(barr, JNI_FALSE);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (alen &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// malloc(bytes) 方法分配 bytes 字节，并返回这块内存的指针，</span></span><br><span class="line">        <span class="comment">// malloc 分配的内存记得使用 free 进行释放，否则会内存泄漏</span></span><br><span class="line">        rtn = <span class="built_in">static_cast</span>&lt;<span class="type">char</span> *&gt;(<span class="built_in">malloc</span>(<span class="built_in">static_cast</span>&lt;<span class="type">size_t</span>&gt;(alen + <span class="number">1</span>)));</span><br><span class="line">        <span class="comment">// memcpy(void*dest, const void *src, size_t n)</span></span><br><span class="line">        <span class="comment">// 由 src 指向地址为起始地址的连续 n 个字节的数据复制到以 destin 指向地址为起始地址的空间内</span></span><br><span class="line">        <span class="built_in">memcpy</span>(rtn, ba, <span class="built_in">static_cast</span>&lt;<span class="type">size_t</span>&gt;(alen));</span><br><span class="line">        rtn[alen] = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    env-&gt;<span class="built_in">ReleaseByteArrayElements</span>(barr, ba, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> rtn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义完转换方法，直接调用即可，记得释放内存</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jstring JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_MainActivity_stringCat</span><span class="params">(JNIEnv *env, jobject, jstring a, jstring b)</span></span>&#123;</span><br><span class="line">	<span class="type">char</span> *first = <span class="built_in">jstring2Char</span>(env, a);</span><br><span class="line">	<span class="type">char</span> *second = <span class="built_in">jstring2Char</span>(env, b);</span><br><span class="line">	std::<span class="built_in">strcat</span>(first, second);</span><br><span class="line">	<span class="built_in">free</span>(first);</span><br><span class="line">	<span class="built_in">free</span>(second);</span><br><span class="line">	<span class="keyword">return</span> env-&gt;<span class="built_in">NewStringUTF</span>(first);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="静态-JNI-方法"><a href="#静态-JNI-方法" class="headerlink" title="静态 JNI 方法"></a>静态 JNI 方法</h4><p>在很多情况下，都不会将 <code>JNI</code> 方法直接定义在 <code>Activity</code>，而是封装到公共方法中，方便调用，那么在公共方法类调用除了通过该类的实例，调用相应方法，还有就是设置该方法为静态方法，那么这种情况和上述有啥区别呢，其实区别不是很大，只需要将 <code>native</code> 端的方法中的参数 <code>jobject</code> 替换成 <code>jclass</code> 即可，但是在 <code>Kotlin</code> 端，除了在半生对象中声明该 <code>native</code> 方法，还需要增加 <code>JvmStatic</code> 注解才行，例如有如下的一个方法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">JniUtils</span> </span>&#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="meta">@JvmStatic</span></span><br><span class="line">        <span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">plus</span><span class="params">(a: <span class="type">Int</span>, b: <span class="type">Int</span>)</span></span>: <span class="built_in">Int</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么在 <code>native</code> 端生成 <code>JNI</code> 方法和前面提到的类似，只需替换参数类型即可</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jint JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_JniUtils_plus</span><span class="params">(JNIEnv *env, jclass, jint , jint b)</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="C-调用-Kotlin-方法"><a href="#C-调用-Kotlin-方法" class="headerlink" title="C++ 调用 Kotlin 方法"></a>C++ 调用 Kotlin 方法</h4><p>前面介绍了如何在 <code>Kotlin</code> 中调用 <code>native</code> 方法，当然，在 <code>c++</code> 层也可以调用 <code>Kotlin</code> 层的方法。假设在 <code>MainActivity</code> 中有一个 <code>callMe(message: String)</code> 和 <code>call(message:String)</code> 方法，在调用 <code>call</code> 的时候，同时内部调用 <code>callMe</code> 方法，当然直接调用很简单，这边通过 <code>JNI</code> 来实现</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">callMe</span><span class="params">(message: <span class="type">String</span>)</span></span>&#123;</span><br><span class="line">    Log.e(TAG, message) <span class="comment">// 只做简单的打印</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">call</span><span class="params">(message: <span class="type">String</span>)</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>native</code> 实现 <code>call</code> 方法上面已经介绍了，接下来介绍在 <code>JNI</code> 内部调用 <code>callMe</code> 方法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT <span class="type">void</span> JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_MainActivity_call</span><span class="params">(JNIEnv *env, jobject instance, jstring msg)</span></span>&#123;</span><br><span class="line">	<span class="type">const</span> <span class="type">char</span> *methodName = <span class="string">&quot;callMe&quot;</span>; <span class="comment">// 指定需要调用的方法名</span></span><br><span class="line">	jclass clazz = env-&gt;<span class="built_in">FindClass</span>(<span class="string">&quot;com.xxx.MainActivity&quot;</span>); <span class="comment">//查找对应的类，指定对应的包名和类</span></span><br><span class="line">	<span class="comment">// 根据所在类和方法名查找方法的 ID，最后一个参数为方法的签名，稍后做解释</span></span><br><span class="line">	jmethodID mid = env-&gt;<span class="built_in">GetMethodId</span>(clazz, methodName, <span class="string">&quot;(Ljava/lang/String;)V&quot;</span>); </span><br><span class="line">	env-&gt;<span class="built_in">CallVoidMethod</span>(instance, mid, msg); <span class="comment">// 根据返回的类型，调用方法，传入相应参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>Kotlin</code> 层调用 <code>call</code> 方法的时候，就会通过 <code>JNI</code> 调用 <code>callMe</code> 方法，执行 <code>callMe</code> 的内部逻辑。在上面提到了「签名」这个东西，这边列出签名的表示方法</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>签名</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td><strong>Z</strong></td>
+</tr>
+<tr>
+<td>byte</td>
+<td>B</td>
+</tr>
+<tr>
+<td>char</td>
+<td>C</td>
+</tr>
+<tr>
+<td>short</td>
+<td>S</td>
+</tr>
+<tr>
+<td>int</td>
+<td>I</td>
+</tr>
+<tr>
+<td>long</td>
+<td><strong>J</strong></td>
+</tr>
+<tr>
+<td>float</td>
+<td>F</td>
+</tr>
+<tr>
+<td>double</td>
+<td>D</td>
+</tr>
+<tr>
+<td>void</td>
+<td>V</td>
+</tr>
+<tr>
+<td>数组</td>
+<td>[</td>
+</tr>
+<tr>
+<td>String/Object</td>
+<td>Ljava/lang/String;  Ljava/lang/Object;</td>
+</tr>
+<tr>
+<td>普通类(com.example.className)</td>
+<td><strong>Lcom/example/className;</strong></td>
+</tr>
+<tr>
+<td>嵌套类(com.example.className.Inner)</td>
+<td><strong>Lcom/example/className$Inner;</strong></td>
+</tr>
+</tbody></table>
+<p>所以方法的签名的规则就是根据传入的参数类型和返回的类型，替换成相应的签名即可，例如：<code>call(Student s, int a): String</code> 方法的签名为 <code>(Lcom/xxx/Student;I)Ljava/lang/String;</code> 如果是内部类则使用 <strong>$</strong> 表示嵌套</p>
+<h4 id="C-获取-Kotlin-的内部参数"><a href="#C-获取-Kotlin-的内部参数" class="headerlink" title="C++ 获取 Kotlin 的内部参数"></a>C++ 获取 Kotlin 的内部参数</h4><p>假设我们在 <code>MainActivity</code> 有个私有参数 <code>name</code>，如果外部有个类需要获取这个参数，可以通过 <code>MainActivty</code> 内部的共有方法来获取，假如没有这个共有方法该咋办呢，当然我们可以通过 <code>JNI </code> 来获取</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jstring JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_MainActivity_getField</span><span class="params">(JNIEnv *env, jobjcet instance)</span></span>&#123;</span><br><span class="line">	jclass clazz = env-&gt;<span class="built_in">FindClass</span>(<span class="string">&quot;com.xxx.MainActivity&quot;</span>); <span class="comment">// 根据类的包名来查找相应的类</span></span><br><span class="line">	<span class="comment">// 根据类和参数名来获取该参数，第三个参数为参数的签名，即类型在 JNI 对应的签名</span></span><br><span class="line">	jfieldID fid = env-&gt;<span class="built_in">GetFieldID</span>(clazz, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>);</span><br><span class="line">	<span class="comment">// 因为 String 不是基本类型，所以只能通过 GetObjectField 进行获取，然后进行强转</span></span><br><span class="line">	<span class="comment">// 如果是 int 等基本类型，提供了 GetIntField 等获取方法，auto 为可自行根据结果判断类型</span></span><br><span class="line">	<span class="keyword">auto</span> name = (jstring)(env-&gt;<span class="built_in">GetObjectField</span>(instance, fid));</span><br><span class="line">	<span class="keyword">return</span> name;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当在外部通过 <code>getField</code> 方法即可获取到该私有属性，这个例子仅为例子而已…</p>
+<h4 id="C-获取普通类的参数信息"><a href="#C-获取普通类的参数信息" class="headerlink" title="C++ 获取普通类的参数信息"></a>C++ 获取普通类的参数信息</h4><p>假设我们有一个类，例如 <code>Student</code> 里面有一些名字，年龄等属性，然后通过 <code>JNI</code> 将这些属性转成 <code>String</code> 返回，那么就需要涉及到获取参数的字段信息了</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义一个普通类 Student</span></span><br><span class="line"><span class="keyword">data</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span></span>(<span class="keyword">val</span> firstName: String, <span class="keyword">val</span> lastName: String, <span class="keyword">val</span> age: <span class="built_in">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在 MAinActivity 定义一个转换的方法</span></span><br><span class="line"><span class="keyword">external</span> <span class="function"><span class="keyword">fun</span> <span class="title">printStudent</span><span class="params">(Student student)</span></span>: String</span><br></pre></td></tr></table></figure>
+
+<p>那么在 <code>C++</code> 层就需要将 <code>student</code> 内部的信息都获取出来，并拼接到字符串，然后返回</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT jstring JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_xxx_MainActivity_printStudent</span><span class="params">(JNIEnv *env, jobject, jobject student)</span></span>&#123;</span><br><span class="line">	jcalss clazz = env-&gt;<span class="built_in">GetObjectClass</span>(student); <span class="comment">// 获取传入参数对应的类</span></span><br><span class="line">	<span class="comment">// 通过参数名和签名，去对应的 class 获取相应的 FieldID，</span></span><br><span class="line">	<span class="comment">// 然后根据 FiedlID 通过 GetObjectField 方法获取对应的属性</span></span><br><span class="line">	<span class="keyword">auto</span> firstName = (jstring)(env-&gt;<span class="built_in">GetObjectField</span>(student, env-&gt;<span class="built_in">GetFieldID</span>(clazz, <span class="string">&quot;firstName&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>)));</span><br><span class="line">	<span class="keyword">auto</span> lastName = (jstring)(env-&gt;<span class="built_in">GetObjectField</span>(student, env-&gt;<span class="built_in">GetFieldID</span>(clazz, <span class="string">&quot;lastName&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>)));</span><br><span class="line">	<span class="comment">// int 为基本类型，可直接通过获取对应类型属性的方法获取</span></span><br><span class="line">	<span class="keyword">auto</span> age = env-&gt;<span class="built_in">GetIntField</span>(student, env-&gt;<span class="built_in">GetFieldID</span>(clazz, <span class="string">&quot;age&quot;</span>, <span class="string">&quot;I&quot;</span>));</span><br><span class="line">	</span><br><span class="line">	<span class="type">char</span> *cFirstName = <span class="built_in">jstring2Char</span>(firstName);</span><br><span class="line">	<span class="type">char</span> *cLastName = <span class="built_in">jstring2Char</span>(lastName);</span><br><span class="line">	std::string cAge = std::<span class="built_in">to_string</span>(age);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, <span class="string">&quot; &quot;</span>);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, cLastName);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName,  <span class="string">&quot; is &quot;</span>);</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, cAge.<span class="built_in">c_str</span>());</span><br><span class="line">	<span class="built_in">strcat</span>(cFirstName, <span class="string">&quot; years old&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">free</span>(cFirstName);</span><br><span class="line">	<span class="built_in">free</span>(cLastName);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> env-&gt;<span class="built_in">NewStringUTF</span>(cFirstName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当外部调用 <code>printStudent</code> 方法的时候就会将 <code>student</code> 的属性打印出来</p>
+<h4 id="动态注册"><a href="#动态注册" class="headerlink" title="动态注册"></a>动态注册</h4><p>在前面的 <code>JNI</code> 方法中，每个方法都需要写很长的一段类名，非常容易出错，那么能不能省略包名呢，当然是可以，通过动态注册就可以让这个麻烦的方法名变得简略</p>
+<p>动态注册，需要指定一个方法列表，用来存放同个包名下的方法，存放的方式如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; Kotlin 层方法名， 方法前面， JNI 函数指针&#125; <span class="comment">// 函数指针固定为 (void *) JNI 方法名</span></span><br></pre></td></tr></table></figure>
+
+<p>例如我们前面提到的方法，放到一个列表中</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> JNINativeMethod jniMethods[] = &#123;</span><br><span class="line">    &#123;<span class="string">&quot;stringFromJNI&quot;</span>, <span class="string">&quot;()Ljava/lang/String;&quot;</span>, (<span class="type">void</span> *) stringFromJNI&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;stringCat&quot;</span>, <span class="string">&quot;(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;&quot;</span>, (<span class="type">void</span> *) stringCat&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;call&quot;</span>, <span class="string">&quot;(Ljava/lang/String;)V&quot;</span>, (<span class="type">void</span> *) call&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;getField&quot;</span>, <span class="string">&quot;()Ljava/lang/String;&quot;</span>, (<span class="type">void</span> *) getField&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;printStudent&quot;</span>, <span class="string">&quot;(Lcom/xxx/Student;)Ljava/lang/String;&quot;</span>, (<span class="type">void</span> *) printStudent&#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>接着就是需要注册这些方法了，封装一个通用的方法，注册成功返回 <code>JNI_TRUE</code> 否则 <code>JNI_FALSE</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">static</span> <span class="type">int</span> <span class="title">registerNativeMethods</span><span class="params">(JNIEnv *env, <span class="type">const</span> <span class="type">char</span> *className, </span></span></span><br><span class="line"><span class="params"><span class="function">                                 JNINativeMethod *getMethods, <span class="type">int</span> sumNum)</span></span>&#123;</span><br><span class="line">    jclass clazz = env-&gt;<span class="built_in">FindClass</span>(className); <span class="comment">// 根据类名去查找相应类，包含 JNINativeMethod 列表所有方法</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (clazz == <span class="literal">nullptr</span>) <span class="keyword">return</span> JNI_FALSE; <span class="comment">// 未找到 class 则认为注册失败</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据所有的方法名和数量进行注册，如果结果返回小于 0 则认为注册失败</span></span><br><span class="line">    <span class="keyword">if</span> (env-&gt;<span class="built_in">RegisterNatives</span>(clazz, getMethods, methodSum) &lt; <span class="number">0</span>) <span class="keyword">return</span> JNI_FALSE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> JNI_TRUE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着就需要实现 <code>JNI_OnLoad</code> 方法(定义在 <code>jni.h</code> 头文件中)，对上述的方法进行注册，该方法会返回一个版本号</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">JNIEXPORT jint JNICALL <span class="title">JNI_OnLoad</span><span class="params">(JavaVM *vm, <span class="type">void</span> *reversed)</span> </span>&#123;</span><br><span class="line">    JNIEnv *env = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 检测环境失败返回 -1</span></span><br><span class="line">    <span class="keyword">if</span> (vm-&gt;<span class="built_in">GetEnv</span>((<span class="type">void</span> **) &amp;env, JNI_VERSION_1_6) != JNI_OK) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">assert</span>(env != <span class="literal">nullptr</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 注册失败返回 -1</span></span><br><span class="line">    <span class="keyword">if</span> (!<span class="built_in">registerNativeMethods</span>(</span><br><span class="line">            env, jniClazz, jniMethods, <span class="built_in">sizeof</span>(jniMethods) / <span class="built_in">sizeof</span>(jniMethods[<span class="number">0</span>]))) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> JNI_VERSION_1_6;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样几步就完成了 <code>JNI</code> 方法的动态注册，只需要全局定义 <code>className</code> 即可，不需要每次都在方法声明完整包路径</p>
+<h4 id="内存释放"><a href="#内存释放" class="headerlink" title="内存释放"></a>内存释放</h4><p>在 <code>C++</code> 中，非常重要的一步就是内存释放，否则就会造成内存泄漏，分分钟给你炸开</p>
+<h5 id="哪些需要手动释放"><a href="#哪些需要手动释放" class="headerlink" title="哪些需要手动释放"></a>哪些需要手动释放</h5><ul>
+<li>不需要手动释放(基本类型)：jint，jlong 等等</li>
+<li>需要手动释放(引用类型，数组家族)：jstring，jobject ，jobjectArray，jintArray ，jclass ，jmethodID</li>
+</ul>
+<h5 id="释放方法（该部分参考自《JNI手动释放内存》）"><a href="#释放方法（该部分参考自《JNI手动释放内存》）" class="headerlink" title="释放方法（该部分参考自《JNI手动释放内存》）"></a>释放方法（该部分参考自《<a target="_blank" rel="noopener" href="https://blog.csdn.net/c1481118216/article/details/77727573">JNI手动释放内存</a>》）</h5><ul>
+<li><h6 id="jstring-amp-char"><a href="#jstring-amp-char" class="headerlink" title="jstring &amp; char *"></a>jstring &amp; char *</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 jstring 和 char*</span></span><br><span class="line">jstring jstr = (jstring)(jniEnv-&gt;<span class="built_in">CallObjectMethod</span>(jniEnv, mPerson, getName));</span><br><span class="line"><span class="type">char</span>* cstr = (<span class="type">char</span>*) jniEnv-&gt;<span class="built_in">GetStringUTFChars</span>(jniEnv,jstr, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseStringUTFChars</span>(jniEnv, jstr, cstr);</span><br><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, jstr);jbyteArray audioArray = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line"> </span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(audioArray)</span><br></pre></td></tr></table></figure></li>
+<li><h6 id="jobject，jobjectArray，jclass-，jmethodID-等引用类型"><a href="#jobject，jobjectArray，jclass-，jmethodID-等引用类型" class="headerlink" title="jobject，jobjectArray，jclass ，jmethodID 等引用类型"></a>jobject，jobjectArray，jclass ，jmethodID 等引用类型</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, XXX);</span><br></pre></td></tr></table></figure></li>
+<li><h6 id="jbyteArray"><a href="#jbyteArray" class="headerlink" title="jbyteArray"></a>jbyteArray</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyteArray arr = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(arr);</span><br></pre></td></tr></table></figure></li>
+<li><h6 id="GetByteArrayElements"><a href="#GetByteArrayElements" class="headerlink" title="GetByteArrayElements"></a>GetByteArrayElements</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyte* array= jniEnv-&gt;<span class="built_in">GetByteArrayElements</span>(env,jarray,&amp;isCopy);</span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseByteArrayElements</span>(env,jarray,array,<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+<li><h6 id="NewGlobalRef"><a href="#NewGlobalRef" class="headerlink" title="NewGlobalRef"></a>NewGlobalRef</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jobject ref= env-&gt;<span class="built_in">NewGlobalRef</span>(customObj);</span><br><span class="line">env-&gt;<span class="built_in">DeleteGlobalRef</span>(customObj);</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在 <code>Android</code> 中，经常需要用到 <code>Context</code> 获取一些相关的信息，这边举个获取屏幕信息的例子</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;jni.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;android/log.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> LOGE(...) __android_log_print(ANDROID_LOG_ERROR, <span class="string">&quot;JNI&quot;</span>, __VA_ARGS__)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取当前的 Context</span></span><br><span class="line"><span class="function">jobject <span class="title">getAndroidApplication</span><span class="params">(JNIEnv *env)</span> </span>&#123;</span><br><span class="line">    jclass activityThreadClazz = env-&gt;<span class="built_in">FindClass</span>(<span class="string">&quot;android/app/ActivityThread&quot;</span>);</span><br><span class="line"></span><br><span class="line">    jmethodID jCurrentActivityThread =</span><br><span class="line">            env-&gt;<span class="built_in">GetStaticMethodID</span>(activityThreadClazz,</span><br><span class="line">                                   <span class="string">&quot;currentActivityThread&quot;</span>, <span class="string">&quot;()Landroid/app/ActivityThread;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    jobject currentActivityThread =</span><br><span class="line">            env-&gt;<span class="built_in">CallStaticObjectMethod</span>(activityThreadClazz, jCurrentActivityThread);</span><br><span class="line"></span><br><span class="line">    jmethodID jGetApplication =</span><br><span class="line">            env-&gt;<span class="built_in">GetMethodID</span>(activityThreadClazz, <span class="string">&quot;getApplication&quot;</span>, <span class="string">&quot;()Landroid/app/Application;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> env-&gt;<span class="built_in">CallObjectMethod</span>(currentActivityThread, jGetApplication);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function">JNIEXPORT <span class="type">void</span> JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_com_demo_kuky_jniwidth_MainActivity_jniDensity</span><span class="params">(JNIEnv *env, jobject)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    jobject instance = <span class="built_in">getAndroidApplication</span>(env);</span><br><span class="line">    jclass contextClazz = env-&gt;<span class="built_in">GetObjectClass</span>(instance);</span><br><span class="line">    <span class="comment">// 获取 `getResources` 方法</span></span><br><span class="line">    jmethodID getResources = env-&gt;<span class="built_in">GetMethodID</span>(contextClazz, <span class="string">&quot;getResources&quot;</span>,</span><br><span class="line">                                              <span class="string">&quot;()Landroid/content/res/Resources;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    jobject resourceInstance = env-&gt;<span class="built_in">CallObjectMethod</span>(instance, getResources);</span><br><span class="line">    jclass resourceClazz = env-&gt;<span class="built_in">GetObjectClass</span>(resourceInstance);</span><br><span class="line">    <span class="comment">// 获取 Resources 下的 `getDisplayMetrics` 方法</span></span><br><span class="line">    jmethodID getDisplayMetrics = env-&gt;<span class="built_in">GetMethodID</span>(resourceClazz, <span class="string">&quot;getDisplayMetrics&quot;</span>,</span><br><span class="line">                                                   <span class="string">&quot;()Landroid/util/DisplayMetrics;&quot;</span>);</span><br><span class="line"></span><br><span class="line">    jobject metricsInstance = env-&gt;<span class="built_in">CallObjectMethod</span>(resourceInstance, getDisplayMetrics);</span><br><span class="line">    jclass metricsClazz = env-&gt;<span class="built_in">GetObjectClass</span>(metricsInstance);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 获取 DisplayMetrics 下的一些参数</span></span><br><span class="line">    jfieldID densityId = env-&gt;<span class="built_in">GetFieldID</span>(metricsClazz, <span class="string">&quot;density&quot;</span>, <span class="string">&quot;F&quot;</span>);</span><br><span class="line">    jfloat density = env-&gt;<span class="built_in">GetFloatField</span>(metricsInstance, densityId);</span><br><span class="line"></span><br><span class="line">    jfieldID widthId = env-&gt;<span class="built_in">GetFieldID</span>(metricsClazz, <span class="string">&quot;widthPixels&quot;</span>, <span class="string">&quot;I&quot;</span>);</span><br><span class="line">    jint width = env-&gt;<span class="built_in">GetIntField</span>(metricsInstance, widthId);</span><br><span class="line"></span><br><span class="line">    jfieldID heightId = env-&gt;<span class="built_in">GetFieldID</span>(metricsClazz, <span class="string">&quot;heightPixels&quot;</span>, <span class="string">&quot;I&quot;</span>);</span><br><span class="line">    jint height = env-&gt;<span class="built_in">GetIntField</span>(metricsInstance, heightId);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">LOGE</span>(<span class="string">&quot;get density: %f, width: %d, height: %d&quot;</span>, density, width, height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>目前使用到的就那么多啦，后面有更多的方法涉及到，再进行添加，Enjoy it ~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" data-id="cl0ufhd0p0031wx1g3e9hhuqb" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/16/FFmpeg-001/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          FFmpeg 配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Jetpack Navigation 分析</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

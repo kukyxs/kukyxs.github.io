@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(06) -- 了解 Flutter 的界面交互 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上一节撸了个界面，虽然比较简单，但是把前面讲的知识串联了下，但是界面之间的跳转一直没说，这节就讲下 Flutter 中的「路由」来管理界面。 NavigatorFlutter 通过 Navigator  来进行页面之间的跳转，分为 push 系列和 pop 系列操作，带 push 方法为入栈操作，带 pop 方法为出栈操作。Navigator 的 push 方法分两类，一类是带 Name 的，需要">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(06) -- 了解 Flutter 的界面交互">
+<meta property="og:url" content="http://example.com/2019/03/17/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-06/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="上一节撸了个界面，虽然比较简单，但是把前面讲的知识串联了下，但是界面之间的跳转一直没说，这节就讲下 Flutter 中的「路由」来管理界面。 NavigatorFlutter 通过 Navigator  来进行页面之间的跳转，分为 push 系列和 pop 系列操作，带 push 方法为入栈操作，带 pop 方法为出栈操作。Navigator 的 push 方法分两类，一类是带 Name 的，需要">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-e8fe3476c02639fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/611/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-5129c0873f1330af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-3e649f0af78d75bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/599/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d32890e60fa05ac0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/602/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-f57b9e4e8f220cd5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/573/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-0f8a0cf16871e5b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp">
+<meta property="article:published_time" content="2019-03-17T12:11:20.000Z">
+<meta property="article:modified_time" content="2019-08-28T13:19:12.162Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-e8fe3476c02639fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/611/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-06" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/17/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-06/" class="article-date">
+  <time datetime="2019-03-17T12:11:20.000Z" itemprop="datePublished">2019-03-17</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(06) -- 了解 Flutter 的界面交互
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一节撸了个界面，虽然比较简单，但是把前面讲的知识串联了下，但是界面之间的跳转一直没说，这节就讲下 <code>Flutter</code> 中的「路由」来管理界面。</p>
+<h4 id="Navigator"><a href="#Navigator" class="headerlink" title="Navigator"></a>Navigator</h4><p><code>Flutter</code> 通过 <code>Navigator</code>  来进行页面之间的跳转，分为 <code>push</code> 系列和 <code>pop</code> 系列操作，带 <code>push</code> 方法为入栈操作，带 <code>pop</code> 方法为出栈操作。<code>Navigator</code> 的 <code>push</code> 方法分两类，一类是带 <code>Name</code> 的，需要在 <code>MaterialApp</code> 下将 <code>routers</code> 属性进行注册，否则将会找不到该路由，还有一个是不带 <code>Name</code> 的，可以通过 <code>Router</code> 直接跳转。</p>
+<p>说那么多相信还不如直接上代码和图来的更直接。因为需要展示所有的跳转至少需要 3 个页面，所以我们创建最简单的三个界面，通过文字来区别不同的页面，因为需要调用带有 <code>Name</code> 的方法，所以需要先在 <code>MaterialApp</code> 对路由进行注册。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">&#x27;Flutter Learning Demo&#x27;</span>,</span><br><span class="line">      <span class="comment">// 在这里注册路由，关联 name 和界面</span></span><br><span class="line">      <span class="comment">// &#x27;/&#x27; 表示根页面，也就是 home 所对应的页面，这边就不需要配置 home 属性了</span></span><br><span class="line">      routes: &#123;<span class="string">&#x27;/&#x27;</span>: (_) =&gt; APage(), <span class="string">&#x27;/page_b&#x27;</span>: (_) =&gt; BPage(), <span class="string">&#x27;/page_c&#x27;</span>: (_) =&gt; CPage()&#125;,</span><br><span class="line">      debugShowCheckedModeBanner: <span class="keyword">false</span>,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Page A，Button 的跳转事件等会进行修改，目前先空着</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">APage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Page A&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(child: RaisedButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;To Page B&#x27;</span>))),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Page B</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Page B&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: &lt;Widget&gt;[</span><br><span class="line">        RaisedButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;To Page C&#x27;</span>)),</span><br><span class="line">        RaisedButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;Back Page A&#x27;</span>))</span><br><span class="line">      ])),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Page C</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Page C&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">          child: Column(</span><br><span class="line">              mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">              children: &lt;Widget&gt;[RaisedButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;Back Last Page&#x27;</span>))])),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="push-pushNamed-方式跳转"><a href="#push-pushNamed-方式跳转" class="headerlink" title="push / pushNamed 方式跳转"></a>push / pushNamed 方式跳转</h5><p>我们在 <code>APage</code> 的 <code>RaiseButton</code> 的 <code>onPressed</code> 方法加入如下代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.push(context, MaterialPageRoute(builder: (_) =&gt; BPage()));</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamed(context, <span class="string">&#x27;/page_b&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>效果相同。跳转后，可以发现，在 <code>BPage</code> 的 <code>AppBar</code> 上有个返回按钮，点击可以返回 <code>APage</code> ，那么也就是说通过 <code>push</code> 或者 <code>pushNamed</code> 方式跳转的时候，界面堆栈的变化是直接在原来的堆栈上添加一个新的 <code>page</code> </p>
+<p><strong>为了凸显堆栈的变化，所以绘制的图中，会比使用的实际页面多一个，下图同</strong></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-e8fe3476c02639fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/611/format/webp" alt="Navigator_push.png"></p>
+<h5 id="pushReplacement-pushReplacementNamed-popAndPushNamed"><a href="#pushReplacement-pushReplacementNamed-popAndPushNamed" class="headerlink" title="pushReplacement / pushReplacementNamed / popAndPushNamed"></a>pushReplacement / pushReplacementNamed / popAndPushNamed</h5><p>将 <code>APage</code> 中的跳转方式进行替换</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =&gt; BPage()));</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushReplacementNamed(context, <span class="string">&#x27;/page_b&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果是第一个界面跳转到下个界面，勿用，`BPage` 会显示返回按钮，但是点击后，界面会变黑</span></span><br><span class="line"><span class="comment">// 因为 `APage` 已经不在堆栈中了，点击后堆栈就没有 `Page` 了，所以界面变黑</span></span><br><span class="line">Navigator.popAndPushNamed(context, <span class="string">&#x27;/page_b&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>效果相同，跳转后，可以发现 <code>BPage</code> 的返回按钮消失了，消失了，消失了，我们可以试下点击返回按键，发现 <code>App</code> 直接退出了，也就是说，<code>BPage</code> 替代了 <code>APage</code> 在堆栈中的位置。那么堆栈的变化图就是这样的</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-5129c0873f1330af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp" alt="Navigator_pushReplacement.png"></p>
+<h5 id="pushAndRemoveUntil-pushNamedAndRemoveUntil"><a href="#pushAndRemoveUntil-pushNamedAndRemoveUntil" class="headerlink" title="pushAndRemoveUntil / pushNamedAndRemoveUntil"></a>pushAndRemoveUntil / pushNamedAndRemoveUntil</h5><h6 id="CASE-1"><a href="#CASE-1" class="headerlink" title="CASE 1"></a>CASE 1</h6><p>这个跳转方式需要通过 <code>CPage</code> 来协助完成，将 <code>APage</code> 的跳转方式修改为 <code>push</code> 方式，然后在 <code>BPage</code> 的第一个按钮加入如下代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushAndRemoveUntil(context, </span><br><span class="line">                   MaterialPageRoute(builder: (_) =&gt; CPage()), (Route router) =&gt; <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamedAndRemoveUntil(context, <span class="string">&#x27;/page_c&#x27;</span>, (Route router) =&gt; <span class="keyword">false</span>);</span><br></pre></td></tr></table></figure>
+
+<p>效果相同，点击 <code>BPage</code> 的跳转 <code>CPage</code> 按钮后，界面来到 <code>CPage</code>，然后发现还是没有返回按钮，没有返回按钮，没有返回按钮，点击下返回按键，然后发现 <code>App</code> 直接退出了，退出了，退出了，那么堆栈变化如图</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-3e649f0af78d75bc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/599/format/webp" alt="Navigator_pushAndRemoveUnit1.png"></p>
+<h6 id="CASE-2"><a href="#CASE-2" class="headerlink" title="CASE 2"></a>CASE 2</h6><p>你以为这两个方法只是为了把堆栈都清空吗，那就太图样图森破了，这边展示另一种。修改跳转的代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushAndRemoveUntil(context, </span><br><span class="line">				MaterialPageRoute(builder: (_) =&gt; CPage()), ModalRoute.withName(<span class="string">&#x27;/&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamedAndRemoveUntil(context, <span class="string">&#x27;/page_c&#x27;</span>, ModalRoute.withName(<span class="string">&#x27;/&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>点击跳转 <code>CPage</code> 以后，发现返回按钮又回来了…就这么回来了…只是修改了一个参数，点击返回按钮，又回到了 <code>APage</code>，你可以在 <code>APage</code> 跳转 <code>BPage</code> 中加入<code>DPage</code> <code>EPage</code> 等等更多的界面，只要保证 <code>BPage</code> 跳转 <code>CPage</code> 的方式不变，点击 <code>CPage</code> 的返回按钮，又回到 <code>APage</code> 了，所以…堆栈的变化图如下</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-d32890e60fa05ac0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/602/format/webp" alt="Navigator_pushAndRemoveUnit2.png"></p>
+<h6 id="SUMMARY"><a href="#SUMMARY" class="headerlink" title="SUMMARY"></a>SUMMARY</h6><p>为什么会这样变化呢，还记得在 <code>MaterialApp</code> 中注册的 <code>router</code> 么，<code>APage</code> 的 <code>name</code> 对应的为 <code>&#39;/&#39;</code>，也就是说，该方法会把堆栈中在 <code>ModalRoute.withName</code> 所对应的 page 上的所有都 pop 出堆栈，如果把参数换成 <code>/page_b</code>，然后在跳转 <code>CPage</code> 之前加入更多的界面，点击 <code>CPage</code> 的返回按钮，就会回到 <code>BPage</code></p>
+<h6 id="QUESTION"><a href="#QUESTION" class="headerlink" title="QUESTION"></a>QUESTION</h6><p>这边再提个小问题，有页面 A，B，C，D，其路由的 name 分别为 ‘/‘，’page_b’，’page_c’，’page_d’，启动顺序为 A -&gt; B -&gt; C -&gt; C -&gt; D，那么在 D 页面使用 </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pushNamedAndRemoveUntil(context, <span class="string">&#x27;/page_c&#x27;</span>, ModalRoute.withName(<span class="string">&#x27;/page_c&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>那么堆栈最后剩下的页面是 <code>ABCC</code> 还是<code>ABC</code> 呢？答案会在最后公布，小伙伴可以先自己尝试着实现。 </p>
+<h5 id="pop"><a href="#pop" class="headerlink" title="pop"></a>pop</h5><p>在 <code>BPage</code> 的第二个按钮中加入 <code>pop</code> 操作</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.pop(context);</span><br></pre></td></tr></table></figure>
+
+<p>跳转到 <code>BPage</code> 后点击该按钮，界面回到 <code>APage</code>，那么堆栈的变化很明显了，如图</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-f57b9e4e8f220cd5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/573/format/webp" alt="Navigator_pop.png"></p>
+<h5 id="popUntil"><a href="#popUntil" class="headerlink" title="popUntil"></a>popUntil</h5><p>这个方法还需要借助 <code>CPage</code> ，在 <code>CPage</code> 的按钮中加入</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Navigator.popUntil(context, ModalRoute.withName(<span class="string">&#x27;/&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<p>点击返回按钮，界面跳过 <code>BPage</code> 回到了 <code>APage</code>，解释同 <code>pushAndRemoveUntil</code> 那么堆栈的变化也显而易见咯</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-0f8a0cf16871e5b5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/589/format/webp" alt="Navigator_popUntil.png"></p>
+<h4 id="Navigator-传值"><a href="#Navigator-传值" class="headerlink" title="Navigator 传值"></a>Navigator 传值</h4><h6 id="CASE-1-传值给下个界面"><a href="#CASE-1-传值给下个界面" class="headerlink" title="CASE 1 传值给下个界面"></a>CASE 1 传值给下个界面</h6><p>修改下 <code>BPage</code> 和 <code>APage</code> 的按钮点击事件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> message;</span><br><span class="line"></span><br><span class="line">  BPage(&#123;Key key, <span class="meta">@required</span> <span class="keyword">this</span>.message&#125;) : <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;passed value: <span class="subst">$message</span>&#x27;</span>);</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      <span class="comment">// 省略相同代码</span></span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// APage 跳转事件</span></span><br><span class="line">Navigator.push(context, MaterialPageRoute(builder: </span><br><span class="line">                                          (_) =&gt; BPage(message: <span class="string">&#x27;Message From Page A&#x27;</span>)));</span><br></pre></td></tr></table></figure>
+
+<p>点击 <code>APage</code> 可以查看控制台有输出 </p>
+<p><code>2019-03-17 00:04:06.854 12868-12888/com.kuky.demo.flutterartsdemosapp I/flutter: passed value: Message From Page A</code> </p>
+<p>也就是成功把值传递过来了。<strong>但是，需要传递参数的话，之前在 <code>MaterialApp</code> 下注册的路由就需要去除了</strong>。</p>
+<h6 id="CASE-2-传值给上个界面"><a href="#CASE-2-传值给上个界面" class="headerlink" title="CASE 2 传值给上个界面"></a>CASE 2 传值给上个界面</h6><p>这边可以查看下 <code>pop</code> 方法</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@optionalTypeArgs</span></span><br><span class="line">  <span class="comment">// pop 可以传入一个可选参数 result，这个 result 也就是回传给上个页面的参数值了</span></span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">bool</span> pop&lt;T <span class="keyword">extends</span> <span class="built_in">Object</span>&gt;(BuildContext context, [ T result ]) &#123;</span><br><span class="line">    <span class="keyword">return</span> Navigator.of(context).pop&lt;T&gt;(result);</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>既然知道 <code>pop</code> 如何传递值给上个界面，那么如何在上个界面接收这个参数呢，还是看下 <code>push</code> 方法</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@optionalTypeArgs</span></span><br><span class="line">  <span class="keyword">static</span> Future&lt;T&gt; push&lt;T <span class="keyword">extends</span> <span class="built_in">Object</span>&gt;(BuildContext context, Route&lt;T&gt; route) &#123;</span><br><span class="line">    <span class="keyword">return</span> Navigator.of(context).push(route);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="meta">@optionalTypeArgs</span></span><br><span class="line">  Future&lt;T&gt; push&lt;T <span class="keyword">extends</span> <span class="built_in">Object</span>&gt;(Route&lt;T&gt; route) &#123;</span><br><span class="line">    <span class="comment">// ...省略无关代码</span></span><br><span class="line">    <span class="comment">// 这边返回一个 Future 值，`pop` 所传递的值会在这边返回</span></span><br><span class="line">    <span class="keyword">return</span> route.popped;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/// <span class="language-markdown">The future completes with the value given to [Navigator.pop], if any.</span></span></span><br><span class="line">Future&lt;T&gt; <span class="keyword">get</span> popped =&gt; _popCompleter.future;</span><br></pre></td></tr></table></figure>
+
+<p>官方的注释非常明白的指出，会在 <code>Future</code> 中携带 <code>pop</code> 传递的参数，那么我们对 <code>APage</code> 跳转 <code>BPage</code> 以及 <code>BPage</code> 返回 <code>APage</code> 的逻辑进行修改</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">APage</span></span></span><br><span class="line">Navigator.push(context, MaterialPageRoute(builder: (_) </span><br><span class="line">                                          =&gt; BPage(message: <span class="string">&#x27;Message From Page A&#x27;</span>)))</span><br><span class="line">                    .then((value) =&gt; <span class="built_in">print</span>(<span class="string">&#x27;BACK MESSAGE =&gt; <span class="subst">$value</span>&#x27;</span>));</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">BPage</span></span></span><br><span class="line">Navigator.pop(context, <span class="string">&#x27;Message back to PageA From BPage&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>点击返回后，能够在控制台发现有如下输入</p>
+<p><code>2019-03-17 16:35:53.820 13417-13442/com.kuky.demo.flutterartsdemosapp I/flutter: BACK MESSAGE =&gt; Message back to PageA From BPage</code></p>
+<p>上个页面成功接收到下个页面回传的数据。</p>
+<h6 id="CASE-3-通过系统返回按钮传值"><a href="#CASE-3-通过系统返回按钮传值" class="headerlink" title="CASE 3 通过系统返回按钮传值"></a>CASE 3 通过系统返回按钮传值</h6><p>在 <code>CASE 2</code> 情况下，通过按钮对返回事件进行监听，那加入我们需求没有这个按钮，只能通过系统默认的返回按钮，或者物理返回按键，那该如何传值呢，这里就需要用 <code>WillpopScope</code> 对系统的返回按钮进行监听。我们对 <code>CPage</code> 做下修改，在 <code>Scaffold</code> 外面包裹一个 <code>WillpopScope</code> </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> WillPopScope(</span><br><span class="line">        child: Scaffold(</span><br><span class="line">          appBar: AppBar(</span><br><span class="line">            title: Text(<span class="string">&#x27;Page C&#x27;</span>),</span><br><span class="line">          ),</span><br><span class="line">          body: Center(</span><br><span class="line">              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: &lt;Widget&gt;[</span><br><span class="line">            RaisedButton(</span><br><span class="line">                onPressed: () &#123;</span><br><span class="line">                  Navigator.popUntil(context, ModalRoute.withName(<span class="string">&#x27;/&#x27;</span>));</span><br><span class="line">                &#125;,</span><br><span class="line">                child: Text(<span class="string">&#x27;Back Last Page&#x27;</span>))</span><br><span class="line">          ])),</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment">// 这里对系统返回按钮做监听..</span></span><br><span class="line">        <span class="comment">// 如果返回的是 `true` 则相当于 `pop` 操作，返回 `false` 则只执行上一步的 `pop` 操作</span></span><br><span class="line">        <span class="comment">// 例如双击返回退出，也是通过 `WillpopScope` 来进行监听</span></span><br><span class="line">        onWillPop: () <span class="keyword">async</span> &#123;</span><br><span class="line">          Navigator.pop(context, <span class="string">&#x27;Hello~&#x27;</span>);</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过返回按钮，<code>BPage</code> 会成功收到从 <code>CPage</code> 返回的 <code>Hello~</code> 值</p>
+<p><em>以上代码查看 <code>router_main.dart</code> 文件</em></p>
+<h4 id="路由切换动画"><a href="#路由切换动画" class="headerlink" title="路由切换动画"></a>路由切换动画</h4><p>假如说我们不想用系统自带的切换动画，需要弄一些比较酷炫的效果该怎么办，那就需要用到自定义路由切换动画了。直接修改 <code>BPage</code> 跳转 <code>CPage</code> 的代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Navigator.push(</span><br><span class="line">    context,</span><br><span class="line">    PageRouteBuilder(</span><br><span class="line">    	<span class="comment">// 返回目标页面</span></span><br><span class="line">        pageBuilder: (context, anim, _) =&gt; CPage(),</span><br><span class="line">        <span class="comment">// 切换动画的切换时长</span></span><br><span class="line">        transitionDuration: <span class="built_in">Duration</span>(milliseconds: <span class="number">500</span>),</span><br><span class="line">        <span class="comment">// 切换动画的切换效果，系统自带的常用 Transition</span></span><br><span class="line">        <span class="comment">// ScaleTransition: 缩放  SlideTransition: 滑动</span></span><br><span class="line">        <span class="comment">// RotationTransition: 旋转  FadeTransition: 透明度</span></span><br><span class="line">        transitionsBuilder: (context, anim, _, child) =&gt; ScaleTransition(</span><br><span class="line">        	  <span class="comment">// Tween 是 flutter 的补间动画，等讲到动画的时候再提吧，这边先记住这么使用</span></span><br><span class="line">              scale: Tween(begin: <span class="number">0.0</span>, end: <span class="number">1.0</span>).animate(anim),</span><br><span class="line">              <span class="comment">// 这个值必须记得要传，否则会不显示界面</span></span><br><span class="line">              child: child,</span><br><span class="line">            )));</span><br></pre></td></tr></table></figure>
+
+<p>当再次点击跳转的时候，切换的动画就有开始自带的平滑效果变成缩放效果了。那如果要实现多个动画呢，例如边缩放，边改变透明度，也很容易实现，只需要将 <code>child</code> 替换成 <code>Transition</code> 即可</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Navigator.push(</span><br><span class="line">    context,</span><br><span class="line">    PageRouteBuilder(</span><br><span class="line">        pageBuilder: (context, anim, _) =&gt; CPage(),</span><br><span class="line">        transitionDuration: <span class="built_in">Duration</span>(milliseconds: <span class="number">500</span>),</span><br><span class="line">        transitionsBuilder: (context, anim, _, child) =&gt; ScaleTransition(</span><br><span class="line">              scale: Tween(begin: <span class="number">0.0</span>, end: <span class="number">1.0</span>).animate(anim),</span><br><span class="line">              <span class="comment">// 替换即可，如果要加入更多的动画，替换 `child` 属性就可以了</span></span><br><span class="line">              child: FadeTransition(</span><br><span class="line">                opacity: Tween(begin: <span class="number">0.0</span>, end: <span class="number">1.0</span>).animate(anim),</span><br><span class="line">                child: child,</span><br><span class="line">              ),</span><br><span class="line">            )));</span><br></pre></td></tr></table></figure>
+
+<p>当然，为了方便重复利用，需要进行封装，例如我们要封装上面的缩放动画效果</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScalePageRoute</span> <span class="keyword">extends</span> <span class="title">PageRouteBuilder</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> Widget widget;</span><br><span class="line"></span><br><span class="line">  ScalePageRoute(<span class="keyword">this</span>.widget)</span><br><span class="line">      : <span class="keyword">super</span>(</span><br><span class="line">            transitionDuration: <span class="built_in">Duration</span>(milliseconds: <span class="number">500</span>),</span><br><span class="line">            pageBuilder: (context, anim, _) =&gt; widget,</span><br><span class="line">            transitionsBuilder: (context, anim, _, child) =&gt; ScaleTransition(</span><br><span class="line">                  scale: Tween(begin: <span class="number">0.0</span>, end: <span class="number">1.0</span>).animate(anim),</span><br><span class="line">                  child: child,</span><br><span class="line">                ));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后直接在 <code>Navigator</code> 跳转的时候调用该 <code>Route</code> 就可以了</p>
+<p><em>该部分代码查看 <code>custom_routes.dart</code> 文件</em></p>
+<p>还记得我们之前写的 <code>demo</code> 都是单个文件写一个入口的吗，现在我们就可以写一个统一管理的页面，对这些界面进行管理了，这个工作就交给大家伙自己了，当然我也在源码做了修改，可以查看 <code>main.dart</code> 文件 </p>
+<p>在前面有提出一个问题，这边公布下答案：堆栈中的页面应该为 <code>ABCC</code>。你答对没有呢~</p>
+<p>最后代码的地址还是要的：</p>
+<ol>
+<li><p>文章中涉及的代码：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_arts_demos_app">demos</a></p>
+</li>
+<li><p>基于郭神 <code>cool weather</code> 接口的一个项目，实现 <code>BLoC</code> 模式，实现状态管理：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_weather">flutter_weather</a></p>
+</li>
+<li><p>一个课程(当时买了想看下代码规范的，代码更新会比较慢，虽然是跟着课上的一些写代码，但是还是做了自己的修改，很多地方看着不舒服，然后就改成自己的实现方式了)：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_shop">flutter_shop</a></p>
+</li>
+</ol>
+<p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/17/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-06/" data-id="cl0ufhd0g000mwx1g24y84z6k" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/19/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-07/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(07) -- 内容太多怎么办，列表来帮你
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/16/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-05/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flutter Guide(05) -- 动手「撸」一个登录，注册界面</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

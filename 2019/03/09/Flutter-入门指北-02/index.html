@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(02) -- 认识 Flutter App | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上一节介绍了 Dart 的一些语法，以及配置环境的网址，这节我们就可以开始了解下 Flutter 了 主要包括 MaterialApp、Scaffold、Text、Image、Icon、Button 以及 AppBar 部分内容，准备出发~ Flutter runApp新建 flutter 项目后，可以看到 lib 下的 main.dart 中 void main() &#x3D;&gt; runApp(M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(02) -- 认识 Flutter App">
+<meta property="og:url" content="http://example.com/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-02/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="上一节介绍了 Dart 的一些语法，以及配置环境的网址，这节我们就可以开始了解下 Flutter 了 主要包括 MaterialApp、Scaffold、Text、Image、Icon、Button 以及 AppBar 部分内容，准备出发~ Flutter runApp新建 flutter 项目后，可以看到 lib 下的 main.dart 中 void main() &#x3D;&gt; runApp(M">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-9f3820d96dae7a54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-bb16e7da4f522bab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/343/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-100b094be03e05fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-89402bcc7cb1738a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/369/format/webp">
+<meta property="article:published_time" content="2019-03-08T16:18:28.000Z">
+<meta property="article:modified_time" content="2019-08-27T01:54:09.081Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-9f3820d96dae7a54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-02" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-02/" class="article-date">
+  <time datetime="2019-03-08T16:18:28.000Z" itemprop="datePublished">2019-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(02) -- 认识 Flutter App
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上一节介绍了 <code>Dart</code> 的一些语法，以及配置环境的网址，这节我们就可以开始了解下 <code>Flutter</code> 了</p>
+<p>主要包括 <code>MaterialApp</code>、<code>Scaffold</code>、<code>Text</code>、<code>Image</code>、<code>Icon</code>、<code>Button</code> 以及 <code>AppBar</code> 部分内容，准备出发~</p>
+<h4 id="Flutter-runApp"><a href="#Flutter-runApp" class="headerlink" title="Flutter runApp"></a>Flutter runApp</h4><p>新建 flutter 项目后，可以看到 lib 下的 main.dart 中 <code>void main() =&gt; runApp(MyApp());</code> 这句就是程序的入口了。这里可以简单看下源码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> runApp(Widget app) &#123;</span><br><span class="line">  WidgetsFlutterBinding.ensureInitialized()</span><br><span class="line">    ..attachRootWidget(app)</span><br><span class="line">    ..scheduleWarmUpFrame();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">///<span class="language-markdown">....</span></span></span><br><span class="line"><span class="keyword">static</span> WidgetsBinding ensureInitialized() &#123;</span><br><span class="line">  <span class="keyword">if</span> (WidgetsBinding.instance == <span class="keyword">null</span>)</span><br><span class="line">    WidgetsFlutterBinding();</span><br><span class="line">  <span class="keyword">return</span> WidgetsBinding.instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">///<span class="language-markdown">....</span></span></span><br><span class="line"><span class="keyword">void</span> attachRootWidget(Widget rootWidget) &#123;</span><br><span class="line">  _renderViewElement = RenderObjectToWidgetAdapter&lt;RenderBox&gt;(</span><br><span class="line">    container: renderView,</span><br><span class="line">    debugShortDescription: <span class="string">&#x27;[root]&#x27;</span>,</span><br><span class="line">    child: rootWidget</span><br><span class="line">  ).attachToRenderTree(buildOwner, renderViewElement);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先会创建一个 <code>WidgetsBinding</code> 单例对象，然后把传入的 App 添加到 <code>rootWidget</code> 中，<code>scheduleWarmUpFrame</code> 方法比较长，这边看下对该方法的注释第一句就能了解方法的主要功能了</p>
+<blockquote>
+<p>Schedule a frame to run as soon as possible </p>
+</blockquote>
+<p>「安排框架尽快运行起来」(原谅我这渣英语，只能看懂不会翻译..大概就是「快速启动框架」的意思吧)</p>
+<h4 id="Flutter-App"><a href="#Flutter-App" class="headerlink" title="Flutter App"></a>Flutter App</h4><p>接着看下 <code>MyApp</code> 这个类，继承自 <code>StatelessWidget</code> 并在 <code>build</code> 方法返回一个 <code>MaterialApp</code> 实例，(偷偷讲下，其实这边还可以返回 <code>CupertinoApp</code>，这是一个 iOS 风格的 widget，基本上你看到部件带 「Cupertino」的都是 iOS 风格的 widget，这里先不讲 iOS 风格的部件，目前 flutter 对 Cupertino 系列的 widget 支持不是很好，包括部件的广度，多语言的支持等等方面都不是很友好，所以我们还是继续看 MD 风格的 Android 部件吧~)，这里先看下 <code>MaterialApp</code> 的构造函数，介绍一些常用的参数</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MaterialApp(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.navigatorKey,</span><br><span class="line">    <span class="keyword">this</span>.home, <span class="comment">// 主界面的内容 widget</span></span><br><span class="line">    <span class="keyword">this</span>.routes = <span class="keyword">const</span> &lt;<span class="built_in">String</span>, WidgetBuilder&gt;&#123;&#125;, <span class="comment">// 带 router 和路由跳转有关</span></span><br><span class="line">    <span class="keyword">this</span>.initialRoute,</span><br><span class="line">    <span class="keyword">this</span>.onGenerateRoute,</span><br><span class="line">    <span class="keyword">this</span>.onUnknownRoute,</span><br><span class="line">    <span class="keyword">this</span>.navigatorObservers = <span class="keyword">const</span> &lt;NavigatorObserver&gt;[], </span><br><span class="line">    <span class="keyword">this</span>.builder,</span><br><span class="line">    <span class="keyword">this</span>.title = <span class="string">&#x27;&#x27;</span>, <span class="comment">// *类似标题</span></span><br><span class="line">    <span class="keyword">this</span>.onGenerateTitle, <span class="comment">// 主要用于多语言情况下，需要根据当前语言替换 title，需要使用该值</span></span><br><span class="line">    <span class="keyword">this</span>.color, <span class="comment">// 主题色，如果该值未设置，取 theme.primaryColor,未设置 theme 则取蓝色</span></span><br><span class="line">    <span class="keyword">this</span>.theme, <span class="comment">// App 的主题风格，包括主题色，按钮默认颜色等等</span></span><br><span class="line">    <span class="keyword">this</span>.locale, <span class="comment">// 带 locale 的和多语言适配相关</span></span><br><span class="line">    <span class="keyword">this</span>.localizationsDelegates,</span><br><span class="line">    <span class="keyword">this</span>.localeListResolutionCallback,</span><br><span class="line">    <span class="keyword">this</span>.localeResolutionCallback,</span><br><span class="line">    <span class="keyword">this</span>.supportedLocales = <span class="keyword">const</span> &lt;Locale&gt;[Locale(<span class="string">&#x27;en&#x27;</span>, <span class="string">&#x27;US&#x27;</span>)],</span><br><span class="line">    <span class="keyword">this</span>.debugShowMaterialGrid = <span class="keyword">false</span>, </span><br><span class="line">    <span class="keyword">this</span>.showPerformanceOverlay = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.checkerboardRasterCacheImages = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.checkerboardOffscreenLayers = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.showSemanticsDebugger = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.debugShowCheckedModeBanner = <span class="keyword">true</span>, <span class="comment">// debug 模式下，是否显示 DEBUG 标示横幅</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>MaterialApp</code> 继承自 <code>StatefulWidget</code>，它和 <code>MyApp</code> 所继承的类 <code>StatelessWidget</code>，就是日常开发中，自定义部件通常继承的抽象类了。</p>
+<ol>
+<li><code>StatelessWidget</code> 是状态不可变部件，通过其构建的部件一般用来展示固定内容，例如需要展示固定的功能按钮列表，不需要根据不同界面状态进行修改其展示内容</li>
+<li><code>StatefulWidget</code> 是可改变状态的部件，比如我们需要通过网络或者数据库获取数据，然后修改部件锁展示的数据内容，则需要通过 <code>StatefulWidget</code> 来构建。当然，不是说 <code>StatelessWidget</code> 不能实现修改界面数据的功能，这就需要涉及到 <strong>状态管理</strong> 的概念了，后面有机会再讲，这边先埋坑【坑1】</li>
+</ol>
+<h4 id="Flutter-Scaffold"><a href="#Flutter-Scaffold" class="headerlink" title="Flutter Scaffold"></a>Flutter Scaffold</h4><p>进入 <code>App</code> 后就需要构建界面了，<code>Flutter</code> 提供了 <code>Scaffold</code> 来快速构建一个 <code>MaterialDesign</code> 风格的界面，还是先看下 <code>Scaffold</code> 的构造函数吧，了解几个比较常用的部分。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Scaffold(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.appBar, <span class="comment">// 界面顶部的那条栏，这边需要返回一个 AppBar 实例</span></span><br><span class="line">    <span class="keyword">this</span>.body, <span class="comment">// 界面的内容部分</span></span><br><span class="line">    <span class="keyword">this</span>.floatingActionButton, <span class="comment">// 悬浮部分，可以通过 floatingActionButtonLocation 设置位置</span></span><br><span class="line">    <span class="keyword">this</span>.floatingActionButtonLocation,</span><br><span class="line">    <span class="keyword">this</span>.floatingActionButtonAnimator,</span><br><span class="line">    <span class="keyword">this</span>.persistentFooterButtons,</span><br><span class="line">    <span class="keyword">this</span>.drawer, <span class="comment">// 侧滑抽屉部分，从左侧滑出(应该和语言有关，和文字方向同向)</span></span><br><span class="line">    <span class="keyword">this</span>.endDrawer, <span class="comment">// 侧滑抽屉部分，从右侧滑出</span></span><br><span class="line">    <span class="keyword">this</span>.bottomNavigationBar, <span class="comment">// 底部导航栏，就是通常看到的底部 TAB 切换部件</span></span><br><span class="line">    <span class="keyword">this</span>.bottomSheet, <span class="comment">// 展示从底部弹出的，起到提示作用的，通过 showModalBottomSheet 展示</span></span><br><span class="line">    <span class="keyword">this</span>.backgroundColor, <span class="comment">// 界面的背景色</span></span><br><span class="line">    <span class="keyword">this</span>.resizeToAvoidBottomPadding = <span class="keyword">true</span>, <span class="comment">// 避免 body 被底部弹出部件填充，例如输入法键盘</span></span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>, <span class="comment">// 当前的 Scaffold 是否需要被展示在屏幕最上层</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>来张图吧，简洁明了</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-9f3820d96dae7a54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/345/format/webp" width="200" height="350" align="center"/>
+
+<p>了解完 <code>Scaffold</code> 的整体构造后，我们从上到下，通过构造函数来了解下各个 <code>Widget</code> 的使用方法</p>
+<h5 id="AppBar"><a href="#AppBar" class="headerlink" title="AppBar"></a>AppBar</h5><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">AppBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.leading, <span class="comment">// 用于设置 AppBar 前置的按钮，例如设置返回我们需要的返回按钮等</span></span><br><span class="line">    <span class="keyword">this</span>.automaticallyImplyLeading = <span class="keyword">true</span>, <span class="comment">// 是否使用系统默认生成的按钮，如果替换 leading 的默认按钮，最好将该属性设置成 false</span></span><br><span class="line">    <span class="keyword">this</span>.title, <span class="comment">// AppBar 所需要展示的组件，传入一个 Widget 实例，通常使用 Text 展示一个标题</span></span><br><span class="line">    <span class="keyword">this</span>.actions, <span class="comment">// AppBar 末尾悬浮的一些操作组件，例如常见的会在末尾设置一个「...」按钮，点击弹出一个 menue 提供给用户操作选择</span></span><br><span class="line">    <span class="keyword">this</span>.flexibleSpace, <span class="comment">// AppBar 的背景，可以设置颜色，背景图等等 </span></span><br><span class="line">    <span class="keyword">this</span>.bottom, <span class="comment">// bottom 用于展示顶部导航 TAB</span></span><br><span class="line">    <span class="keyword">this</span>.elevation = <span class="number">4.0</span>,</span><br><span class="line">    <span class="keyword">this</span>.backgroundColor, <span class="comment">// AppBar 的背景色，如果只需要修改颜色，可以不通过 flexibleSpace 修改</span></span><br><span class="line">    <span class="keyword">this</span>.brightness,</span><br><span class="line">    <span class="keyword">this</span>.iconTheme, <span class="comment">// 按钮的默认样式</span></span><br><span class="line">    <span class="keyword">this</span>.textTheme, <span class="comment">// 文字的默认样式</span></span><br><span class="line">    <span class="keyword">this</span>.primary = <span class="keyword">true</span>,</span><br><span class="line">    <span class="keyword">this</span>.centerTitle, <span class="comment">// 是否将展示的 title 居中</span></span><br><span class="line">    <span class="keyword">this</span>.titleSpacing = NavigationToolbar.kMiddleSpacing, <span class="comment">// AppBar title 两侧的空白间隔</span></span><br><span class="line">    <span class="keyword">this</span>.toolbarOpacity = <span class="number">1.0</span>,</span><br><span class="line">    <span class="keyword">this</span>.bottomOpacity = <span class="number">1.0</span>,</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在展示 <code>AppBar</code> 的 <code>demo</code> 之前，我们先学习几个基本的组件 <strong><code>Text</code>、<code>Image</code>、<code>Icon</code>、<code>Button</code></strong> 分布用于展示文字，图片，图标，按钮</p>
+<h5 id="Text"><a href="#Text" class="headerlink" title="Text"></a>Text</h5><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Text(<span class="keyword">this</span>.data, &#123; <span class="comment">// Text 需要展示的文字</span></span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.style, <span class="comment">// 文字的样式，包括颜色，大小，间距等等属性，这边就不继续展示 TextStyle 构造函数了，不然我怕大家都不想继续看了，稍后通过例子来说明</span></span><br><span class="line">    <span class="keyword">this</span>.textAlign, <span class="comment">// 文字的对齐方式，包括左对齐，右对齐，居中等，详见 TextAlign 类</span></span><br><span class="line">    <span class="keyword">this</span>.textDirection, <span class="comment">// 文字方向，ltr(left to right) 或者 rtl(right to left)</span></span><br><span class="line">    <span class="keyword">this</span>.locale, </span><br><span class="line">    <span class="keyword">this</span>.softWrap, <span class="comment">// 当文字一行显示不完是否换行</span></span><br><span class="line">    <span class="keyword">this</span>.overflow, <span class="comment">// 如果超出限制的行数，以哪种方式省略未展示的内容</span></span><br><span class="line">    <span class="keyword">this</span>.textScaleFactor, <span class="comment">// 文字缩放比例</span></span><br><span class="line">    <span class="keyword">this</span>.maxLines, <span class="comment">// 最多展示的行数</span></span><br><span class="line">    <span class="keyword">this</span>.semanticsLabel,</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>说了那么多，相信很多小伙伴都要急着撸代码了吧，接着来展示一些 <code>Text</code> 的示例，接下来的例子都会直接替换 <code>HomePage</code> 内的展示内容，其余都是相同的，接下来请关注 <code>Text</code> 别的部件先忽略，后面会介绍，这边先埋坑【坑2】</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:flutter/material.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() =&gt; runApp(DemoApp());</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DemoApp</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> MaterialApp(</span><br><span class="line">      title: <span class="string">&#x27;Flutter Demo&#x27;</span>,</span><br><span class="line">      debugShowCheckedModeBanner: <span class="keyword">false</span>,</span><br><span class="line">      theme: ThemeData(primarySwatch: Colors.lightBlue),</span><br><span class="line">      home: HomePage(),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomePage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        appBar: AppBar(),</span><br><span class="line">        body: Container(</span><br><span class="line">          padding: <span class="keyword">const</span> EdgeInsets.only(top: <span class="number">10.0</span>),</span><br><span class="line">          child: Center(</span><br><span class="line">              child: Column(</span><br><span class="line">            mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">            children: &lt;Widget&gt;[</span><br><span class="line">              Text(<span class="string">&#x27;绿色背景黑色文字展示&#x27;</span>,</span><br><span class="line">                  style: TextStyle(</span><br><span class="line">                      color: Colors.black, <span class="comment">// 设置文字颜色，不可和 foreground 同时设置</span></span><br><span class="line">                      fontSize: <span class="number">24.0</span>, <span class="comment">// 字体大小</span></span><br><span class="line">                      letterSpacing: <span class="number">2.0</span>, <span class="comment">// 每个字符之间的间隔</span></span><br><span class="line">                      background: Paint()..color = Colors.green)), <span class="comment">// 背景色</span></span><br><span class="line">              Text(<span class="string">&#x27;这是一个带红色下划线的文字展示&#x27;</span>,</span><br><span class="line">                  style: TextStyle(</span><br><span class="line">                      color: Colors.black,</span><br><span class="line">                      fontSize: <span class="number">24.0</span>,</span><br><span class="line">                      <span class="comment">// 文字装饰线，除了 underline 还有 overline, lineThrough，</span></span><br><span class="line">                      <span class="comment">// 不同的样式小伙伴可以通过自己修改代码来查看</span></span><br><span class="line">                      decoration: TextDecoration.underline,</span><br><span class="line">                      <span class="comment">// 文字装饰线的类型，除了 solid 还有 double,dotted,dashed,wavy 可选</span></span><br><span class="line">                      decorationStyle: TextDecorationStyle.solid,</span><br><span class="line">                      <span class="comment">// 装饰线的颜色</span></span><br><span class="line">                      decorationColor: Colors.red))</span><br><span class="line">            ],</span><br><span class="line">          )),</span><br><span class="line">        ));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>该部分代码查看源码 <code>text_main.dart</code> 文件</em></p>
+<p>最后的展示效果如下图：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-bb16e7da4f522bab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/343/format/webp" width="200" height="350" align="center"/>
+
+<h5 id="Image"><a href="#Image" class="headerlink" title="Image"></a>Image</h5><p>/坏笑  按照惯例，我们还是先看下 <code>Image</code> 的构造函数吧</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Image(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="comment">// 一个 ImageProvider 实例，但是 ImageProvider 是一个抽象类，Flutter 已经给我们提供如下</span></span><br><span class="line">    <span class="comment">// AssetImage，NetworkImage，FileImage，MemoryImage 这四种图片加载器，为了方便调用</span></span><br><span class="line">    <span class="comment">// 我们可以直接通过 Image.asset, Image.network, Image.file, Image.memory 简化，</span></span><br><span class="line">    <span class="comment">// 通过方法名，可以看出分别从 asset 文件，网络，文件，内存中加载图片</span></span><br><span class="line">    <span class="meta">@required</span> <span class="keyword">this</span>.image, </span><br><span class="line">    <span class="keyword">this</span>.semanticLabel,</span><br><span class="line">    <span class="keyword">this</span>.excludeFromSemantics = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.width, <span class="comment">// 图片宽度</span></span><br><span class="line">    <span class="keyword">this</span>.height, <span class="comment">// 图片高度</span></span><br><span class="line">    <span class="keyword">this</span>.color, <span class="comment">// 图片背景色</span></span><br><span class="line">    <span class="keyword">this</span>.colorBlendMode, <span class="comment">// color 和图片的混合模式(这个值比较多，可以一个个尝试)</span></span><br><span class="line">    <span class="keyword">this</span>.fit, <span class="comment">// 图片填充方式 fill, cover, contain, fillWidth, fillHeight, scaleDown, none</span></span><br><span class="line">    <span class="keyword">this</span>.alignment = Alignment.center, <span class="comment">// 对齐方式</span></span><br><span class="line">    <span class="keyword">this</span>.repeat = ImageRepeat.noRepeat, <span class="comment">// 若未填充满空间，重复展示的方式</span></span><br><span class="line">    <span class="keyword">this</span>.centerSlice,</span><br><span class="line">    <span class="keyword">this</span>.matchTextDirection = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.gaplessPlayback = <span class="keyword">false</span>,</span><br><span class="line">    <span class="keyword">this</span>.filterQuality = FilterQuality.low,</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>好了好了，我知道你们又想自己写代码尝试下了，在这之前，需要你先准备一张本地图片，然后在项目的根目录，也就是 <code>lib</code> 文件夹同层，创建一个新的文件夹，命名为 <code>images</code>，把你准备好的图片放到这个目录下。放好之后打开 <code>pubspec.yaml</code> 把图片资源文件注册下</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The following section is specific to Flutter.</span></span><br><span class="line"><span class="attr">flutter:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># The following line ensures that the Material Icons font is</span></span><br><span class="line">  <span class="comment"># included with your application, so that you can use the icons in</span></span><br><span class="line">  <span class="comment"># the material Icons class.</span></span><br><span class="line">  <span class="attr">uses-material-design:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># 这边注册资源文件，以后有图片文件也可以只注册 images 文件夹，会自动读取内部的文件</span></span><br><span class="line">  <span class="attr">assets:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">images/ali.jpg</span></span><br></pre></td></tr></table></figure>
+
+<p>注册完成后，就可以继续愉快的撸代码了~</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomePage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> _assetAli = <span class="string">&#x27;images/ali.jpg&#x27;</span>;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> _picUrl =</span><br><span class="line">      <span class="string">&#x27;https://timg05.bdimg.com/timg?wapbaike&amp;quality=60&amp;size=b1440_952&amp;cut_x=143&amp;cut_y=0&amp;cut_w=1633&amp;&#x27;</span></span><br><span class="line">      <span class="string">&#x27;cut_h=1080&amp;sec=1349839550&amp;di=cbbc175a45ccec5482ce2cff09a3ae34&amp;&#x27;</span></span><br><span class="line">      <span class="string">&#x27;src=http://imgsrc.baidu.com/baike/pic/item/4afbfbedab64034f104872baa7c379310b551d80.jpg&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        appBar: AppBar(),</span><br><span class="line">        body: Container(</span><br><span class="line">          padding: <span class="keyword">const</span> EdgeInsets.only(top: <span class="number">10.0</span>),</span><br><span class="line">          child: Center(</span><br><span class="line">              child: Column(</span><br><span class="line">            mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">            children: &lt;Widget&gt;[</span><br><span class="line">              <span class="comment">// 这种展示图片方式和下一种会有相同的效果</span></span><br><span class="line">              Image(image: AssetImage(_assetAli), width: <span class="number">80.0</span>, height: <span class="number">80.0</span>),</span><br><span class="line">              <span class="comment">// 接下来加载图片都会使用这些比较方便的方法</span></span><br><span class="line">              Image.asset(_assetAli, width: <span class="number">80.0</span>, height: <span class="number">80.0</span>),</span><br><span class="line">              <span class="comment">// 加载一张网络图片</span></span><br><span class="line">              Image.network(_picUrl,</span><br><span class="line">                  height: <span class="number">80.0</span>,</span><br><span class="line">                  <span class="comment">// 横向重复</span></span><br><span class="line">                  repeat: ImageRepeat.repeatX,</span><br><span class="line">                  <span class="comment">// MediaQuery.of(context).size 获取到的为上层容器的宽高</span></span><br><span class="line">                  width: MediaQuery.of(context).size.width),</span><br><span class="line">              <span class="comment">// 通过设置混合模式，可以看到图片展示的样式已经修改</span></span><br><span class="line">              Image.asset(_assetAli,</span><br><span class="line">                  width: <span class="number">80.0</span>, height: <span class="number">80.0</span>, color: Colors.green, colorBlendMode: BlendMode.colorDodge),</span><br><span class="line">              <span class="comment">// 会优先加载指定的 asset 图片，然后等网络图片读取成功后加载网络图片，会通过渐隐渐现方式展现</span></span><br><span class="line">              <span class="comment">// cover 方式按照较小的边布满，较大的给切割</span></span><br><span class="line">              <span class="comment">// contain 会按照最大的边布满，较小的会被留白</span></span><br><span class="line">              <span class="comment">// fill 会把较大的一边压缩</span></span><br><span class="line">              <span class="comment">// fitHeight, fitWidth 分别按照长宽来布满</span></span><br><span class="line">              FadeInImage.assetNetwork(</span><br><span class="line">                  placeholder: _assetAli, image: _picUrl, width: <span class="number">120.0</span>, height: <span class="number">120.0</span>, fit: BoxFit.cover),</span><br><span class="line">              <span class="comment">// Icon 相对属性少了很多，需要传入一个 IconData 实例，flutter 提供了很多图标，</span></span><br><span class="line">              <span class="comment">// 但是实际情况我们需要加入我们自己的图标，这边再埋坑【坑3】</span></span><br><span class="line">              <span class="comment">// size 为图标显示的大小，color 为图标的颜色，这边通过 Theme 获取主题色调</span></span><br><span class="line">              Icon(Icons.android, size: <span class="number">40.0</span>, color: Theme.of(context).primaryColorDark)</span><br><span class="line">            ],</span><br><span class="line">          )),</span><br><span class="line">        ));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>该部分代码查看源码 <code>image_main.dart</code> 文件</em></p>
+<p>最后的效果如下：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-100b094be03e05fa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/344/format/webp" width="200" height="350" align="center"/>
+
+<h5 id="Button"><a href="#Button" class="headerlink" title="Button"></a>Button</h5><p><code>Flutter</code> 提供了各种类型的 <code>Button</code> 几乎是大同小异的，这边就抽取一些比较常用的展示下效果，常用的主要有 <code>RaisedButton</code> 、<code>FlatButton</code>、<code>IconButton</code>、<code>OutlineButton</code>、<code>MaterialButton</code>、<code>FloatActionButton</code>、<code>FloatingActionButton.extended</code> </p>
+<p><code>Button</code> 都有一个 <code>onPress</code> 参数，是 <code>VoidCallback</code> 类型的参数，通过查看源码可以知道 <code>VoidCallback</code> 是无参无返回值的一种类型参数。如果该参数传入的值为 <code>null</code> 那么这个按钮的就不可点击状态，无点击效果，等会可以在例子中查看。还有就是 <code>child</code> 参数，这里就是传入你需要展示的内容，比如 <code>Text</code>、<code>Icon</code> 等等。别的参数基本可以通过参数名了解，这边不扩展了(再看源码我怕你们都不想继续看下去了…)</p>
+<blockquote>
+<p>Talk is cheap, show me the code</p>
+</blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HomePage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(),</span><br><span class="line">      body: Container(</span><br><span class="line">        padding: <span class="keyword">const</span> EdgeInsets.only(top: <span class="number">10.0</span>),</span><br><span class="line">        child: Center(</span><br><span class="line">            child: Column(</span><br><span class="line">          mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            RaisedButton(</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">&#x27;This is a Rased Button can be clicked&#x27;</span>);</span><br><span class="line">              &#125;,</span><br><span class="line">              child: Text(<span class="string">&#x27;Raised Enable&#x27;</span>),</span><br><span class="line">            ),</span><br><span class="line">            RaisedButton(onPressed: <span class="keyword">null</span>, child: Text(<span class="string">&#x27;Raised Disable&#x27;</span>)),</span><br><span class="line">            FlatButton(</span><br><span class="line">              onPressed: () =&gt; <span class="built_in">print</span>(<span class="string">&#x27;This is a Flat Button can be clicker&#x27;</span>),</span><br><span class="line">              child: Text(<span class="string">&#x27;Flat Enable&#x27;</span>),</span><br><span class="line">            ),</span><br><span class="line">            FlatButton(onPressed: <span class="keyword">null</span>, child: Text(<span class="string">&#x27;Flat Disable&#x27;</span>)),</span><br><span class="line">            IconButton(icon: Icon(Icons.android), onPressed: () &#123;&#125;),</span><br><span class="line">            IconButton(icon: Icon(Icons.android), onPressed: <span class="keyword">null</span>),</span><br><span class="line">            MaterialButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;Material Enable&#x27;</span>)),</span><br><span class="line">            MaterialButton(onPressed: <span class="keyword">null</span>, child: Text(<span class="string">&#x27;Material Disable&#x27;</span>)),</span><br><span class="line">            OutlineButton(onPressed: () &#123;&#125;, child: Text(<span class="string">&#x27;Outline Enable&#x27;</span>)),</span><br><span class="line">            OutlineButton(onPressed: <span class="keyword">null</span>, child: Text(<span class="string">&#x27;Outline Enable&#x27;</span>)),</span><br><span class="line">          ],</span><br><span class="line">        )),</span><br><span class="line">      ),</span><br><span class="line">      floatingActionButton:</span><br><span class="line">          FloatingActionButton.extended(onPressed: () &#123;&#125;, icon: Icon(Icons.android), label: Text(<span class="string">&#x27;Android&#x27;</span>)),</span><br><span class="line">      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>该部分代码查看源码 <code>button_main.dart</code> 部分</em></p>
+<p>最终的效果图：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-89402bcc7cb1738a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/369/format/webp" width="200" height="350" align="center"/>
+
+<p>这篇终于到末尾了，最后留了 3 个坑等以后解决</p>
+<p>最后代码的地址还是要的：</p>
+<ol>
+<li><p>文章中涉及的代码：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_arts_demos_app">demos</a></p>
+</li>
+<li><p>基于郭神 <code>cool weather</code> 接口的一个项目，实现 <code>BLoC</code> 模式，实现状态管理：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_weather">flutter_weather</a></p>
+</li>
+<li><p>一个课程(当时买了想看下代码规范的，代码更新会比较慢，虽然是跟着课上的一些写代码，但是还是做了自己的修改，很多地方看着不舒服，然后就改成自己的实现方式了)：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_shop">flutter_shop</a></p>
+</li>
+</ol>
+<p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-02/" data-id="cl0ufhd0d0006wx1g6vli9w87" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/11/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-03/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(03) -- 了解 Scaffold 和 AppBar
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flutter Guide(01) -- Start With Dart</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

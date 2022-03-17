@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(12) -- Flutter 数据如何持久化 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.0+1，小">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(12) -- Flutter 数据如何持久化">
+<meta property="og:url" content="http://example.com/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.0+1，小">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-7a9977c10ad33aff.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-6cbe9d19584b96b4.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="article:published_time" content="2019-04-01T16:18:44.000Z">
+<meta property="article:modified_time" content="2019-08-28T13:03:33.034Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-7a9977c10ad33aff.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-12" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/" class="article-date">
+  <time datetime="2019-04-01T16:18:44.000Z" itemprop="datePublished">2019-04-02</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(12) -- Flutter 数据如何持久化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>上节讲了状态管理，但是当 <code>App</code> 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式</p>
+<ul>
+<li>文件读写</li>
+<li><code>shared_preferences</code> 存储</li>
+<li>数据库存储</li>
+</ul>
+<p>持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式</p>
+<h4 id="文件读写-IO-操作"><a href="#文件读写-IO-操作" class="headerlink" title="文件读写/ IO 操作"></a>文件读写/ IO 操作</h4><p>文件读写需要 <code>path_provider</code> 插件，写这篇文章的时候，最新版本是 <code>0.5.0+1</code>，小伙伴们可以根据官网最新的版本进行替换，导入后我们就可以来看下如何实现文件的读写了。<code>path_provider</code> 的源码比较简单，这边就不单独拎出来说了，可以自行查看。<code>path_provider</code> 用于获取手机的存储文件位置，一共有三个方法</p>
+<ul>
+<li><code>getTemporaryDirectory</code> 临时目录，在 Android 中对应的方法为 <code>getCacheDir</code>，而在 iOS 中对应为 <code>NSCachesDirectory</code>，可以通过系统检测并清除</li>
+<li><code>getApplicationDocumentsDirectory</code> 缓存目录，在 Android 中对应为 <code>AppData</code> 文件夹，在 iOS 中对应为  <code>NSDocumentsDirectory</code>，只有当 App 被删除才能被删除</li>
+<li><code>getExternalStorageDirectory</code> 外部存储目录，只有在 Android 中有效，在 iOS 调用会抛出 <code>UnsupportedError</code> 异常，不过 Android 在写入前记得先申请权限哟，否则也是不行滴。</li>
+</ul>
+<p>读写文件操作需要通过 <code>Dart</code> 的 <code>IO</code> 操作完成，这边小伙伴们可以自己看文档 <a target="_blank" rel="noopener" href="https://api.dartlang.org/stable/2.2.0/dart-io/File-class.html">File class</a>，接着我们就直接通过例子来看文件实现数据持久化。先看下效果吧，最终重启 App 后，数据也能正常读取显示，说明数据被保存下来了</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-7a9977c10ad33aff.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>看下实现的代码，因为会涉及到多种方式，所以这边我把视图抽取出来实现</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">Widget _fileIoPart() &#123;</span><br><span class="line">    <span class="keyword">return</span> Card(</span><br><span class="line">      margin: <span class="keyword">const</span> EdgeInsets.all(<span class="number">8.0</span>),</span><br><span class="line">      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(<span class="number">8.0</span>))),</span><br><span class="line">      child: Column(children: &lt;Widget&gt;[</span><br><span class="line">        Padding(</span><br><span class="line">          padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">          child: Text(<span class="string">&#x27;File IO&#x27;</span>, style: TextStyle(fontSize: <span class="number">20.0</span>, color: Theme.of(context).primaryColor)),</span><br><span class="line">        ),</span><br><span class="line">        <span class="comment">// RadioList 是单选按钮部件，通过选择不同的情况，创建不同目录的文件</span></span><br><span class="line">        RadioListTile(</span><br><span class="line">            value: _radioText[<span class="number">0</span>],</span><br><span class="line">            title: Text(_radioText[<span class="number">0</span>]),</span><br><span class="line">            subtitle: Text(_radioDescriptions[<span class="number">0</span>]),</span><br><span class="line">            groupValue: _currentValue,</span><br><span class="line">            onChanged: ((value) &#123;</span><br><span class="line">              setState(() =&gt; _currentValue = value);</span><br><span class="line">            &#125;)),</span><br><span class="line">        RadioListTile(</span><br><span class="line">            value: _radioText[<span class="number">1</span>],</span><br><span class="line">            title: Text(_radioText[<span class="number">1</span>]),</span><br><span class="line">            subtitle: Text(_radioDescriptions[<span class="number">1</span>]),</span><br><span class="line">            groupValue: _currentValue,</span><br><span class="line">            onChanged: ((value) &#123;</span><br><span class="line">              setState(() =&gt; _currentValue = value);</span><br><span class="line">            &#125;)),</span><br><span class="line">        RadioListTile(</span><br><span class="line">            value: _radioText[<span class="number">2</span>],</span><br><span class="line">            title: Text(_radioText[<span class="number">2</span>]),</span><br><span class="line">            subtitle: Text(_radioDescriptions[<span class="number">2</span>]),</span><br><span class="line">            groupValue: _currentValue,</span><br><span class="line">            onChanged: ((value) &#123;</span><br><span class="line">              setState(() =&gt; _currentValue = value);</span><br><span class="line">            &#125;)),</span><br><span class="line">        Padding(</span><br><span class="line">          padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">          <span class="comment">// 用于写入文本信息</span></span><br><span class="line">          child: TextField(</span><br><span class="line">            controller: _editController,</span><br><span class="line">            decoration: InputDecoration(labelText: <span class="string">&#x27;输入存储的文本内容&#x27;</span>, icon: Icon(Icons.text_fields)),</span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">        Container(</span><br><span class="line">          margin: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>),</span><br><span class="line">          width: MediaQuery.of(context).size.width,</span><br><span class="line">          child: RaisedButton(</span><br><span class="line">            onPressed: _writeTextIntoFile,</span><br><span class="line">            child: Text(<span class="string">&#x27;写入文件信息&#x27;</span>),</span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">        Padding(</span><br><span class="line">          padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">          child: Row(</span><br><span class="line">            crossAxisAlignment: CrossAxisAlignment.start,</span><br><span class="line">            mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">            children: &lt;Widget&gt;[Text(<span class="string">&#x27;文件内容：&#x27;</span>), Expanded(child: Text(_fileContent, softWrap: <span class="keyword">true</span>))],</span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">        Container(</span><br><span class="line">          margin: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>),</span><br><span class="line">          width: MediaQuery.of(context).size.width,</span><br><span class="line">          child: RaisedButton(</span><br><span class="line">            onPressed: _readTextFromFile,</span><br><span class="line">            child: Text(<span class="string">&#x27;读取文件信息&#x27;</span>),</span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">      ]),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>关键的部分在于 <code>_writeTextIntoFile</code> 和 <code>_readTextFromFile</code> 两个方法的实现。看下实现的代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 如果写入外部内存需要读写权限，这边使用了第三方插件 `permission_handler`</span></span><br><span class="line"> <span class="keyword">void</span> _writeTextIntoFile() <span class="keyword">async</span> &#123;</span><br><span class="line">   <span class="keyword">if</span> (_currentValue == _radioText[<span class="number">2</span>]) &#123;</span><br><span class="line">     PermissionStatus status = <span class="keyword">await</span> PermissionHandler().checkPermissionStatus(PermissionGroup.storage);</span><br><span class="line">     <span class="keyword">if</span> (status == PermissionStatus.granted) <span class="comment">// 如果是写入外部存储，则检测权限状态，同意则写入</span></span><br><span class="line">       _writeContent();</span><br><span class="line">     <span class="keyword">else</span> <span class="keyword">if</span> (status == PermissionStatus.disabled) <span class="comment">// 拒绝了提示手动打开</span></span><br><span class="line">       Fluttertoast.showToast(msg: <span class="string">&#x27;未打开相关权限&#x27;</span>);</span><br><span class="line">     <span class="keyword">else</span> <span class="comment">// 未同意则主动申请权限</span></span><br><span class="line">       PermissionHandler().requestPermissions([PermissionGroup.storage]);</span><br><span class="line">   &#125; <span class="keyword">else</span> <span class="comment">// 不是写入外部存储直接写入文件</span></span><br><span class="line">     _writeContent();</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 文本写入文件 </span></span><br><span class="line"> <span class="keyword">void</span> _writeContent() <span class="keyword">async</span> &#123;</span><br><span class="line">   <span class="comment">// 写入文本操作</span></span><br><span class="line">   <span class="keyword">var</span> text = _editController.value.text; <span class="comment">// 获取文本框的内容</span></span><br><span class="line">   File file = File(<span class="keyword">await</span> _getFilePath()); <span class="comment">// 获取相应的文件</span></span><br><span class="line"></span><br><span class="line">   <span class="keyword">if</span> (text == <span class="keyword">null</span> || text.isEmpty) &#123;</span><br><span class="line">     Fluttertoast.showToast(msg: <span class="string">&#x27;请输入内容&#x27;</span>); <span class="comment">// 内容为空，则不写入并提醒</span></span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     <span class="comment">// 内容不空，则判断是否已经存在，存在先删除，重新创建后写入信息</span></span><br><span class="line">     <span class="keyword">if</span> (<span class="keyword">await</span> file.exists()) file.deleteSync();</span><br><span class="line">     file.createSync(); <span class="comment">// createSync 是一个同步的创建过程</span></span><br><span class="line">     file.writeAsStringSync(text); <span class="comment">// writeAsStringSync 是同步写入的过程</span></span><br><span class="line">     _editController.clear(); <span class="comment">// 写入文件后清空输入框信息</span></span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="comment">// 读取文本操作</span></span><br><span class="line"> <span class="keyword">void</span> _readTextFromFile() <span class="keyword">async</span> &#123;</span><br><span class="line">   File file = File(<span class="keyword">await</span> _getFilePath());</span><br><span class="line">   <span class="keyword">if</span> (<span class="keyword">await</span> file.exists()) &#123;</span><br><span class="line">     setState(() =&gt; _fileContent = file.readAsStringSync()); <span class="comment">// 文件存在则直接显示文本信息</span></span><br><span class="line">   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">     setState(() =&gt; _fileContent = <span class="string">&#x27;&#x27;</span>); <span class="comment">// 文件不存在则清空显示文本信息，并提示</span></span><br><span class="line">     Fluttertoast.showToast(msg: <span class="string">&#x27;文件还未创建，请先通过写入信息来创建文件&#x27;</span>);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为外部存储的文件需要涉及到权限问题，而且 iOS 也不支持，所以如果需要使用文件来持久化数据的话，尽量使用另外两种。因为在例子中，我们保存的数据相对比较简单，所以这边就不得不说另外一种更方便的持久化方式了 <code>shared_preferences</code></p>
+<h4 id="SharedPreferences"><a href="#SharedPreferences" class="headerlink" title="SharedPreferences"></a>SharedPreferences</h4><p>写 Android 的小伙伴对这个应该不陌生了，但是 <code>Flutter</code> 并没有自带的 <code>shared_preferences</code> 功能，需要第三方插件来实现，引入 <code>shared_preferences</code> 插件，写文章的时候最新版本是 <code>^0.5.1+2</code>，还是先看下最后的效果</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-6cbe9d19584b96b4.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>代码的实现相对比较简单</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">Widget _sharedPart() &#123;</span><br><span class="line">    <span class="keyword">return</span> Card(</span><br><span class="line">        margin: <span class="keyword">const</span> EdgeInsets.all(<span class="number">8.0</span>),</span><br><span class="line">        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(<span class="number">8.0</span>))),</span><br><span class="line">        child: Column(</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">              child:</span><br><span class="line">                  Text(<span class="string">&#x27;Shared Preferences&#x27;</span>, style: TextStyle(fontSize: <span class="number">20.0</span>, color: Theme.of(context).primaryColor)),</span><br><span class="line">            ),</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.fromLTRB(<span class="number">12.0</span>, <span class="number">0</span>, <span class="number">12.0</span>, <span class="number">12.0</span>),</span><br><span class="line">              <span class="comment">// 用于设置 key 信息</span></span><br><span class="line">              child: TextField(</span><br><span class="line">                controller: _shareKeyController,</span><br><span class="line">                decoration: InputDecoration(labelText: <span class="string">&#x27;输入 share 存储的 key&#x27;</span>, icon: Icon(Icons.lock_outline)),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.fromLTRB(<span class="number">12.0</span>, <span class="number">0</span>, <span class="number">12.0</span>, <span class="number">12.0</span>),</span><br><span class="line">              <span class="comment">// 用于写入文本信息</span></span><br><span class="line">              child: TextField(</span><br><span class="line">                controller: _shareValueController,</span><br><span class="line">                decoration: InputDecoration(labelText: <span class="string">&#x27;输入 share 存储的 value&#x27;</span>, icon: Icon(Icons.text_fields)),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">            Container(</span><br><span class="line">              margin: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>),</span><br><span class="line">              width: MediaQuery.of(context).size.width,</span><br><span class="line">              child: RaisedButton(</span><br><span class="line">                onPressed: _writeIntoShare,</span><br><span class="line">                child: Text(<span class="string">&#x27;写入 share&#x27;</span>),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">            Padding(</span><br><span class="line">              padding: <span class="keyword">const</span> EdgeInsets.all(<span class="number">12.0</span>),</span><br><span class="line">              child: Row(</span><br><span class="line">                crossAxisAlignment: CrossAxisAlignment.start,</span><br><span class="line">                mainAxisAlignment: MainAxisAlignment.center,</span><br><span class="line">                children: &lt;Widget&gt;[Text(<span class="string">&#x27;share 存储内容：&#x27;</span>), Expanded(child: Text(_shareContent, softWrap: <span class="keyword">true</span>))],</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">            Container(</span><br><span class="line">              margin: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>),</span><br><span class="line">              width: MediaQuery.of(context).size.width,</span><br><span class="line">              child: RaisedButton(</span><br><span class="line">                onPressed: _readFromShare,</span><br><span class="line">                child: Text(<span class="string">&#x27;读取 share&#x27;</span>),</span><br><span class="line">              ),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        ));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现的关键部分就是方法 <code>_writeIntoShare</code> 和 <code>_readFromShare</code> </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> _writeIntoShare() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> shareKey = _shareKeyController.value.text;</span><br><span class="line">    <span class="keyword">var</span> shareContent = _shareValueController.value.text;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (shareKey == <span class="keyword">null</span> || shareKey.isEmpty) &#123;</span><br><span class="line">      Fluttertoast.showToast(msg: <span class="string">&#x27;请输入 key&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (shareContent == <span class="keyword">null</span> || shareContent.isEmpty) &#123;</span><br><span class="line">      Fluttertoast.showToast(msg: <span class="string">&#x27;请输入保存的内容&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 通过 `getInstance` 获取 `shared_preferences` 单例</span></span><br><span class="line">      <span class="keyword">var</span> sp = <span class="keyword">await</span> SharedPreferences.getInstance();</span><br><span class="line">      <span class="comment">// sp 能保存的数据类型包括 `int`, `String`, `bool`, `double`, `StringList`</span></span><br><span class="line">      sp.setString(shareKey, shareContent);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">void</span> _readFromShare() <span class="keyword">async</span> &#123;</span><br><span class="line">    <span class="keyword">var</span> shareKey = _shareKeyController.value.text;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (shareKey == <span class="keyword">null</span> || shareKey.isEmpty) &#123;</span><br><span class="line">      Fluttertoast.showToast(msg: <span class="string">&#x27;请输入 key&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">var</span> sp = <span class="keyword">await</span> SharedPreferences.getInstance();</span><br><span class="line">      <span class="comment">// 数据读取的类型同写入类型，如果传入的 key 不存在则返回 null</span></span><br><span class="line">      <span class="keyword">var</span> value = sp.getString(shareKey);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">        Fluttertoast.showToast(msg: <span class="string">&#x27;未找到该 key&#x27;</span>);</span><br><span class="line">        setState(() =&gt; _shareContent = <span class="string">&#x27;&#x27;</span>);</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        setState(() =&gt; _shareContent = value);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这两种数据持久化的方式主要用于存储相对简单，关系不复杂的数据，如果涉及到大量的，且字段之间有关系的情况就需要通过数据库来实现了，Android 和 iOS 都自带 sqlite 数据库。</p>
+<p><em>以上代码查看 <code>data_persistence_main.dart</code> 文件</em></p>
+<h4 id="Sqflite"><a href="#Sqflite" class="headerlink" title="Sqflite"></a>Sqflite</h4><p><code>Flutter</code> 实现数据库存储需要通过插件 <code>sqflite</code> 来实现，写文章的时候最新的版本是 <code>sqflite 1.1.3</code>，但是该版本需要 <code>flutter 1.2</code> 以上才行，所以我选择的是 <code>sqflite 1.1.0</code>，小伙伴可以根据自己的 <code>flutter</code> 版本选择相应的 <code>sqflite</code> 版本</p>
+<p>sqflite 的基本操作语句，在<a target="_blank" rel="noopener" href="https://github.com/tekartik/sqflite/blob/master/sqflite/README.md">文档中</a>已经写得非常明白了，所以就不搬运了，这边直接讲下对于数据库的一些封装处理吧，因为打开数据库是一个很消耗资源的一个过程，所以呢，推荐实现单例会比较好。例如我们要实现一个 <code>student</code> 存储表</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DatabaseUtils</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">String</span> _tableStudent = <span class="string">&#x27;student&#x27;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> Database _database; <span class="comment">// 创建单例，防止重复打开消耗内存</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> DatabaseUtils _instance;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> DatabaseUtils <span class="keyword">get</span> instance =&gt; _instance;</span><br><span class="line"></span><br><span class="line">  DatabaseUtils._internal() &#123;</span><br><span class="line">    getDatabasesPath().then((path) <span class="keyword">async</span> &#123;</span><br><span class="line">      _database = <span class="keyword">await</span> openDatabase(join(path, <span class="string">&#x27;demo.db&#x27;</span>), version: <span class="number">2</span>, onCreate: (db, version) &#123;</span><br><span class="line">        <span class="comment">// 创建数据库的时候在这边调用</span></span><br><span class="line">        db.execute(<span class="string">&#x27;create table <span class="subst">$_tableStudent</span> &#x27;</span></span><br><span class="line">            <span class="string">&#x27;id integer primary key autoincrement,&#x27;</span></span><br><span class="line">            <span class="string">&#x27;name text not null,&#x27;</span></span><br><span class="line">            <span class="string">&#x27;age integer not null default 0,&#x27;</span></span><br><span class="line">            <span class="string">&#x27;gender integer not null default 0&#x27;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 更新升级增加的字段</span></span><br><span class="line">        db.execute(<span class="string">&#x27;alter table <span class="subst">$_tableStudent</span> add column birthday text&#x27;</span>);</span><br><span class="line">      &#125;, onUpgrade: (db, oldVersion, newVersion) &#123;</span><br><span class="line">        <span class="comment">// 更新升级数据库的时候在这操作</span></span><br><span class="line">        <span class="keyword">if</span> (oldVersion == <span class="number">1</span>) db.execute(<span class="string">&#x27;alter table <span class="subst">$_tableStudent</span> add column birthday text&#x27;</span>);</span><br><span class="line">      &#125;, onOpen: (db) &#123;</span><br><span class="line">        <span class="comment">// 打开数据库时候的回调</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;<span class="subst">$&#123;db.path&#125;</span>&#x27;</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">factory</span> DatabaseUtils() &#123;</span><br><span class="line">    <span class="comment">// 如果当前的单例已经存在，则不再创建，否则重新创建，factory 关键词看第一章</span></span><br><span class="line">    <span class="keyword">if</span> (_instance == <span class="keyword">null</span>) _instance = DatabaseUtils._internal();</span><br><span class="line">    <span class="keyword">return</span> _instance;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么对数据库的操作就完全考验你的 <code>SQL</code> 的掌握程度了，但是千万记住，sqlite 中的类型只有，整型 <code>integer</code> ，字符类型 <code>text</code>，浮点类型 <code>real</code>，二进制 <code>blob</code>。数据库的具体例子会等到最后的实际项目中展示，原谅我不懂如何展示一个界面给你操作，实现数据库的各种功能。</p>
+<p><em>该部分代码查看 <code>db_util.dart</code> 文件</em>，里面有一些基本的操作写法，小伙伴可自行查看。</p>
+<p>最后代码的地址还是要的：</p>
+<ol>
+<li><p>文章中涉及的代码：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_arts_demos_app">demos</a></p>
+</li>
+<li><p>基于郭神 <code>cool weather</code> 接口的一个项目，实现 <code>BLoC</code> 模式，实现状态管理：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_weather">flutter_weather</a></p>
+</li>
+<li><p>一个课程(当时买了想看下代码规范的，代码更新会比较慢，虽然是跟着课上的一些写代码，但是还是做了自己的修改，很多地方看着不舒服，然后就改成自己的实现方式了)：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_shop">flutter_shop</a></p>
+</li>
+</ol>
+<p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/" data-id="cl0ufhd0i0015wx1g8jnp44dl" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/04/03/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-13/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(13) -- 如何调用 Api
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/31/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-11/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flutter Guide(11) -- 如何实现状态管理，BLoC 一展身手</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

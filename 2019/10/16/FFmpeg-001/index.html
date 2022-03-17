@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>FFmpeg 配置 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="自学 FFmpeg 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 win 那么直接安装 Visual Studio 吧，不要用 CLion 啥的了，在配置环境上坑了好久还是没爬出来，这边以 VS 为例，记录 FFmpage 的配置过程。至于 VS 怎么安装，下载安装文件，无脑下一步就行，实在不懂，就去找 Google 粑粑吧 在你的计算机配置 FFmpeg首先你需要到官网">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FFmpeg 配置">
+<meta property="og:url" content="http://example.com/2019/10/16/FFmpeg-001/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="自学 FFmpeg 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 win 那么直接安装 Visual Studio 吧，不要用 CLion 啥的了，在配置环境上坑了好久还是没爬出来，这边以 VS 为例，记录 FFmpage 的配置过程。至于 VS 怎么安装，下载安装文件，无脑下一步就行，实在不懂，就去找 Google 粑粑吧 在你的计算机配置 FFmpeg首先你需要到官网">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFXON6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFjBUx.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFjTG8.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/Kk9sPI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFvbY6.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFxS0A.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFz62T.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KFzyGV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KkSqf0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/16/KkSOpV.png">
+<meta property="article:published_time" content="2019-10-16T13:36:08.000Z">
+<meta property="article:modified_time" content="2019-10-16T15:03:31.638Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="FFmpeg">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/16/KFXON6.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-FFmpeg-001" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/10/16/FFmpeg-001/" class="article-date">
+  <time datetime="2019-10-16T13:36:08.000Z" itemprop="datePublished">2019-10-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/FFmpeg/">FFmpeg</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      FFmpeg 配置
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>自学 <code>FFmpeg</code> 的路真的比较难走，这边做下简单的记录，用来回顾用。如果你和我一样用的是 <code>win</code> 那么直接安装 <code>Visual Studio</code> 吧，不要用 <code>CLion</code> 啥的了，在配置环境上坑了好久还是没爬出来，这边以 <code>VS</code> 为例，记录 <code>FFmpage</code> 的配置过程。至于 <code>VS</code> 怎么安装，下载安装文件，无脑下一步就行，实在不懂，就去找 <code>Google</code> 粑粑吧</p>
+<h4 id="在你的计算机配置-FFmpeg"><a href="#在你的计算机配置-FFmpeg" class="headerlink" title="在你的计算机配置 FFmpeg"></a>在你的计算机配置 FFmpeg</h4><p>首先你需要到<a target="_blank" rel="noopener" href="https://ffmpeg.zeranoe.com/builds/">官网</a>下载 <code>FFmpeg</code>，打开链接后你会看到如下界面，我们需要下载 <code>Shared</code> 和 <code>Dev</code> 版本，当然你可以选择自己需要的版本，为了不那么麻烦，直接下了最新版本的，可能会有 <code>Bug</code> 等遇到了再慢慢解决吧，毕竟爬过坑才能涨记性</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFXON6.png" alt="KFXON6.png"></p>
+<p>下载完成后，需要把两个文件夹内的取出来放到同个文件夹下，例如 <code>ffmpeglib-4.2.1</code>，不要把这个文件夹放到 <code>Program Files / Program Files(x86)</code> 这些高权限的文件夹内，可以另外放一个文件夹，最后这个文件夹应该是下图这样的。</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFjBUx.png" alt="KFjBUx.png"></p>
+<p>放好文件夹后呢，将 <code>bin</code> 文件配置到系统环境中去，不懂如何配置的，出门右拐找 <code>Google</code>，配置完成环境后，打开终端，输入 <code>ffmpeg</code> 将出现如下图，说明计算机环境配置完成。如果提示 <code>ffmpeg</code> 指令无法识别，那么重启下就可以了。</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/KFjTG8.png" alt="KFjTG8.png"></p>
+<p>配置完成后，可以试下播放一个 <code>mp4</code> 文件， 例如输入命令行 <code>ffplay C:\Users\kuky\Desktop\1.mp4</code>，就可以看到视频播放啦，同时在终端输出了一些视频信息，例如创建时间等等</p>
+<p><img src="https://s2.ax1x.com/2019/10/16/Kk9sPI.png" alt="Kk9sPI.png"></p>
+<h4 id="配置-FFmpeg-到项目"><a href="#配置-FFmpeg-到项目" class="headerlink" title="配置 FFmpeg 到项目"></a>配置 FFmpeg 到项目</h4><p>打开 <code>VS</code> 创建项目，这里选择需要选择 “控制台应用”，然后下一步，命名项目选择项目位置，点击创建稍等下就可以看见 <code>Hello World</code> 了</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KFvbY6.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KFxS0A.png" width="400">
+</div>
+
+<p>在引入 <code>FFmpeg</code> 库和头文件之前，如果你的系统是 64 位，需要做些如下的修改，首先打开 “项目 -&gt; 属性 -&gt; 链接器 -&gt; 高级 -&gt; 目标计算机” 设置为 <code>MachineX64(/MACHINE:X64)</code>，修改完成后，打开 “生成 -&gt; 配置管理器 -&gt; 活动解决方案平台” 设置为 <code>x64</code>，再点击 “生成 -&gt; 清理解决方案” 就可以了。</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KFz62T.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KFzyGV.png" width="400">
+</div>
+
+<p>然后就是配置 <code>FFmpeg</code> 库和头文件了，打开 “项目 -&gt;  属性”，分别做如下配置，这里先引入一个 <code>avutil.lib</code> 用来验证是否真的依赖成功，成功后再引入其他 <code>lib</code> 文件。首先在 “VC++目录” 下配置 “包含目录” 和 “库目录”，包含目录就是刚才下载 <code>ffmpeg</code> 整合文件夹中的 <code>include</code> 文件夹，库目录就是整合后的 <code>lib</code> 文件夹。配置完成后，选择 “链接器 -&gt; 输入” 配置 “附加依赖项” 属性，这里就是 <code>lib</code> 文件夹下的库，只不过命名方式不同，例如在 <code>lib</code> 下的 <code>libavutil</code> 在这就是 <code>avutil.lib</code>，其余类似，多个 <code>lib</code> 库之间用换行间隔即可</p>
+<div align="center">
+    <img src="https://s2.ax1x.com/2019/10/16/KkSqf0.png" width="400">
+    <img src="https://s2.ax1x.com/2019/10/16/KkSOpV.png" width="400">
+</div>
+
+<p>配置完成后，来做下验证是否真的成功引入 <code>avutil</code> 库，修改代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;libavutil/log.h&gt;</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">av_log_set_level</span>(AV_LOG_DEBUG);</span><br><span class="line">	<span class="built_in">av_log</span>(<span class="literal">nullptr</span>, AV_LOG_INFO, <span class="string">&quot;Hello World\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行后如果正常输出 <code>Hello World</code> 那么说明项目配置 <code>FFmpeg</code> 库成功啦~ 至于剩余的 <code>lib</code> 可以自行配置进去，完成后就可以愉快的继续写代码了，在接下来的时间，会有不定期的更新，记录 <code>ffmpeg</code> 的踩坑记录。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/10/16/FFmpeg-001/" data-id="cl0ufhd0a0001wx1g2srefntm" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/10/22/FFmpeg-002/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          初识 SDL2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">初识 JNI</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

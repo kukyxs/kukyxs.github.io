@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(10) -- 入门 Flutter 的手势交互和动画 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在 Flutter 中，自带手势监听的目前为止好像只有按钮部件和一些 chip 部件，例如 Text 等部件需要实现手势监听，就需要借助带有监听事件的部件来实现了，这节我们会讲下 InkWell 和 GestureDetector 来实现手势的监听。 InkWell在前面的一些例子中，小伙伴应该看到了好几次 InkWell 这个部件，通过它我们可以实现对一些手势的监听，并实现 MD 的水波纹效果，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(10) -- 入门 Flutter 的手势交互和动画">
+<meta property="og:url" content="http://example.com/2019/03/28/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-10/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在 Flutter 中，自带手势监听的目前为止好像只有按钮部件和一些 chip 部件，例如 Text 等部件需要实现手势监听，就需要借助带有监听事件的部件来实现了，这节我们会讲下 InkWell 和 GestureDetector 来实现手势的监听。 InkWell在前面的一些例子中，小伙伴应该看到了好几次 InkWell 这个部件，通过它我们可以实现对一些手势的监听，并实现 MD 的水波纹效果，">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-fad16bdf993f54d8.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-0f55a9d8215eb84c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-977e7de1b224aa58.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-329d48585eee04b4.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-b20a401615f8acde.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="article:published_time" content="2019-03-28T01:05:37.000Z">
+<meta property="article:modified_time" content="2019-08-28T13:11:27.151Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-fad16bdf993f54d8.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-10" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/28/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-10/" class="article-date">
+  <time datetime="2019-03-28T01:05:37.000Z" itemprop="datePublished">2019-03-28</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(10) -- 入门 Flutter 的手势交互和动画
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在 <code>Flutter</code> 中，自带手势监听的目前为止好像只有按钮部件和一些 <code>chip</code> 部件，例如 <code>Text</code> 等部件需要实现手势监听，就需要借助带有监听事件的部件来实现了，这节我们会讲下 <code>InkWell</code> 和 <code>GestureDetector</code> 来实现手势的监听。</p>
+<h4 id="InkWell"><a href="#InkWell" class="headerlink" title="InkWell"></a>InkWell</h4><p>在前面的一些例子中，小伙伴应该看到了好几次 <code>InkWell</code> 这个部件，通过它我们可以实现对一些手势的监听，并实现 <code>MD</code> 的水波纹效果，举个简单的一个例子</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">InkWell(</span><br><span class="line">  child: Text(<span class="string">&#x27;点我...点我...我能响应点击手势&#x27;</span>),</span><br><span class="line">  onTap: () =&gt; <span class="built_in">print</span>(<span class="string">&#x27;啊...我被点击了...&#x27;</span>)</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
+
+<p>那么当点击 <code>Text</code> 的时候就会响应点击事件，控制台输出日志</p>
+<p>我们还是老套路，分析下源码。<code>Ctrl</code> 点击 <code>InkWell</code> 来查看源码(<code>Android Studio</code> 的操作，别的我不懂喔…)，然后，「嗯…除了构造函数怎么什么都没有？？？」那只能看它的父类 <code>InkResponse</code> 了，在那之前，我们看下 <code>InkWell</code> 的说明</p>
+<blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">A rectangular area of a [Material] that responds to touch.</span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><code>InkWell</code> 是在 <strong><code>MaterialDesign</code></strong> 风格下的一个用来响应触摸的<strong>矩形区域</strong>（注意加粗的文字，1.如果不是 <code>MD</code> 风格的部件下，你是不能用这个来做点击响应的；2.<code>InkWell</code> 是一块矩形区域，如果你要的是圆形区域，8 好意思，不行！）</p>
+<blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">The [InkWell] widget must have a [Material] widget as an ancestor. The</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[Material] widget is where the ink reactions are actually painted. This</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">matches the material design premise wherein the [Material] is what is</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">actually reacting to touches by spreading ink.<span class="code">```</span></span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><code>InkWell</code> 必须要有一个 <code>Material</code> 风格的部件作为锚点，巴拉巴拉巴拉….再次强调必须要在 <code>MD</code> 风格下使用。</p>
+<p>接下来看下 <code>InkResponse</code> 吧</p>
+<p>####InkResponse</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> InkResponse(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="keyword">this</span>.child, <span class="comment">// 需要监听的子部件</span></span><br><span class="line">    <span class="comment">// 一个 `GestureTapCallback` 类型参数，看下 `GestureTapCallback` 的定义,</span></span><br><span class="line">    <span class="comment">// `typedef GestureTapCallback = void Function();` 就是简单的无参无返回类型参数</span></span><br><span class="line">    <span class="comment">// 监听手指点击事件</span></span><br><span class="line">    <span class="keyword">this</span>.onTap,</span><br><span class="line">    <span class="comment">// 一个 `GestureTapDownCallback` 类型参数，需要 `TapDownDetails` 类型参数，</span></span><br><span class="line">    <span class="comment">// `TapDownDetails` 里面有个 `Offset` 参数用于记录点击的位置，监听手指点击屏幕的事件</span></span><br><span class="line">    <span class="keyword">this</span>.onTapDown,</span><br><span class="line">    <span class="comment">// 同 `onTap` 表示点击事件取消监听</span></span><br><span class="line">    <span class="keyword">this</span>.onTapCancel,</span><br><span class="line">    <span class="comment">// 同 `onTap` 表示双击事件监听</span></span><br><span class="line">    <span class="keyword">this</span>.onDoubleTap,</span><br><span class="line">    <span class="comment">// 一个 `GestureLongPressCallback` 类型参数，也是无参无返回值，表示长按的监听</span></span><br><span class="line">    <span class="keyword">this</span>.onLongPress,</span><br><span class="line">    <span class="comment">// 监听高亮的变化，返回 `true` 表示往高亮变化，`false` 相反</span></span><br><span class="line">    <span class="keyword">this</span>.onHighlightChanged,</span><br><span class="line">    <span class="comment">// 是否需要裁剪区域，`InkWell` 该值为 `true`，会根据 `highlightShape` 裁剪</span></span><br><span class="line">    <span class="keyword">this</span>.containedInkWell = <span class="keyword">false</span>,</span><br><span class="line">    <span class="comment">// 高亮的外形，`InkWell` 该值设置成 `BoxShape.rectangle`，所以是个矩形区域</span></span><br><span class="line">    <span class="keyword">this</span>.highlightShape = BoxShape.circle,</span><br><span class="line">    <span class="keyword">this</span>.radius, <span class="comment">// 手指点下去的时候，出现水波纹的半径</span></span><br><span class="line">    <span class="keyword">this</span>.borderRadius, <span class="comment">// 点击时候外圈阴影的圆角半径</span></span><br><span class="line">    <span class="keyword">this</span>.customBorder,</span><br><span class="line">    <span class="keyword">this</span>.highlightColor, <span class="comment">// 高亮颜色</span></span><br><span class="line">    <span class="keyword">this</span>.splashColor, <span class="comment">// 手指点下生成的水波颜色</span></span><br><span class="line">    <span class="keyword">this</span>.splashFactory, <span class="comment">// 两个值 `InkRipple.splashFactory` 和 `InkSplash.splashFactory`</span></span><br><span class="line">    <span class="keyword">this</span>.enableFeedback = <span class="keyword">true</span>, <span class="comment">// 检测到手势是否有反馈</span></span><br><span class="line">    <span class="keyword">this</span>.excludeFromSemantics = <span class="keyword">false</span>,</span><br><span class="line">  &#125;) </span><br></pre></td></tr></table></figure>
+
+<p>所以一些简单的触摸事件直接通过 <code>InkWell</code> 或者 <code>InkResponse</code> 就能够实现，但是面临一些比较复杂的手势，就有点不太够用了，我们需要通过 <code>GestureDector</code> 来进行处理</p>
+<h4 id="GestureDector"><a href="#GestureDector" class="headerlink" title="GestureDector"></a>GestureDector</h4><p><code>GestureDetector</code> 也是一个部件，主要实现对各种手势动作的监听，其监听事件查看下面的表格</p>
+<table>
+<thead>
+<tr>
+<th align="left">回调方法</th>
+<th>回调描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>onTapDown</code></td>
+<td>点击屏幕的手势触碰到屏幕时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onTapUp</code></td>
+<td>点击屏幕抬手后触发，点击结束</td>
+</tr>
+<tr>
+<td align="left"><code>onTap</code></td>
+<td>点击事件已经完成的时候触发，和 <code>onTapUp</code> 几乎同时</td>
+</tr>
+<tr>
+<td align="left"><code>onTapCancel</code></td>
+<td>点击未完成，被其它手势取代的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onDoubleTap</code></td>
+<td>双击屏幕的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onLongPress</code></td>
+<td>长按屏幕的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onLongPressUp</code></td>
+<td>长按屏幕后抬手触发</td>
+</tr>
+<tr>
+<td align="left"><code>onVerticalDragDown</code></td>
+<td>触碰到屏幕，可能发生垂直方向移动触发，<code>onVerticalDrag</code> 系列事件不会同 <code>onHorizontalDrag</code> 系列事件同时发生 ，如果发生了 <code>onVerticalDrag</code> 则接下来如何变化移动，都不会触发 <code>onHorizontalDrag</code> 事件，除非取消后重新触发。判断两者的关键是准备滑动的意图，先发生横向滑动则触发 <code>onHorizontalDrag</code> 事件，否则 <code>onVerticalDrag</code> 事件。</td>
+</tr>
+<tr>
+<td align="left"><code>onVerticalDragStart</code></td>
+<td>触碰到屏幕，并开始发生垂直方向的移动触发</td>
+</tr>
+<tr>
+<td align="left"><code>onVerticalDragUpdate</code></td>
+<td>垂直方向移动的距离变化触发</td>
+</tr>
+<tr>
+<td align="left"><code>onVerticalDragEnd</code></td>
+<td>抬手取消垂直方向移动的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onVerticalDragCancel</code></td>
+<td>触发 <code>onVerticalDragDown</code> 但是没有完成整个 <code>onVerticalDrag</code> 事件触发</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td><code>onHorizontalDrag</code> 系列介绍省略同上…</td>
+</tr>
+<tr>
+<td align="left"><code>onPanDown</code></td>
+<td>触碰到屏幕，准备滑动的时候触发，<code>onPan</code> 系列回调不可和 <code>onVerticalDrag</code> 或者 <code>onHorizontalDrag</code> 系列回调同时设置</td>
+</tr>
+<tr>
+<td align="left"><code>onPanStart</code></td>
+<td>触碰到屏幕，并开始滑动时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onPanUpdate</code></td>
+<td>滑动位置发生改变的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onPanEnd</code></td>
+<td>滑动完成并抬手的时候触发</td>
+</tr>
+<tr>
+<td align="left"><code>onPanCancel</code></td>
+<td>触发 <code>onPanDown</code> 但是没有完成整个 <code>onPan</code> 事件触发</td>
+</tr>
+<tr>
+<td align="left"><code>onScaleStart</code></td>
+<td>两个手指之间建立联络点触发，初始缩放比例为 1.0</td>
+</tr>
+<tr>
+<td align="left"><code>onScaleUpdate</code></td>
+<td>手指距离发生变化，缩放比例也跟随变化触发</td>
+</tr>
+<tr>
+<td align="left"><code>onScaleEnd</code></td>
+<td>手指抬起，至间的联络断开时候触发</td>
+</tr>
+</tbody></table>
+<p>还有 <code>onForcePress</code> 系列事件，这个是根据对屏幕的挤压力度进行触发，需要达到某些定值才能触发。<code>GestureDetector</code> 有个 <code>behavior</code> 属性用于设置手势监听过程中的表现形式</p>
+<ol>
+<li><code>deferToChild</code> 默认值，触摸到 <code>child</code> 的范围才会触发手势，空白处不会触发</li>
+<li><code>opaque</code> 不透明模式，防止 <code>background widget</code> 接收到手势</li>
+<li><code>translucent</code> 半透明模式，刚好同 <code>opaque</code> 相反，允许 <code>background widget</code> 接收到手势</li>
+</ol>
+<p>介绍完了手势，那就可以实际操练起来了，比如，实现一个跟随手指运动的小方块，先看下效果图</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-fad16bdf993f54d8.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>简单的分析下，通过 <code>Positioned</code> 来设置小方块的位置，根据 <code>GestureDetector</code> 的 <code>onPanUpdate</code> 修改 <code>Positioned</code> 的 <code>left</code> 和 <code>top</code> 值，当 <code>onPanEnd</code> 或者 <code>onPanCancel</code> 的时候设置为原点，那么就可以有如图的效果了</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">GestureDemoPage</span> <span class="keyword">extends</span> <span class="title">StatefulWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  _GestureDemoPageState createState() =&gt; _GestureDemoPageState();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_GestureDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">GestureDemoPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="built_in">double</span> left = <span class="number">0.0</span>;</span><br><span class="line">  <span class="built_in">double</span> top = <span class="number">0.0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">        appBar: AppBar(</span><br><span class="line">          title: Text(<span class="string">&#x27;Gesture Demo&#x27;</span>),</span><br><span class="line">        ),</span><br><span class="line">        body: Stack(</span><br><span class="line">          alignment: Alignment.center,</span><br><span class="line">          children: &lt;Widget&gt;[</span><br><span class="line">            Positioned(child: Container(width: <span class="number">50.0</span>, height: <span class="number">50.0</span>, color: Colors.red), left: left, top: top),</span><br><span class="line">            GestureDetector(</span><br><span class="line">              behavior: HitTestBehavior.translucent,</span><br><span class="line">              child: Container(</span><br><span class="line">                  color: Colors.transparent,</span><br><span class="line">                  width: MediaQuery.of(context).size.width - <span class="number">10</span>,</span><br><span class="line">                  height: MediaQuery.of(context).size.height),</span><br><span class="line">              onPanDown: (details) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  left = details.globalPosition.dx;</span><br><span class="line">                  top = details.globalPosition.dy;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">              onPanUpdate: (details) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  left = details.globalPosition.dx;</span><br><span class="line">                  top = details.globalPosition.dy;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">              onPanCancel: () &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  left = <span class="number">0.0</span>;</span><br><span class="line">                  top = <span class="number">0.0</span>;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">              onPanEnd: (details) &#123;</span><br><span class="line">                setState(() &#123;</span><br><span class="line">                  left = <span class="number">0.0</span>;</span><br><span class="line">                  top = <span class="number">0.0</span>;</span><br><span class="line">                &#125;);</span><br><span class="line">              &#125;,</span><br><span class="line">            )</span><br><span class="line">          ],</span><br><span class="line">        ));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果说要实现一个放大缩小的方块，就可以通过 <code>onScaleUpdate</code> 中获取到的 <code>details.scale</code> 来设置方块的宽高即可。这个比较简单就留给小伙伴们自己实现效果了。</p>
+<p><em>该部分代码查看 <code>gesture_main.dart</code> 文件</em></p>
+<h4 id="Animation-动画"><a href="#Animation-动画" class="headerlink" title="Animation 动画"></a>Animation 动画</h4><p><code>Flutter</code> 的 <code>Animation</code> 是个抽象类，具体的实现需要看其子类 <code>AnimationController</code>，在这之前，先了解下 <code>Animation</code> 的一些方法和介绍。</p>
+<ol>
+<li><p><code>addListener</code> / <code>removeListener</code> 添加的监听用于监听值的变化，<code>remove</code> 用于停止监听</p>
+</li>
+<li><p><code>addStatusListener</code> / <code>removeStatusListener</code> 添加动画状态变化的监听，<code>remove</code> 停止监听，<code>Animation</code> 的状态有 4 种：<code>dismissed</code> 动画初始状态，反向运动结束状态，<code>forward</code> 动画正向运动状态，<code>reverse</code> 动画反向运动状态，<code>completed</code> 动画正向运动结束状态。</p>
+</li>
+<li><p><code>drive</code> 方法用于连接动画，例如官方举的例子，因为 <code>AnimationController</code> 是其子类，所以也拥有该方法</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Animation&lt;Alignment&gt; _alignment1 = _controller.drive(</span><br><span class="line">     AlignmentTween(</span><br><span class="line">       begin: Alignment.topLeft,</span><br><span class="line">       end: Alignment.topRight,</span><br><span class="line">     ),</span><br><span class="line">   );</span><br></pre></td></tr></table></figure>
+
+<p>上面的例子将 <code>AnimationController</code> 和 <code>AlignmentTween</code> 结合成一个 <code>Animation&lt;Alignment&gt;</code> 动画，当然 <code>drive</code> 可以结合多个动画，例如</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Animation&lt;Alignment&gt; _alignment3 = _controller</span><br><span class="line">       .drive(CurveTween(curve: Curves.easeIn))</span><br><span class="line">       .drive(AlignmentTween(</span><br><span class="line">         begin: Alignment.topLeft,</span><br><span class="line">         end: Alignment.topRight,</span><br><span class="line">       ));</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>因为 <code>Animation</code> 是抽象类，所以具体的还是需要通过 <code>AnimationController</code> 来实现。</p>
+<h4 id="AnimationController"><a href="#AnimationController" class="headerlink" title="AnimationController"></a>AnimationController</h4><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">AnimationController(&#123;</span><br><span class="line">    <span class="built_in">double</span> value, <span class="comment">// 设置初始的值</span></span><br><span class="line">    <span class="keyword">this</span>.duration, <span class="comment">// 动画的时长</span></span><br><span class="line">    <span class="keyword">this</span>.debugLabel, <span class="comment">// 主要是用于 `toString` 方法中输出信息</span></span><br><span class="line">    <span class="keyword">this</span>.lowerBound = <span class="number">0.0</span>, <span class="comment">// 最小范围</span></span><br><span class="line">    <span class="keyword">this</span>.upperBound = <span class="number">1.0</span>, <span class="comment">// 最大范围</span></span><br><span class="line">    <span class="comment">// AnimationController 结束时候的行为，有 `normal` 和 `preserve` 两个值可选</span></span><br><span class="line">    <span class="keyword">this</span>.animationBehavior = AnimationBehavior.normal, </span><br><span class="line">    <span class="comment">// 这个属性可以通过 with `SingleTickerProviderStateMixin` </span></span><br><span class="line">    <span class="comment">// 或者 `TickerProviderStateMixin` 引入到 `State`，通过 `this` 指定</span></span><br><span class="line">    <span class="meta">@required</span> TickerProvider vsync,</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p><code>AnimationController</code> 控制动画的方法有这么几个</p>
+<ol>
+<li><code>forward</code> 启动动画，和上面提到的 <code>forward</code> 状态不一样</li>
+<li><code>reverse</code> 方向启动动画</li>
+<li><code>repeat</code> 重复使动画运行</li>
+<li><code>stop</code> 停止动画</li>
+<li><code>reset</code> 重置动画</li>
+</ol>
+<p>大概了解了 <code>AnimationController</code> ，接下来通过一个实际的小例子来加深下印象，例如实现如下效果，点击开始动画，结束后再点击反向动画</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-0f55a9d8215eb84c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_AnimationDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">AnimationDemoPage</span>&gt; <span class="title">with</span> <span class="title">TickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  AnimationController _animationController;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _animationController = AnimationController(</span><br><span class="line">        vsync: <span class="keyword">this</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">1000</span>), lowerBound: <span class="number">28.0</span>, upperBound: <span class="number">50.0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当动画值发生变化的时候，重绘下 icon</span></span><br><span class="line">    _animationController.addListener(() &#123;</span><br><span class="line">      setState(() &#123;&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="comment">// 一定要释放资源</span></span><br><span class="line">    _animationController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Animation Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">        child: IconButton(</span><br><span class="line">            icon: Icon(Icons.android, color: Colors.green[<span class="number">500</span>], size: _animationController.value),</span><br><span class="line">            onPressed: () &#123;</span><br><span class="line">              <span class="comment">// 根据状态执行不同动画运动方式</span></span><br><span class="line">              <span class="keyword">if</span> (_animationController.status == AnimationStatus.completed)</span><br><span class="line">                _animationController.reverse();</span><br><span class="line">              <span class="keyword">else</span> <span class="keyword">if</span> (_animationController.status == AnimationStatus.dismissed)</span><br><span class="line">                _animationController.forward();</span><br><span class="line">            &#125;),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么如果要实现无限动画呢，那就可以通过 <code>addStatusListener</code> 监听动画的状态来执行，修改代码，在 <code>initState</code> 增加如下代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">_animationController.addStatusListener((status) &#123;</span><br><span class="line">      <span class="keyword">if</span> (_animationController.status == AnimationStatus.completed)</span><br><span class="line">        _animationController.reverse();  <span class="comment">// 正向结束后开始反向</span></span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (_animationController.status == AnimationStatus.dismissed) </span><br><span class="line">        _animationController.forward(); <span class="comment">// 反向结束后开始正向</span></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    _animationController.forward(); <span class="comment">// 启动动画</span></span><br></pre></td></tr></table></figure>
+
+<p>把 <code>Center</code> 的 <code>child</code> 替换成一个 <code>Icon</code>，因为上面已经启动了动画，所以不需要再用点击去启动了，运行后就会无限放大缩小循环跑了。</p>
+<p>在这个例子中，通过设置 <code>AnimationController</code> 的 <code>lowerBound</code> 和 <code>upperBound</code> 实现了动画的变化范围，接下来，将通过 <code>Tween</code> 来实现动画的变化范围。先看下 <code>Tween</code> 的一些介绍。</p>
+<h4 id="Tween"><a href="#Tween" class="headerlink" title="Tween"></a>Tween</h4><blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">A linear interpolation between a beginning and ending value.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[Tween] is useful if you want to interpolate across a range.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">To use a [Tween] object with an animation, call the [Tween] object&#x27;s</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">[animate] method and pass it the [Animation] object that you want to</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">modify.</span></span></span><br><span class="line"><span class="comment">///</span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">You can chain [Tween] objects together using the [chain] method, so that a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">single [Animation] object is configured by multiple [Tween] objects called</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">in succession. This is different than calling the [animate] method twice,</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">which results in two separate [Animation] objects, each configured with a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">single [Tween].</span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><code>Tween</code> 是一个线性插值(如果要修改运动的插值，可以通过 <code>CurveTween</code> 来修改)，所以在线性变化的时候很有用</p>
+<p>通过调用 <code>Tween</code> 的 <code>animate</code> 方法生成一个 <code>Animation</code>(<code>animate</code> 一般传入 <code>AnimationController</code>)</p>
+<p>还可以通过 <code>chain</code> 方法将多个 <code>Tween</code> 结合到一起，这样就不需要多次去调用 <code>Tween</code> 的 <code>animate</code> 方法来生成动画了，多次调用 <code>animate</code> 相当于使用了两个分开的动画来完成效果，但是 <code>chain</code> 结合到一起就是一个动画过程</p>
+<p>那么对前面的动画进行一些修改，通过 <code>Tween</code> 来控制值的变化</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_AnimationDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">AnimationDemoPage</span>&gt; <span class="title">with</span> <span class="title">TickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  AnimationController _animationController;</span><br><span class="line">  Animation _scaleAnimation; <span class="comment">// 动画实例，用于修改值的大小</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _animationController = AnimationController(vsync: <span class="keyword">this</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">1000</span>)); <span class="comment">// 不通过 `lowerBound` 和 `upperBound` 设置范围，改用 `Tween`</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当动画值发生变化的时候，重绘下 icon</span></span><br><span class="line">    _animationController.addListener(() &#123;</span><br><span class="line">      setState(() &#123;&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    _animationController.addStatusListener((status) &#123;</span><br><span class="line">      <span class="keyword">if</span> (_animationController.status == AnimationStatus.completed)</span><br><span class="line">        _animationController.reverse();</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (_animationController.status == AnimationStatus.dismissed)</span><br><span class="line">        _animationController.forward();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过 `Tween` 的 `animate` 生成一个 Animation</span></span><br><span class="line">    <span class="comment">// 再通过  Animation.value 进行值的修改</span></span><br><span class="line">    _scaleAnimation = Tween(begin: <span class="number">28.0</span>, end: <span class="number">50.0</span>).animate(_animationController);</span><br><span class="line">    _animationController.forward();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="comment">// 一定要释放资源</span></span><br><span class="line">    _animationController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Animation Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Center(</span><br><span class="line">        <span class="comment">// 通过动画返回的值，修改图标的大小</span></span><br><span class="line">        child: Icon(Icons.favorite, color: Colors.red, size: _scaleAnimation.value),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次运行，还是能过达到之前的效果，那么很多小伙伴肯定会问了，「**，加了那么多代码，效果还是和以前的一样，还不如不加…」好吧，我无法反驳，但是如果要实现多个动画呢，那么使用 <code>Tween</code> 就有优势了，比如我们让图标大小变化的同时，颜色和位置也发生变化，只通过 <code>AnimationController</code> 要怎么实现? 又比如说，运动的方式要先加速后减速，那只通过 <code>AnimationController</code> 要如何实现？这些问题通过 <code>Tween</code> 就会非常方便解决，直接上代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_AnimationDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">AnimationDemoPage</span>&gt; <span class="title">with</span> <span class="title">TickerProviderStateMixin</span> </span>&#123;</span><br><span class="line">  AnimationController _animationController;</span><br><span class="line">  Animation _scaleAnimation; <span class="comment">// 用于控制图标大小</span></span><br><span class="line">  Animation&lt;Color&gt; _colorAnimation; <span class="comment">// 控制图标颜色</span></span><br><span class="line">  Animation&lt;Offset&gt; _positionAnimation; <span class="comment">// 控制图标位置</span></span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">    _animationController = AnimationController(vsync: <span class="keyword">this</span>, duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">2000</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 当动画值发生变化的时候，重绘下 icon</span></span><br><span class="line">    _animationController.addListener(() &#123;</span><br><span class="line">      setState(() &#123;&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    _animationController.addStatusListener((status) &#123;</span><br><span class="line">      <span class="keyword">if</span> (_animationController.status == AnimationStatus.completed)</span><br><span class="line">        _animationController.reverse();</span><br><span class="line">      <span class="keyword">else</span> <span class="keyword">if</span> (_animationController.status == AnimationStatus.dismissed) _animationController.forward();</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="comment">// 通过 `chain` 结合 `CurveTween` 修改动画的运动方式，曲线类型可自行替换</span></span><br><span class="line">    _scaleAnimation =</span><br><span class="line">        Tween(begin: <span class="number">28.0</span>, end: <span class="number">50.0</span>).chain(CurveTween(curve: Curves.decelerate)).animate(_animationController);</span><br><span class="line"></span><br><span class="line">    _colorAnimation = ColorTween(begin: Colors.red[<span class="number">200</span>], end: Colors.red[<span class="number">900</span>])</span><br><span class="line">        .chain(CurveTween(curve: Curves.easeIn))</span><br><span class="line">        .animate(_animationController);</span><br><span class="line"></span><br><span class="line">    _positionAnimation = Tween(begin: Offset(<span class="number">100</span>, <span class="number">100</span>), end: Offset(<span class="number">300</span>, <span class="number">300</span>))</span><br><span class="line">        .chain(CurveTween(curve: Curves.bounceInOut))</span><br><span class="line">        .animate(_animationController);</span><br><span class="line"></span><br><span class="line">    _animationController.forward(); <span class="comment">// 启动动画</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    _animationController.dispose();</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Animation Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Stack(</span><br><span class="line">        children: &lt;Widget&gt;[</span><br><span class="line">          Positioned(</span><br><span class="line">            child: Icon(Icons.favorite, color: _colorAnimation.value, size: _scaleAnimation.value),</span><br><span class="line">            left: _positionAnimation.value.dx,</span><br><span class="line">            top: _positionAnimation.value.dy,</span><br><span class="line">          )</span><br><span class="line">        ],</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么最后的效果图</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-977e7de1b224aa58.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>当然，<code>Flutter</code> 中已经实现的 <code>Tween</code> 还有很多，包括 <code>BorderTween</code>、<code>TextStyleTween</code>、<code>ThemeDataTween</code> ..等等，实现的方式都是类似的，小伙伴们可以自己慢慢看。</p>
+<h4 id="AnimationWidget"><a href="#AnimationWidget" class="headerlink" title="AnimationWidget"></a>AnimationWidget</h4><p>在上面的例子中，都是通过 <code>addListener</code> 监听动画值变化，然后通过 <code>setState</code> 方法来实现刷新效果。那么 <code>Flutter</code> 也提供了一个部件 <code>AnimationWidget</code> 来实现动画部件，就不需要一直监听了，还是实现上面的例子</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RunningHeart</span> <span class="keyword">extends</span> <span class="title">AnimatedWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">List</span>&lt;Animation&gt; animations; <span class="comment">// 传入动画列表</span></span><br><span class="line">  <span class="keyword">final</span> AnimationController animationController; <span class="comment">// 控制动画</span></span><br><span class="line"></span><br><span class="line">  RunningHeart(&#123;<span class="keyword">this</span>.animations, <span class="keyword">this</span>.animationController&#125;)</span><br><span class="line">      <span class="comment">// 对传入的参数进行限制(当然你也可以不做限制)</span></span><br><span class="line">      : <span class="keyword">assert</span>(animations.length == <span class="number">3</span>),</span><br><span class="line">        <span class="keyword">assert</span>(animations[<span class="number">0</span>] <span class="keyword">is</span> Animation&lt;Color&gt;),</span><br><span class="line">        <span class="keyword">assert</span>(animations[<span class="number">1</span>] <span class="keyword">is</span> Animation&lt;<span class="built_in">double</span>&gt;),</span><br><span class="line">        <span class="keyword">assert</span>(animations[<span class="number">2</span>] <span class="keyword">is</span> Animation&lt;Offset&gt;),</span><br><span class="line">        <span class="keyword">super</span>(listenable: animationController);</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Stack(</span><br><span class="line">      children: &lt;Widget&gt;[</span><br><span class="line">        Positioned(</span><br><span class="line">          <span class="comment">// 之前的 animation 都通过 animations 参数传入到 `AnimationWidget`</span></span><br><span class="line">          child: Icon(Icons.favorite, color: animations[<span class="number">0</span>].value, size: animations[<span class="number">1</span>].value),</span><br><span class="line">          left: animations[<span class="number">2</span>].value.dx,</span><br><span class="line">          top: animations[<span class="number">2</span>].value.dy,</span><br><span class="line">        )</span><br><span class="line">      ],</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其实内部返回的部件和前面的是一样的</p>
+<p>接着对 <code>_AnimationDemoPageState</code> 类进行修改，注释 <code>initState</code> 中的 <code>_animationController.addListener</code> 所有内容，然后将 <code>body</code> 属性替换成新建的 <code>RunningHeart</code> 部件，记得传入的动画列表的顺序</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">body: RunningHeart(</span><br><span class="line">        animations: [_colorAnimation, _scaleAnimation, _positionAnimation],</span><br><span class="line">        animationController: _animationController,</span><br><span class="line">      )</span><br></pre></td></tr></table></figure>
+
+<p>这样就实现了刚才一样的效果，并且没有一直调用 <code>setState</code> 来刷新。</p>
+<p><em>该部分代码查看 <code>animation_main.dart</code> 文件</em></p>
+<h4 id="StaggeredAnimations"><a href="#StaggeredAnimations" class="headerlink" title="StaggeredAnimations"></a>StaggeredAnimations</h4><p><code>Flutter</code> 还提供了交错动画，听名字就可以知道，是按照时间轴，进行不同的动画，并且由同个<code>AnimationController</code> 进行控制。因为没有找到好的例子，原谅我直接搬官方的例子来讲，<a target="_blank" rel="noopener" href="https://flutterchina.club/animations/staggered-animations/#complete-staggered-animation">官方交错动画 demo</a></p>
+<p>在继续看之前，先了解下 <code>Interval</code></p>
+<blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">An [Interval] can be used to delay an animation. For example, a six second</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">animation that uses an [Interval] with its [begin] set to 0.5 and its [end]</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">set to 1.0 will essentially become a three-second animation that starts</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">three seconds later.</span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><code>Interval</code> 用来延迟动画，例如一个时长 6s 的动画，通过 <code>Interval</code> 设置其 <code>begin</code> 参数为 0.5，<code>end</code> 参数设置为 1.0，那么这个动画就会变成 3s 的动画，并且开始的时间延迟了 3s。</p>
+<p>了解 <code>Interval</code> 功能后，就可以看下实例了，当然我们不和官方的 demo 一样，中间加个旋转动画</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">StaggeredAnim</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> AnimationController controller;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;<span class="built_in">double</span>&gt; opacity;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;<span class="built_in">double</span>&gt; width;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;<span class="built_in">double</span>&gt; height;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;EdgeInsets&gt; padding;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;BorderRadius&gt; border;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;Color&gt; color;</span><br><span class="line">  <span class="keyword">final</span> Animation&lt;<span class="built_in">double</span>&gt; rotate;</span><br><span class="line"></span><br><span class="line">  StaggeredAnim(&#123;Key key, <span class="keyword">this</span>.controller&#125;):</span><br><span class="line">        <span class="comment">// widget 透明度</span></span><br><span class="line">        opacity = Tween(begin: <span class="number">0.0</span>, end: <span class="number">1.0</span>)</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.0</span>, <span class="number">0.1</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 宽</span></span><br><span class="line">        width = Tween(begin: <span class="number">50.0</span>, end: <span class="number">150.0</span>)</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.1</span>, <span class="number">0.250</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 高</span></span><br><span class="line">        height = Tween(begin: <span class="number">50.0</span>, end: <span class="number">150.0</span>)</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.25</span>, <span class="number">0.375</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 底部距离</span></span><br><span class="line">        padding = EdgeInsetsTween(begin: <span class="keyword">const</span> EdgeInsets.only(top: <span class="number">150.0</span>), end: <span class="keyword">const</span> EdgeInsets.only(top: <span class="number">.0</span>))</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.25</span>, <span class="number">0.375</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 旋转</span></span><br><span class="line">        rotate = Tween(begin: <span class="number">0.0</span>, end: <span class="number">0.25</span>)</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.375</span>, <span class="number">0.5</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 外形</span></span><br><span class="line">        border = BorderRadiusTween(begin: BorderRadius.circular(<span class="number">5.0</span>), end: BorderRadius.circular(<span class="number">75.0</span>))</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.5</span>, <span class="number">0.75</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="comment">// widget 颜色</span></span><br><span class="line">        color = ColorTween(begin: Colors.blue, end: Colors.orange)</span><br><span class="line">            .animate(CurvedAnimation(parent: controller, curve: Interval(<span class="number">0.75</span>, <span class="number">1.0</span>, curve: Curves.ease))),</span><br><span class="line">        <span class="keyword">super</span>(key: key);</span><br><span class="line"></span><br><span class="line">  Widget _buildAnimWidget(BuildContext context, Widget child) &#123;</span><br><span class="line">    <span class="keyword">return</span> Container(</span><br><span class="line">      padding: padding.value,</span><br><span class="line">      alignment: Alignment.center,</span><br><span class="line">      <span class="comment">// 旋转变化</span></span><br><span class="line">      child: RotationTransition(</span><br><span class="line">        turns: rotate, <span class="comment">// turns 表示当前动画的值 * 360° 角度</span></span><br><span class="line">        child: Opacity(</span><br><span class="line">          opacity: opacity.value, <span class="comment">// 透明度变化</span></span><br><span class="line">          child: Container(</span><br><span class="line">            width: width.value, <span class="comment">// 宽度变化</span></span><br><span class="line">            height: height.value, <span class="comment">// 高度变化</span></span><br><span class="line">            decoration: BoxDecoration(</span><br><span class="line">                color: color.value, <span class="comment">// 颜色变化</span></span><br><span class="line">                border: Border.all(color: Colors.indigo[<span class="number">300</span>], width: <span class="number">3.0</span>),</span><br><span class="line">                borderRadius: border.value), <span class="comment">// 外形变化</span></span><br><span class="line">          ),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="comment">// AnimatedBuilder 继承 AnimationWidget，用来快速构建动画部件</span></span><br><span class="line">    <span class="keyword">return</span> AnimatedBuilder(animation: controller, builder: _buildAnimWidget);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后修改 <code>body</code> 的参数，设置成我们的动画，当点击的时候就会启动动画</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">GestureDetector(</span><br><span class="line">       behavior: HitTestBehavior.opaque,</span><br><span class="line">       onTap: _playAnim,</span><br><span class="line">       child: Center(</span><br><span class="line">         <span class="comment">// 定义一个外层圈，能够使动画显眼点</span></span><br><span class="line">         child: Container(</span><br><span class="line">           width: <span class="number">300</span>,</span><br><span class="line">           height: <span class="number">300</span>,</span><br><span class="line">           decoration: BoxDecoration(</span><br><span class="line">               color: Colors.black.withOpacity(<span class="number">0.1</span>), border: Border.all(color: Colors.black.withOpacity(<span class="number">0.5</span>))),</span><br><span class="line">           child: StaggeredAnim(controller: _controller),</span><br><span class="line">         ),</span><br><span class="line">       ),</span><br><span class="line">     )</span><br></pre></td></tr></table></figure>
+
+<p>看下最后的效果吧</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-329d48585eee04b4.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p><em>该部分代码查看 <code>staggered_animation_main.dart</code> 文件</em></p>
+<p>结束前，我们再讲一种比较简单的 <code>Hreo</code> 动画，用来过渡用。</p>
+<h4 id="Hero"><a href="#Hero" class="headerlink" title="Hero"></a>Hero</h4><p>通过指定 <code>Hero</code> 中的 <code>tag</code>，在切换的时候 <code>Hero</code> 会寻找相同的 <code>tag</code>，并实现动画，具体的实现逻辑，这里可以推荐一篇文章 <a target="_blank" rel="noopener" href="https://blog.csdn.net/yumi0629/article/details/83176911">谈一谈Flutter中的共享元素动画Hero</a>，里面写的很详细，就不造车轮了。当然这边还是得提供个简单的 demo 的，替换前面的 <code>body</code> 参数</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">body: Container(</span><br><span class="line">        alignment: Alignment.center,</span><br><span class="line">        child: InkWell(</span><br><span class="line">          child: Hero(</span><br><span class="line">            tag: <span class="string">&#x27;hero_tag&#x27;</span>, <span class="comment">// 这里指定 tag</span></span><br><span class="line">            child: Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>, width: <span class="number">100.0</span>, height: <span class="number">100.0</span>),</span><br><span class="line">          ),</span><br><span class="line">          onTap: () =&gt; Navigator.push(context, MaterialPageRoute(builder: (_) =&gt; HeroPage())),</span><br><span class="line">        ),</span><br><span class="line">      )</span><br></pre></td></tr></table></figure>
+
+<p>然后创建 <code>HeroPage</code> 界面，当然也可以是个 <code>Dialog</code>，只要通过路由实现即可</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HeroPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      body: Container(</span><br><span class="line">        alignment: Alignment.center,</span><br><span class="line">        child: InkWell(</span><br><span class="line">          child: Hero(tag: <span class="string">&#x27;hero_tag&#x27;</span>, child: Image.asset(<span class="string">&#x27;images/ali.jpg&#x27;</span>, width: <span class="number">200.0</span>, height: <span class="number">200.0</span>)),</span><br><span class="line">          onTap: () =&gt; Navigator.pop(context),</span><br><span class="line">        ),</span><br><span class="line">      ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看下最后的效果图：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-b20a401615f8acde.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p><em>该部分代码查看 <code>animation_main.dart</code> 文件</em></p>
+<p>这一部分讲的比较多，小伙伴可以慢慢消化，下节我会尽量填下之前留下的状态管理的坑。</p>
+<p>最后代码的地址还是要的：</p>
+<ol>
+<li><p>文章中涉及的代码：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_arts_demos_app">demos</a></p>
+</li>
+<li><p>基于郭神 <code>cool weather</code> 接口的一个项目，实现 <code>BLoC</code> 模式，实现状态管理：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_weather">flutter_weather</a></p>
+</li>
+<li><p>一个课程(当时买了想看下代码规范的，代码更新会比较慢，虽然是跟着课上的一些写代码，但是还是做了自己的修改，很多地方看着不舒服，然后就改成自己的实现方式了)：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_shop">flutter_shop</a></p>
+</li>
+</ol>
+<p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/28/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-10/" data-id="cl0ufhd0h0010wx1g2046ejio" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/31/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-11/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(11) -- 如何实现状态管理，BLoC 一展身手
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flutter Guide(09) -- 了解 Flutter 的友好提示</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

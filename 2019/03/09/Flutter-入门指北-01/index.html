@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(01) -- Start With Dart | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近 Flutter 真心火爆到不要不要的，随大流，学一波，在这之前，对于语言的语法还是需要有些必要的了解的，Dart 这门语言，说实话对于会 Java 这类面向对象的语言的小伙伴们来说，真的灰常灰常简单，这边我总结了一些 Dart 和 Java 的一些语法差异，当然，只是部分，但是，按照我目前的学习进度来说，了解了这些对于写 Flutter 项目绝对够了。小伙伴也可以自己查看，我这边提供一个自己">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(01) -- Start With Dart">
+<meta property="og:url" content="http://example.com/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近 Flutter 真心火爆到不要不要的，随大流，学一波，在这之前，对于语言的语法还是需要有些必要的了解的，Dart 这门语言，说实话对于会 Java 这类面向对象的语言的小伙伴们来说，真的灰常灰常简单，这边我总结了一些 Dart 和 Java 的一些语法差异，当然，只是部分，但是，按照我目前的学习进度来说，了解了这些对于写 Flutter 项目绝对够了。小伙伴也可以自己查看，我这边提供一个自己">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-03-08T16:06:22.000Z">
+<meta property="article:modified_time" content="2019-08-27T01:53:44.793Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta property="article:tag" content="Dart">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-01" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/" class="article-date">
+  <time datetime="2019-03-08T16:06:22.000Z" itemprop="datePublished">2019-03-09</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(01) -- Start With Dart
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近 <code>Flutter</code> 真心火爆到不要不要的，随大流，学一波，在这之前，对于语言的语法还是需要有些必要的了解的，<code>Dart</code> 这门语言，说实话对于会 <code>Java</code> 这类面向对象的语言的小伙伴们来说，真的灰常灰常简单，这边我总结了一些 <code>Dart</code> 和 <code>Java</code> 的一些语法差异，当然，只是部分，但是，按照我目前的学习进度来说，了解了这些对于写 <code>Flutter</code> 项目绝对够了。小伙伴也可以自己查看，我这边提供一个自己学习的网址 <a target="_blank" rel="noopener" href="http://dart.goodev.org/guides/language">Dart 快速入门</a></p>
+<p>温馨提示：本篇文章<strong>没有图，没有图，没有图</strong>，可能会造成部分不适，<strong>请注意，请注意，请注意</strong>，系好安全带，我们要「开车了」……</p>
+<h5 id="1-Variables"><a href="#1-Variables" class="headerlink" title="1. Variables"></a>1. Variables</h5><p><code>Dart</code> 变量类型可以通过具体的赋值进行推导，例如：<code>var name = &#39;kuky&#39;</code> 则定义了一个 <code>String</code> 类型对象 <code>name</code>，也可以通过指定具体的类型 <code>String name = &#39;kuky&#39;</code>，如果没有初始化变量，则默认值为 null，类型为数字的变量默认值同为 <code>null</code>（**同 <code>java</code> 不同，<code>java</code> 中 <code>int</code> 默认为 0.**）如果需要定义常量，可以通过 <code>final</code> 和 <code>const</code> 进行定义，<code>final</code> 变量只能赋值一次，<code>const</code> 是编译时常量。</p>
+<h5 id="2-Build-in-types"><a href="#2-Build-in-types" class="headerlink" title="2. Build-in-types"></a>2. Build-in-types</h5><p><code>Dart</code> 内置类型包括 ：</p>
+<ul>
+<li><p><code>Numbers </code>    包括 <code>int</code>[-2^53 ~ 2^53]， <code>double</code>[64-bit 浮点数]</p>
+</li>
+<li><p><code>Strings</code>    <code>Dart</code> 字符串是 <code>UTF-16</code> 编码的字符序列， 可以使用单引号或者双引号来创建字符串。</p>
+<ol>
+<li>通过 <code>==</code> 判断两个字符串是否相同</li>
+<li>通过三对单引号<code>&#39;&#39;&#39;aaa&#39;&#39;&#39;</code>或者双引号<code>&quot;&quot;&quot;aaa&quot;&quot;&quot;</code>可以创建多行字符串对象</li>
+<li>使用前缀 <code>r</code> 创建 <code>raw string</code>，字符串内不会进行转义，例如：<code>var a = r&#39;haha \n breakLine&#39;</code> 打印 <code>a</code> 对象则会按照输入的输出，不会进行换行</li>
+</ol>
+</li>
+<li><p><code>Booleans</code>    <code>Dart</code> 中，只有 <code>true</code> 对象才被认为是 <code>true</code>， 所有其他的值都是 <code>false</code></p>
+</li>
+<li><p><code>Lists</code>    列表，例如：<code>var list = [1, 2, 3, 4]</code></p>
+<pre><code>通过 `const` 关键词可以定义一个不可变列表 `var list = const [1, 2, 3, 4]`
+
+  参数化定义`var name = &lt;String&gt;[&#39;Jone&#39;, &#39;Jack&#39;]`
+</code></pre>
+</li>
+<li><p><code>Maps</code>    键值对，例如：<code>var map = &#123;&#39;one&#39;: 1, &#39;two&#39;: 2&#125;</code></p>
+<pre><code>如果键值对需要添加新的键值对，直接指定即可，`map[&#39;three&#39;] = 3`，若查找的键不存在，返回 `null`
+
+  参数化定义 `var map = &lt;String, int&gt;&#123;&#39;one&#39;: 1, &#39;two&#39;: 2&#125;`
+</code></pre>
+</li>
+<li><p><code>Runes</code>    代表字符串的 <code>UTF-32 code points</code>，通常使用 <code>\uXXXX</code> 的方式来表示 Unicode code point， XXXX 是4个 16 进制的数，例如 <code>\u2665</code> 返回心形符号 (♥)</p>
+</li>
+<li><p><code>Symbols</code>    代表 Dart 程序中声明的操作符或者标识符，几乎不使用</p>
+</li>
+</ul>
+<h5 id="3-Function"><a href="#3-Function" class="headerlink" title="3. Function"></a>3. Function</h5><p>函数方法的可选参数通过在参数列表中用 {} 指定，例如：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> say(<span class="built_in">String</span> name, &#123;<span class="built_in">String</span> word = <span class="string">&#x27;hello&#x27;</span>&#125;)&#123;</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;<span class="subst">$name</span> say <span class="subst">$word</span>&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过（可选参数名 + :）进行可选参数的赋值</span></span><br><span class="line">main()&#123;</span><br><span class="line">    say(<span class="string">&#x27;kuky&#x27;</span>, word: <span class="string">&#x27;Hello World&#x27;</span>); <span class="comment">// kuky say Hello World</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>word 参数为可选参数，默认值为 hello</p>
+<h5 id="4-Operators"><a href="#4-Operators" class="headerlink" title="4. Operators"></a>4. Operators</h5><p>操作符几乎和别的语言类似，提个比较特殊的赋值操作符 <code>??=</code> 和 <code>?.</code>操作符</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> b ?? = a; <span class="comment">// 如果 b 的值是 null 则将 a 赋值给 b，否则保持不变</span></span><br><span class="line"><span class="keyword">var</span> c = size?.x; <span class="comment">// 如果 size 为 null 则返回 null，否则返回 size.a 的值</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="5-Conditional-Expressions"><a href="#5-Conditional-Expressions" class="headerlink" title="5. Conditional Expressions"></a>5. Conditional Expressions</h5><p><code>Dart</code> 可以通过两个特殊的操作符替换 <code>if()&#123;&#125; else&#123;&#125;</code> 表达式</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">condition? expr1: expr2 同 java 三目运算符</span></span></span><br><span class="line"><span class="keyword">var</span> a = <span class="keyword">if</span>(a &lt; <span class="number">0</span>) -a : a</span><br><span class="line"><span class="comment">/// <span class="language-markdown">expr1 ?? expr2 </span></span></span><br><span class="line"><span class="built_in">String</span> toString() =&gt; msg ?? <span class="keyword">super</span>.toString() <span class="comment">// 如果 expr1 不为 null 则返回 expr1 否则返回 expr2</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="6-Cascade-Notaion"><a href="#6-Cascade-Notaion" class="headerlink" title="6. Cascade Notaion(..)"></a>6. Cascade Notaion(..)</h5><p>级联操作符 (<code>..</code>) 可以在同一个对象上 连续调用多个函数以及访问成员变量</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Size</span></span>&#123;</span><br><span class="line">    <span class="built_in">double</span> x;</span><br><span class="line">    <span class="built_in">double</span> y;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="built_in">String</span> toString() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Size&#123;x: <span class="subst">$x</span>, y: <span class="subst">$y</span>&#125;&#x27;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> size = Size();</span><br><span class="line"><span class="comment">/// <span class="language-markdown">通过级联操作符进行赋值，可以更加简洁，!!如果函数返回值为 void 则不能进行级联!!</span></span></span><br><span class="line"><span class="built_in">print</span>(size</span><br><span class="line">      ..x = <span class="number">10</span></span><br><span class="line">      ..y = <span class="number">100</span></span><br><span class="line">      ..toString()); <span class="comment">/// <span class="language-markdown">输出 Size&#123;x: 10.0, y: 100.0&#125;</span></span></span><br></pre></td></tr></table></figure>
+
+<h5 id="7-foreach"><a href="#7-foreach" class="headerlink" title="7. foreach"></a>7. foreach</h5><p>通过 <code>foreach</code> 循环遍历一个实现 <code>Iterable</code> 接口的对象</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> items = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">var</span> maps = &#123;<span class="string">&#x27;a&#x27;</span>: <span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>: <span class="number">2</span>&#125;;</span><br><span class="line"></span><br><span class="line">items.where((i) =&gt; i &gt; <span class="number">2</span>).forEach((i) =&gt; <span class="built_in">print</span>(i));  <span class="comment">// 3, 4, 5</span></span><br><span class="line">maps.forEach((key, value) =&gt; <span class="built_in">print</span>(<span class="string">&#x27;<span class="subst">$key</span> =&gt; <span class="subst">$value</span>&#x27;</span>)); <span class="comment">// a =&gt; 1, b =&gt; 2</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="8-Switch-and-case"><a href="#8-Switch-and-case" class="headerlink" title="8. Switch and case"></a>8. Switch and case</h5><p>如果需要实现继续到下一个 <code>case</code> 语句中继续执行，则可以 使用 <code>continue</code> 语句跳转到对应的标签处继续执行</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> command = <span class="string">&#x27;Close&#x27;</span>;</span><br><span class="line"><span class="keyword">switch</span> (command.toLowerCase()) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;close&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;close&#x27;</span>);</span><br><span class="line">    <span class="keyword">continue</span> open;</span><br><span class="line">        </span><br><span class="line">  open: <span class="comment">// 这是个标签</span></span><br><span class="line">  <span class="keyword">case</span> <span class="string">&#x27;open&#x27;</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;open&#x27;</span>);</span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="9-Assert"><a href="#9-Assert" class="headerlink" title="9. Assert"></a>9. Assert</h5><p>如果条件表达式结果不满足需要，则可以使用 <code>assert</code> 语句俩打断代码的执行，例如：<code>assert(a == 1);</code></p>
+<h5 id="10-Exceptions"><a href="#10-Exceptions" class="headerlink" title="10. Exceptions"></a>10. Exceptions</h5><p>所有的 <code>Dart</code> 异常是非检查异常。捕捉 <code>exceptions</code> 的时候可以通过 <code>on</code> 指定 <code>exceptions</code> 类型，再使用 <code>catch</code> 捕获</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  breedMoreLlamas();</span><br><span class="line">&#125; <span class="keyword">on</span> OutOfLlamasException &#123;</span><br><span class="line">  buyMoreLlamas();</span><br><span class="line">&#125; <span class="keyword">on</span> Exception <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Unknown exception: <span class="subst">$e</span>&#x27;</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (e, s) &#123; <span class="comment">// 函数 catch 可以带有一个或两个参数，第一个参数为抛出的异常对象，第二个为堆栈信息</span></span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Something really unknown: <span class="subst">$e</span>&#x27;</span>);</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;Stack trace:\n <span class="subst">$s</span>&#x27;</span>);</span><br><span class="line">  <span class="keyword">rethrow</span>; <span class="comment">// 通过 rethrow 可以将异常重新抛出</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="11-Classes"><a href="#11-Classes" class="headerlink" title="11. Classes"></a>11. Classes</h5><p><code>Dart</code> 中的类都是单继承，但是同时支持 <em><code>mixin</code></em> 的继承机制（<strong>除 <code>Object</code> 类，每个类都只有一个超类</strong>），所有的类都继承于 <code>Object</code>，通过调用 <code>runtimeType</code> 判断实例的类型。每个实例变量都会自动生成一个 <em><code>getter</code></em> 方法（隐含的）， Non-final 实例变量还会自动生成一个 <em><code>setter</code></em> 方法。</p>
+<ul>
+<li><p>Constructors</p>
+<p><code>Dart</code> 的构造函数同 <code>Java</code> 类似</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Size</span> </span>&#123;</span><br><span class="line">  <span class="built_in">num</span> x, y;</span><br><span class="line"></span><br><span class="line">  Size(<span class="built_in">num</span> nx, <span class="built_in">num</span> y)&#123;</span><br><span class="line">    x = nx;</span><br><span class="line">    <span class="keyword">this</span>.y = y; <span class="comment">// this 关键字只有当名字冲突时候使用，否则 Dart 推荐省略 this</span></span><br><span class="line">  &#125;</span><br><span class="line">    </span><br><span class="line">  Size(<span class="keyword">this</span>.x, <span class="keyword">this</span>.y); <span class="comment">// Dart 通过语法糖省略了构造函数的赋值过程，效果同上</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果没有定义构造函数，则会有个默认构造函数。默认构造函数没有参数，并且会调用超类的 没有参数的构造函数。子类不会继承超类的构造函数，子类如果没有定义构造函数，则只有一个默认构造函数。</p>
+<p><code>Dart</code> 通过命名构造函数为类创建多个构造函数，同时指明意图</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Size</span> </span>&#123;</span><br><span class="line">  <span class="built_in">num</span> x, y;</span><br><span class="line"></span><br><span class="line">  Size(<span class="keyword">this</span>.x, <span class="keyword">this</span>.y);</span><br><span class="line"></span><br><span class="line">  Size.fromJson(<span class="built_in">Map</span> json)&#123;</span><br><span class="line">    <span class="keyword">this</span>.x = json[<span class="string">&#x27;x&#x27;</span>];</span><br><span class="line">    <span class="keyword">this</span>.y = json[<span class="string">&#x27;y&#x27;</span>];</span><br><span class="line">  &#125; <span class="comment">// 因为构造函数不能继承，如果希望子类也有超类一样的命名构造函数，必须在子类中实现该构造函数</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 构造函数体执行之前除了可以调用超类构造函数之外，还可以初始化实例参数</span></span><br><span class="line">  <span class="comment">// 初始化列表非常适合用来设置 final 变量的值</span></span><br><span class="line">  Size.fromJsonInit(<span class="built_in">Map</span> json)</span><br><span class="line">      : <span class="keyword">this</span>.x = json[<span class="string">&#x27;x&#x27;</span>],</span><br><span class="line">        <span class="keyword">this</span>.y = json[<span class="string">&#x27;y&#x27;</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>常量构造函数（如果类需要提供一个状态不变的对象，通过 <code>const</code> 构造函数实现）</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ConstPoint</span> </span>&#123;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">num</span> x;</span><br><span class="line">  <span class="keyword">final</span> <span class="built_in">num</span> y;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> ConstPoint(<span class="keyword">this</span>.x, <span class="keyword">this</span>.y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>工厂方法构造函数（如果一个类不需要每次都提供一个新的对象，通过 <code>factory</code> 构造函数实现）</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HttpCore</span> </span>&#123;</span><br><span class="line">  HttpCore._internal();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">factory</span> HttpCore() &#123;</span><br><span class="line">    <span class="keyword">if</span> (_instance == <span class="keyword">null</span>) _instance = HttpCore._internal();</span><br><span class="line">    <span class="keyword">return</span> _instance;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> HttpCore _instance;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">static</span> HttpCore <span class="keyword">get</span> instance =&gt; HttpCore();</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">void</span> _request()&#123;</span><br><span class="line">      <span class="comment">//...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>每个类都隐式的定义了一个包含所有实例成员的接口， 并且这个类实现了这个接口，通过抽象类实现类似 <code>Java</code> 接口的功能。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Callback</span> </span>&#123;</span><br><span class="line">  <span class="keyword">void</span> <span class="built_in">print</span>(<span class="built_in">String</span> msg);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> <span class="keyword">implements</span> <span class="title">Callback</span></span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> <span class="built_in">print</span>(<span class="built_in">String</span> msg) &#123;</span><br><span class="line">    <span class="built_in">print</span>(msg);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li><p>Mixins  <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/a578bd2c42aa">Dart | 什么是Mixin</a></p>
+</li>
+</ul>
+<h5 id="12-Asynchrony-support"><a href="#12-Asynchrony-support" class="headerlink" title="12. Asynchrony support"></a>12. Asynchrony support</h5><ol>
+<li><p><code>Future</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">loopIntegers() &#123;</span><br><span class="line">  <span class="comment">// 通过 then 进行获取到 Future 对象后的操作</span></span><br><span class="line">  getListDelay().then((ints) =&gt; ints.forEach((i) =&gt; <span class="built_in">print</span>(i)));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 生成一个 Future 对象</span></span><br><span class="line">Future&lt;<span class="built_in">List</span>&lt;<span class="built_in">int</span>&gt;&gt; getListDelay() &#123;</span><br><span class="line">  <span class="keyword">return</span> Future.delayed(<span class="built_in">Duration</span>(seconds: <span class="number">2</span>), () =&gt; <span class="built_in">List</span>.generate(<span class="number">10</span>, (delta) =&gt; delta));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过 <code>async</code> <code>await</code> 简化 <code>Future</code> 操作</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">runUsingFuture() &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  findEntrypoint().then((entrypoint) &#123;</span><br><span class="line">    <span class="keyword">return</span> runExecutable(entrypoint, args);</span><br><span class="line">  &#125;).then(flushThenExit);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 简化了 then</span></span><br><span class="line">runUsingAsyncAwait() <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="keyword">var</span> entrypoint = <span class="keyword">await</span> findEntrypoint();</span><br><span class="line">  <span class="keyword">var</span> exitCode = <span class="keyword">await</span> runExecutable(entrypoint, args);</span><br><span class="line">  <span class="keyword">await</span> flushThenExit(exitCode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有时候要求调用很多异步方法，并且等待 所有方法完成后再继续执行，通过使用 <code>Future.wait()</code> 进行管理</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Future deleteDone = deleteLotsOfFiles();</span><br><span class="line">Future copyDone = copyLotsOfFiles();</span><br><span class="line">Future checksumDone = checksumLotsOfOtherFiles();</span><br><span class="line"></span><br><span class="line">Future.wait([deleteDone, copyDone, checksumDone])</span><br><span class="line">    .then((<span class="built_in">List</span> values) &#123;</span><br><span class="line">      <span class="built_in">print</span>(<span class="string">&#x27;Done with all the long steps&#x27;</span>);</span><br><span class="line">    &#125;);</span><br></pre></td></tr></table></figure></li>
+<li><p>Stream <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/a5d7758938ef">Dart|什么是 Stream</a></p>
+</li>
+</ol>
+<p>大概了解了 <code>Dart</code> 的语法，下节就开始写 <code>Flutter</code> 啦~，环境的安装具体查看官网，很详细 <a target="_blank" rel="noopener" href="https://flutterchina.club/get-started/install/">Flutter 环境安装</a> 记得一定要<strong>配置镜像，配置镜像，配置镜像</strong> </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-01/" data-id="cl0ufhd0c0005wx1gegor314t" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/09/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-02/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(02) -- 认识 Flutter App
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">如何使用 Scrapy 做一些简单的爬虫</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

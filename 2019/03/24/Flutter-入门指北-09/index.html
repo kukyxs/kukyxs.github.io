@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Flutter Guide(09) -- 了解 Flutter 的友好提示 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前面的小节把常用的一些部件都介绍了，这节介绍下 Flutter 中的一些操作提示。Flutter 中的操作提示主要有这么几种 SnackBar、BottomSheet、Dialog，因为 Dialog 样式比较多，放最后讲好了 SnackBarSnackBar 的源码相对简单 12345678const SnackBar(&amp;#123;    Key key,    @required this.c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Flutter Guide(09) -- 了解 Flutter 的友好提示">
+<meta property="og:url" content="http://example.com/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前面的小节把常用的一些部件都介绍了，这节介绍下 Flutter 中的一些操作提示。Flutter 中的操作提示主要有这么几种 SnackBar、BottomSheet、Dialog，因为 Dialog 样式比较多，放最后讲好了 SnackBarSnackBar 的源码相对简单 12345678const SnackBar(&amp;#123;    Key key,    @required this.c">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-70e344e56f98f683.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-51e8092d6a0e879b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-dd8dc81b43e02e44.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-a9dd6de23478249e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-692a6d8b1b1b2ad1.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-d8d87f53f23ef081.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/609/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-6fe46f000ccd7336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/453/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-b90b21ff3cca2241.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-fe488a85d5276b4c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp">
+<meta property="article:published_time" content="2019-03-24T13:03:33.000Z">
+<meta property="article:modified_time" content="2019-08-28T13:13:05.947Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Flutter">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Flutter-入门指北-09" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/" class="article-date">
+  <time datetime="2019-03-24T13:03:33.000Z" itemprop="datePublished">2019-03-24</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Flutter Guide(09) -- 了解 Flutter 的友好提示
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>前面的小节把常用的一些部件都介绍了，这节介绍下 <code>Flutter</code> 中的一些操作提示。<code>Flutter</code> 中的操作提示主要有这么几种 <code>SnackBar</code>、<code>BottomSheet</code>、<code>Dialog</code>，因为 <code>Dialog</code> 样式比较多，放最后讲好了</p>
+<h4 id="SnackBar"><a href="#SnackBar" class="headerlink" title="SnackBar"></a>SnackBar</h4><p><code>SnackBar</code> 的源码相对简单</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> SnackBar(&#123;</span><br><span class="line">    Key key,</span><br><span class="line">    <span class="meta">@required</span> <span class="keyword">this</span>.content, <span class="comment">// 提示信息</span></span><br><span class="line">    <span class="keyword">this</span>.backgroundColor, <span class="comment">// 背景色</span></span><br><span class="line">    <span class="keyword">this</span>.action, <span class="comment">// SnackBar 尾部的按钮，用于一些回退操作等</span></span><br><span class="line">    <span class="keyword">this</span>.duration = _kSnackBarDisplayDuration, <span class="comment">// 停留的时长，默认 4000ms</span></span><br><span class="line">    <span class="keyword">this</span>.animation, <span class="comment">// 进出动画</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>例如我们需要实现一个功能，修改某个值，修改后给用户一个提示，同时给用户一个撤销该操作的按钮，那么就可以通过 <code>SnackBar</code> 来简单实现。还有就是 <code>SnackBar</code> 可以和 <code>floatingActionButton</code> 完美的配合，弹出的时候不会遮挡住 <code>fab</code></p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_PromptDemoPageState</span> <span class="keyword">extends</span> <span class="title">State</span>&lt;<span class="title">PromptDemoPage</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> initState() &#123;</span><br><span class="line">    <span class="keyword">super</span>.initState();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  <span class="keyword">void</span> dispose() &#123;</span><br><span class="line">    <span class="keyword">super</span>.dispose();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自增操作</span></span><br><span class="line">  increase() &#123;</span><br><span class="line">    setState(() =&gt; count++);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 自减操作</span></span><br><span class="line">  decrease() &#123;</span><br><span class="line">    setState(() =&gt; count--);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  _changeValue(BuildContext context) &#123;</span><br><span class="line">    increase();</span><br><span class="line">    Scaffold.of(context).showSnackBar(SnackBar(</span><br><span class="line">        content: Text(<span class="string">&#x27;当前值已修改&#x27;</span>),</span><br><span class="line">        action: SnackBarAction(label: <span class="string">&#x27;撤销&#x27;</span>, onPressed: decrease),</span><br><span class="line">        duration: <span class="built_in">Duration</span>(milliseconds: <span class="number">2000</span>)));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> Scaffold(</span><br><span class="line">      appBar: AppBar(</span><br><span class="line">        title: Text(<span class="string">&#x27;Prompt Demo&#x27;</span>),</span><br><span class="line">      ),</span><br><span class="line">      body: Column(children: &lt;Widget&gt;[</span><br><span class="line">        Text(<span class="string">&#x27;当前值：<span class="subst">$count</span>&#x27;</span>, style: TextStyle(fontSize: <span class="number">20.0</span>)),</span><br><span class="line">        Expanded(</span><br><span class="line">            <span class="comment">// 为了方便拓展，我这边提取了 `snackBar` 的方法，并把按钮放在列表</span></span><br><span class="line">            child: ListView(padding: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>, vertical: <span class="number">8.0</span>), children: &lt;Widget&gt;[</span><br><span class="line">          <span class="comment">// SnackBar 需要提供一个包含 context，但是 context 不能是 Scaffold 节点下的 context，所以需要通过 Builder 包裹一层</span></span><br><span class="line">          Builder(builder: (context) =&gt; RaisedButton(onPressed: () =&gt; _changeValue(context), child: Text(<span class="string">&#x27;修改当前值&#x27;</span>))),</span><br><span class="line">        ]))</span><br><span class="line">      ]),</span><br><span class="line">      <span class="comment">// 当 SnackBar 弹出时，fab 会上移一段距离</span></span><br><span class="line">      floatingActionButton: Builder(</span><br><span class="line">          builder: (context) =&gt; FloatingActionButton(onPressed: () =&gt; _changeValue(context), child: Icon(Icons.send))),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看下最后的效果图，请注意看 <code>fab</code> 和值的变化：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-da29f7ede96f2215.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<h4 id="BottomSheet"><a href="#BottomSheet" class="headerlink" title="BottomSheet"></a>BottomSheet</h4><p><code>BottomSheet</code> 看命名就知道是从底部弹出的菜单，展示 <code>BottomSheet</code> 有两种方式，分别是 <code>showBottomSheet</code> 和 <code>showModalBottomSheet</code>，两种方式只有在展示类型上的差别，方法调用无差，而且 <code>showBottomSheet</code> 和 <code>fab</code> 有组合动画，<code>showModalBottomSheet</code> 则没有，看下实际的例子吧。在 <code>ListView</code> 中增加一个 <code>BottomSheet</code> 的按钮，因为 <code>BottomSheet</code> 需要的 <code>context</code> 也不能是 <code>Scaffold</code> 下的 <code>context</code>，所以需要通过 <code>Builder</code> 进行包裹一层，然后增加 <code>_showBottomSheet</code> 的方法</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">_showBottomSheet(BuildContext context) &#123;</span><br><span class="line">   showBottomSheet(</span><br><span class="line">     context: context,</span><br><span class="line">     builder: (context) =&gt; ListView(</span><br><span class="line">             <span class="comment">// 生成一个列表选择器</span></span><br><span class="line">             children: <span class="built_in">List</span>.generate(</span><br><span class="line">           <span class="number">20</span>,</span><br><span class="line">           (index) =&gt; InkWell(</span><br><span class="line">               child: Container(alignment: Alignment.center, height: <span class="number">60.0</span>, child: Text(<span class="string">&#x27;Item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>)),</span><br><span class="line">               onTap: () &#123;</span><br><span class="line">                 <span class="built_in">print</span>(<span class="string">&#x27;tapped item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>);</span><br><span class="line">                 Navigator.pop(context);</span><br><span class="line">               &#125;),</span><br><span class="line">         )),</span><br><span class="line">   );</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>把 <code>showBottomSheet</code> 替换成 <code>showModalBottomSheet</code> 就是另外一种展示方式了，内部不需要做任何改变，我们看下两种的运行效果：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-70e344e56f98f683.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>可以看到 <code>showBottomSheet</code> 会充满整个屏幕，然后 <code>fab</code> 会跟随一起到 <code>AppBar</code> 的底部位置，而 <code>showModalBottomSheet</code> 展示的高度不会超过半个屏幕的高度，但是 <code>fab</code> 被其遮挡了。假如我们只需要展示 2-3 个 <code>item</code>，但是按照刚才的方式 <code>showModalBottomSheet</code> 的高度太高了，那我们可以在 <code>ListView</code> 外层包裹一层 <code>Container</code>，然后指定 <code>height</code> 即可</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">_showModalBottomSheet(BuildContext context) &#123;</span><br><span class="line">    showModalBottomSheet(</span><br><span class="line">      context: context,</span><br><span class="line">      builder: (context) =&gt; Container(</span><br><span class="line">            child: ListView(</span><br><span class="line">                children: <span class="built_in">List</span>.generate(</span><br><span class="line">              <span class="number">2</span>,</span><br><span class="line">              (index) =&gt; InkWell(</span><br><span class="line">                  child: Container(alignment: Alignment.center, height: <span class="number">60.0</span>, child: Text(<span class="string">&#x27;Item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>)),</span><br><span class="line">                  onTap: () &#123;</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&#x27;tapped item <span class="subst">$&#123;index + <span class="number">1</span>&#125;</span>&#x27;</span>);</span><br><span class="line">                    Navigator.pop(context);</span><br><span class="line">                  &#125;),</span><br><span class="line">            )),</span><br><span class="line">            height: <span class="number">120</span>,</span><br><span class="line">          ),</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改高度后的效果：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-51e8092d6a0e879b.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<h4 id="Dialog"><a href="#Dialog" class="headerlink" title="Dialog"></a>Dialog</h4><p>相对于 <code>SnackBar</code> 和 <code>BottomSheet</code>，<code>Dialog</code> 的使用场景相对会更多，在 <code>MaterialDesign</code> 下，<code>Dialog</code> 主要有 3 种：<code>AlertDialog</code>，<code>SimpleDialog</code> 和 <code>AboutDialog</code>，当然在 <code>Cupertino</code> 风格下也有相应的 <code>Dialog</code>，因为这个系列以 <code>MaterialDesign</code> 风格为主，所以 <code>Cupertiono</code> 等下次有时间再写吧。</p>
+<h5 id="AlertDialog"><a href="#AlertDialog" class="headerlink" title="AlertDialog"></a>AlertDialog</h5><p>在 <code>ListView</code> 中增加一个 <code>AlertDialog</code> 的按钮，用于点击显示 <code>AlertDialog</code> 用，然后加入显示 <code>AlertDilaog</code> 的方法，并将按钮的 <code>onPressed</code> 指向该方法，<code>Dialog</code> 的 <code>context</code> 可以是 <code>Scaffold</code> 下的 <code>context</code>，所以不需要用 <code>Builder</code> 来包裹一层。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">_showAlertDialog() &#123;</span><br><span class="line">    showDialog(</span><br><span class="line">        <span class="comment">// 设置点击 dialog 外部不取消 dialog，默认能够取消</span></span><br><span class="line">        barrierDismissible: <span class="keyword">false</span>,</span><br><span class="line">        context: context,</span><br><span class="line">        builder: (context) =&gt; AlertDialog(</span><br><span class="line">              title: Text(<span class="string">&#x27;我是个标题...嗯，标题..&#x27;</span>),</span><br><span class="line">              titleTextStyle: TextStyle(color: Colors.purple), <span class="comment">// 标题文字样式</span></span><br><span class="line">              content: Text(<span class="string">r&#x27;我是内容\(^o^)/~, 我是内容\(^o^)/~, 我是内容\(^o^)/~&#x27;</span>),</span><br><span class="line">              contentTextStyle: TextStyle(color: Colors.green), <span class="comment">// 内容文字样式</span></span><br><span class="line">              backgroundColor: CupertinoColors.white,</span><br><span class="line">              elevation: <span class="number">8.0</span>, <span class="comment">// 投影的阴影高度</span></span><br><span class="line">              semanticLabel: <span class="string">&#x27;Label&#x27;</span>, <span class="comment">// 这个用于无障碍下弹出 dialog 的提示</span></span><br><span class="line">              shape: Border.all(),</span><br><span class="line">              <span class="comment">// dialog 的操作按钮，actions 的个数尽量控制不要过多，否则会溢出 `Overflow`</span></span><br><span class="line">              actions: &lt;Widget&gt;[</span><br><span class="line">                <span class="comment">// 点击增加显示的值</span></span><br><span class="line">                FlatButton(onPressed: increase, child: Text(<span class="string">&#x27;点我增加&#x27;</span>)),</span><br><span class="line">                <span class="comment">// 点击减少显示的值</span></span><br><span class="line">                FlatButton(onPressed: decrease, child: Text(<span class="string">&#x27;点我减少&#x27;</span>)),</span><br><span class="line">                <span class="comment">// 点击关闭 dialog，需要通过 Navigator 进行操作</span></span><br><span class="line">                FlatButton(onPressed: () =&gt; Navigator.pop(context), </span><br><span class="line">                           child: Text(<span class="string">&#x27;你点我试试.&#x27;</span>)),</span><br><span class="line">              ],</span><br><span class="line">            ));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后看下效果：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-dd8dc81b43e02e44.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<h5 id="SimpleDialog"><a href="#SimpleDialog" class="headerlink" title="SimpleDialog"></a>SimpleDialog</h5><p><code>SimpleDialog</code> 相比于 <code>AlertDialog</code> 少了 <code>content</code> 和 <code>action</code> 参数，多了 <code>children</code> 属性，需要传入 <code>Widget</code> 列表，那就可以自定义全部内容了。那我们这里就实现一个性别选择的 <code>Dialog</code>，选择后通过 <code>Taost</code> 提示选择的内容，<code>Taost</code> 就是之前导入的第三方插件，先看下效果图吧</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-a9dd6de23478249e.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>只要实现 <code>children</code> 是个列表选择器就可以了，比较简单，直接上代码</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">_showSimpleDialog() &#123;</span><br><span class="line">    showDialog(</span><br><span class="line">        barrierDismissible: <span class="keyword">false</span>,</span><br><span class="line">        context: context,</span><br><span class="line">        builder: (context) =&gt; SimpleDialog(</span><br><span class="line">              title: Text(<span class="string">&#x27;我是个比较正经的标题...\n选择你的性别&#x27;</span>),</span><br><span class="line">              <span class="comment">// 这里传入一个选择器列表即可</span></span><br><span class="line">              children: _genders</span><br><span class="line">                  .map((gender) =&gt; InkWell(</span><br><span class="line">                        child: Container(height: <span class="number">40.0</span>, child: Text(gender), alignment: Alignment.center),</span><br><span class="line">                        onTap: () &#123;</span><br><span class="line">                          Navigator.pop(context);</span><br><span class="line">                          Fluttertoast.showToast(msg: <span class="string">&#x27;你选择的性别是 <span class="subst">$gender</span>&#x27;</span>);</span><br><span class="line">                        &#125;,</span><br><span class="line">                      ))</span><br><span class="line">                  .toList(),</span><br><span class="line">            ));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="AboutDialog"><a href="#AboutDialog" class="headerlink" title="AboutDialog"></a>AboutDialog</h5><p><code>AboutDialog</code> 主要是用于展示你的 <code>App</code> 或者别的相关东西的内容信息的，平时用的比较少，显示 <code>AboutDialog</code> 有两种方式可以展示，一种是前面一样的 <code>showDialog</code> 方法，传入一个 <code>AboutDialog</code> 实例，还有中方法是直接调用 <code>showAboutDialog</code> 方法。我们还是一样在列表加个按钮，并指向显示 <code>AboutDialog</code> 的事件。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">_showAboutDialog() &#123;</span><br><span class="line">    showDialog(</span><br><span class="line">        barrierDismissible: <span class="keyword">false</span>,</span><br><span class="line">        context: context,</span><br><span class="line">        builder: (context) =&gt; AboutDialog(</span><br><span class="line">              <span class="comment">// App 的名字</span></span><br><span class="line">              applicationName: <span class="string">&#x27;Flutter 入门指北&#x27;</span>,</span><br><span class="line">              <span class="comment">// App 的版本号</span></span><br><span class="line">              applicationVersion: <span class="string">&#x27;0.1.1&#x27;</span>,</span><br><span class="line">              <span class="comment">// App 基本信息下面会显示一行小字，主要用来显示版权信息</span></span><br><span class="line">              applicationLegalese: <span class="string">&#x27;Copyright: this is a copyright notice topically&#x27;</span>,</span><br><span class="line">              <span class="comment">// App 的图标</span></span><br><span class="line">              applicationIcon: Icon(Icons.android, size: <span class="number">28.0</span>, color: CupertinoColors.activeBlue),</span><br><span class="line">              <span class="comment">// 任何你想展示的</span></span><br><span class="line">              children: &lt;Widget&gt;[Text(<span class="string">&#x27;我是个比较正经的对话框内容...你可以随便把我替换成任何部件，只要你喜欢(*^▽^*)&#x27;</span>)],</span><br><span class="line">            ));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过 <code>showAboutDialog</code> 实现同样的效果</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">_showAboutDialog() &#123;</span><br><span class="line">  showAboutDialog(</span><br><span class="line">    context: context,</span><br><span class="line">    applicationName: <span class="string">&#x27;Flutter 入门指北&#x27;</span>,</span><br><span class="line">    applicationVersion: <span class="string">&#x27;0.1.1&#x27;</span>,</span><br><span class="line">    applicationLegalese: <span class="string">&#x27;Copyright: this is a copyright notice topically&#x27;</span>,</span><br><span class="line">    applicationIcon: Image.asset(<span class="string">&#x27;images/app_icon.png&#x27;</span>, width: <span class="number">40.0</span>, height: <span class="number">40.0</span>),</span><br><span class="line">    children: &lt;Widget&gt;[Text(<span class="string">&#x27;我是个比较正经的对话框内容...你可以随便把我替换成任何部件，只要你喜欢(*^▽^*)&#x27;</span>)],</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后的效果：</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-692a6d8b1b1b2ad1.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p><code>AboutDialog</code> 会自带两个按钮 <code>VIEW LICENSES</code> 和 <code>CLOSE</code>，<code>VIEW LICENSES</code> 会跳转一个 <code>Flutter Licenses</code> 的网页，<code>CLOSE</code> 会关闭，至于为什么是英文的，是因为我们没有设置语言的原因，这个涉及到多语言，这边推荐几篇之前看的文章，如果下次有时间的话会单独拿出来讲下</p>
+<p><a target="_blank" rel="noopener" href="https://www.didierboelens.com/2018/04/internationalization---make-an-flutter-application-multi-lingual/">英文原版多语言设置，介绍两种方式实现</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/yumi0629/article/details/81873141">国人翻译版，未持续更新第二种方式</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.im/post/5c701379f265da2d9b5e196a">使用插件 in18 版</a></p>
+<p>这边为了支持中文，我们做下如下的修改，首先打开 <code>pubspec.ymal</code> 文件加入如下支持</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-d8d87f53f23ef081.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/609/format/webp" width="300" height="300" align="center"/>
+
+<p><code>get package</code> 后给 <code>MaterialApp</code> 加入如下属性，这样就会支持中文了，这里需要导入包 <code>package:flutter_localizations/flutter_localizations.dart</code>，再次运行，就会发现之前的英文变成中文了，当然你也可以设置成别的语言。</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-6fe46f000ccd7336.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/453/format/webp" width="300" height="250" align="center"/>
+
+<h4 id="Dialog-状态保持"><a href="#Dialog-状态保持" class="headerlink" title="Dialog 状态保持"></a>Dialog 状态保持</h4><p>假如有个需求，需要在弹出的 <code>Dialog</code> 显示当前被改变的值，然后通过按钮可以修改这个值 ，该如何实现。相信很多小伙伴都会这么认为，通过 <code>setState</code> 来修改不就行了吗，没错，我一开始的确这么去实现的，我们先看下代码好了，增加一个 <code>DialogState</code> 按钮，然后指向对应的点击事件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">_showStateDialog() &#123;</span><br><span class="line">    showDialog(</span><br><span class="line">        context: context,</span><br><span class="line">        barrierDismissible: <span class="keyword">false</span>,</span><br><span class="line">        builder: (context) =&gt; SimpleDialog(</span><br><span class="line">              title: Text(<span class="string">&#x27;我这边能实时修改状态值&#x27;</span>),</span><br><span class="line">              contentPadding: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>, vertical: <span class="number">8.0</span>),</span><br><span class="line">              children: &lt;Widget&gt;[</span><br><span class="line">                Text(<span class="string">&#x27;当前的值是： <span class="subst">$_count</span>&#x27;</span>, style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                Padding(</span><br><span class="line">                  padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">12.0</span>),</span><br><span class="line">                  child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: &lt;Widget&gt;[</span><br><span class="line">                    RaisedButton(</span><br><span class="line">                      onPressed: increase,</span><br><span class="line">                      child: Text(<span class="string">&#x27;点我自增&#x27;</span>),</span><br><span class="line">                    ),</span><br><span class="line">                    RaisedButton(</span><br><span class="line">                      onPressed: decrease,</span><br><span class="line">                      child: Text(<span class="string">&#x27;点我自减&#x27;</span>),</span><br><span class="line">                    ),</span><br><span class="line">                    RaisedButton(</span><br><span class="line">                      onPressed: () =&gt; Navigator.pop(context),</span><br><span class="line">                      child: Text(<span class="string">&#x27;点我关闭&#x27;</span>),</span><br><span class="line">                    )</span><br><span class="line">                  ]),</span><br><span class="line">                )</span><br><span class="line">              ],</span><br><span class="line">            ));</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们运行看下</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-b90b21ff3cca2241.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p>诶诶诶，怎么 <code>Dialog</code> 的值不改变呢，明明界面上的已经修改了啊。所以说图样图森破咯，看下官方对 <code>showDialog</code> 方法的解释吧</p>
+<blockquote>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/// <span class="language-markdown">This function takes a <span class="code">`builder`</span> which typically builds a [Dialog] widget.</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">Content below the dialog is dimmed with a [ModalBarrier]. The widget</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">returned by the <span class="code">`builder`</span> does not share a context with the location that</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown"><span class="code">`showDialog`</span> is originally called from. Use a [StatefulBuilder] or a</span></span></span><br><span class="line"><span class="comment">/// <span class="language-markdown">custom [StatefulWidget] if the dialog needs to update dynamically.</span></span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>糟糕透的翻译又来了：该方法通过 <code>builder</code> 参数来传入一个 <code>Dialog</code> 部件，<code>dialog</code> 下的内容被一个「模态障碍」阻隔，<code>builder</code> 的 <code>context</code> 和调用 <code>showDialog</code> 时候的 <code>context</code> 不是共享的，如果需要动态修改 <code>dialog</code> 的状态值，需要通过 <code>StatefulBuilder</code> 或者自定义 <code>dialog</code> 继承于 <code>StatefulWidget</code> 来实现</p>
+<p>所以解决的方法很明确，对上面的代码进行修改，在外层嵌套一个 <code>StatefulBuilder</code> 部件</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">_showStateDialog() &#123;</span><br><span class="line">   showDialog(</span><br><span class="line">       context: context,</span><br><span class="line">       barrierDismissible: <span class="keyword">false</span>,</span><br><span class="line">       <span class="comment">// 通过 StatefulBuilder 来保存 dialog 状态</span></span><br><span class="line">       <span class="comment">// builder 需要传入一个 BuildContext 和 StateSetter 类型参数</span></span><br><span class="line">       <span class="comment">// StateSetter 有一个 VoidCallback，修改状态的方法在这写</span></span><br><span class="line">       builder: (context) =&gt; StatefulBuilder(</span><br><span class="line">           builder: (context, dialogStateState) =&gt; SimpleDialog(</span><br><span class="line">                 title: Text(<span class="string">&#x27;我这边能实时修改状态值&#x27;</span>),</span><br><span class="line">                 contentPadding: <span class="keyword">const</span> EdgeInsets.symmetric(horizontal: <span class="number">12.0</span>, vertical: <span class="number">8.0</span>),</span><br><span class="line">                 children: &lt;Widget&gt;[</span><br><span class="line">                   Text(<span class="string">&#x27;当前的值是： <span class="subst">$_count</span>&#x27;</span>, style: TextStyle(fontSize: <span class="number">18.0</span>)),</span><br><span class="line">                   Padding(</span><br><span class="line">                     padding: <span class="keyword">const</span> EdgeInsets.symmetric(vertical: <span class="number">12.0</span>),</span><br><span class="line">                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: &lt;Widget&gt;[</span><br><span class="line">                       RaisedButton(</span><br><span class="line">                         <span class="comment">// 通过 StatefulBuilder 的 StateSetter 来修改值</span></span><br><span class="line">                         onPressed: () =&gt; dialogStateState(() =&gt; increase()),</span><br><span class="line">                         child: Text(<span class="string">&#x27;点我自增&#x27;</span>),</span><br><span class="line">                       ),</span><br><span class="line">                       RaisedButton(</span><br><span class="line">                         onPressed: () =&gt; dialogStateState(() =&gt; decrease()),</span><br><span class="line">                         child: Text(<span class="string">&#x27;点我自减&#x27;</span>),</span><br><span class="line">                       ),</span><br><span class="line">                       RaisedButton(</span><br><span class="line">                         onPressed: () =&gt; Navigator.pop(context),</span><br><span class="line">                         child: Text(<span class="string">&#x27;点我关闭&#x27;</span>),</span><br><span class="line">                       )</span><br><span class="line">                     ]),</span><br><span class="line">                   )</span><br><span class="line">                 ],</span><br><span class="line">               )));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再运行下，可以看到 <code>dialog</code> 和界面的值保持一致了</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-fe488a85d5276b4c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/338/format/webp" width="200" height="350" align="center"/>
+
+<p><em>以上部分代码查看 <code>prompt_main.dart</code> 文件</em></p>
+<p>差不多常用弹窗和操作提示就在这了，好好消化吧~</p>
+<p>最后代码的地址还是要的：</p>
+<ol>
+<li><p>文章中涉及的代码：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_arts_demos_app">demos</a></p>
+</li>
+<li><p>基于郭神 <code>cool weather</code> 接口的一个项目，实现 <code>BLoC</code> 模式，实现状态管理：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_weather">flutter_weather</a></p>
+</li>
+<li><p>一个课程(当时买了想看下代码规范的，代码更新会比较慢，虽然是跟着课上的一些写代码，但是还是做了自己的修改，很多地方看着不舒服，然后就改成自己的实现方式了)：<a target="_blank" rel="noopener" href="https://github.com/kukyxs/flutter_shop">flutter_shop</a></p>
+</li>
+</ol>
+<p>如果对你有帮助的话，记得给个 <strong>Star</strong>，先谢过，你的认可就是支持我继续写下去的动力~</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/03/24/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-09/" data-id="cl0ufhd0i0012wx1gfmhr226j" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/28/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-10/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Flutter Guide(10) -- 入门 Flutter 的手势交互和动画
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/21/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-08/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Flutter Guide(08) -- 认识 Flutter 的 Sliver 家族</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

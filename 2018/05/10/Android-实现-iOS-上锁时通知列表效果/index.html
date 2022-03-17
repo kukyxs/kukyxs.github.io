@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Android 实现 iOS 上锁时通知列表效果 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="最近公司的项目要仿照 iOS 解锁时通知列表的效果，有 iPhone 的朋友可以自己看自己手机，没有的，要不问有的借个，然后观摩下~~或者看最后的实现效果，虽然说没有完全像，应该也有 7-8 分像吧。 既然是列表，好吧第一时间想到的就是 RecyclerView，然后顶部的时间日期播放器等等等，就放到一个头部就 OK 了，放一张手画的解决方案(字丑请无视)，然后我们再慢慢分析。   列表大概分 4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 实现 iOS 上锁时通知列表效果">
+<meta property="og:url" content="http://example.com/2018/05/10/Android-%E5%AE%9E%E7%8E%B0-iOS-%E4%B8%8A%E9%94%81%E6%97%B6%E9%80%9A%E7%9F%A5%E5%88%97%E8%A1%A8%E6%95%88%E6%9E%9C/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="最近公司的项目要仿照 iOS 解锁时通知列表的效果，有 iPhone 的朋友可以自己看自己手机，没有的，要不问有的借个，然后观摩下~~或者看最后的实现效果，虽然说没有完全像，应该也有 7-8 分像吧。 既然是列表，好吧第一时间想到的就是 RecyclerView，然后顶部的时间日期播放器等等等，就放到一个头部就 OK 了，放一张手画的解决方案(字丑请无视)，然后我们再慢慢分析。   列表大概分 4">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-f5a544acd0a79c5f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-dbe5d3fa6ae24ad8.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/240/format/webp">
+<meta property="article:published_time" content="2018-05-10T14:13:16.000Z">
+<meta property="article:modified_time" content="2019-08-27T02:00:52.056Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="仿 iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2888797-f5a544acd0a79c5f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Android-实现-iOS-上锁时通知列表效果" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/10/Android-%E5%AE%9E%E7%8E%B0-iOS-%E4%B8%8A%E9%94%81%E6%97%B6%E9%80%9A%E7%9F%A5%E5%88%97%E8%A1%A8%E6%95%88%E6%9E%9C/" class="article-date">
+  <time datetime="2018-05-10T14:13:16.000Z" itemprop="datePublished">2018-05-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Android/">Android</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Android 实现 iOS 上锁时通知列表效果
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近公司的项目要仿照 iOS 解锁时通知列表的效果，有 iPhone 的朋友可以自己看自己手机，没有的，要不问有的借个，然后观摩下~~或者看最后的实现效果，虽然说没有完全像，应该也有 7-8 分像吧。</p>
+<p>既然是列表，好吧第一时间想到的就是 RecyclerView，然后顶部的时间日期播放器等等等，就放到一个头部就 OK 了，放一张手画的解决方案(字丑请无视)，然后我们再慢慢分析。</p>
+<img src="https://upload-images.jianshu.io/upload_images/2888797-f5a544acd0a79c5f.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1000/format/webp" width="450" height="400" align="center"/>
+
+<p>列表大概分 4 部分，头部，新消息通知，占位的空 View(至于为什么要放一个占位的 View 稍后再说)，旧消息通知。看过 iPhone 效果的朋友应该能发现，旧通知往上滚动的时候，第一屏的 item 的透明度会慢慢从 0 到 1 变化，当快达到和新通知交界的地方，会有一个往上顶的动作，如果说还没达到交界的地方，会迅速弹回，然后透明度又从 1 转为 0，当达到交界以后，就随着新消息通知一起滚动，不再变化，这些效果，我们就需要通过占位的 View 来帮助实现了。接着就开始上代码继续分析啦(代码用到了 DataBinding 不熟悉的小伙伴可以熟悉下)~</p>
+<p>首先我们需要定义 Adapter，在这之前，我们先定义消息的实体类，为了方便，我们就只定义 2 个关键属性，一个是消息的内容，一个是判断是否为新消息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NotificationBean</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String notificationContent;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> isNewNotification;</span><br><span class="line">    <span class="comment">// 省略 N 多 setter/getter 和构造方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么我们的 adapter 布局也就放一个 TextView 让其加载消息的内容即可</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">&quot;http://schemas.android.com/tools&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">variable</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">&quot;notification&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">type</span>=<span class="string">&quot;kuky.com.iosnotificationapplication.NotificationBean&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">RelativeLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">&quot;center&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:padding</span>=<span class="string">&quot;16dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">&quot;@&#123;notification.notificationContent&#125;&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">&quot;#AA000000&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">&quot;18sp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">tools:text</span>=<span class="string">&quot;Notification&quot;</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">View</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;1dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_alignParentBottom</span>=<span class="string">&quot;true&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">&quot;#FFFFFF&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">RelativeLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后，我们的占位 View 也是列表数据中的一个，所以我们也需要将其布局定义出来</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;utf-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layout</span> <span class="attr">xmlns:android</span>=<span class="string">&quot;http://schemas.android.com/apk/res/android&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">FrameLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">&quot;wrap_content&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">View</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">&quot;@+id/blank_content&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">&quot;match_parent&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">&quot;0dp&quot;</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">&quot;@color/colorAccent&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">FrameLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这里有个坑，虽然我们的占位 View 就一个子控件，但是我们还是需要给嵌套一层父布局，因为 RecyclerView 不允许直接修改 ViewHolder 的 LayoutParam，一定要注意。</p>
+<p>然后我们定义自己的 adapter</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 因为需要多种数据类型，所以我们这边的数据的类型定义为 Object</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">NotificationAdapter</span> <span class="keyword">extends</span> <span class="title class_">BaseRvHeaderFooterAdapter</span>&lt;Object&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">NOTIFICATION_TYPE</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">BLANK_TYPE</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">int</span> <span class="variable">OTHER_TYPE</span> <span class="operator">=</span> <span class="number">2</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">NotificationAdapter</span><span class="params">(Context context, List&lt;Object&gt; data)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(context, data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> <span class="title function_">getLayoutId</span><span class="params">(<span class="type">int</span> viewType)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据返回的 Type 返回不同的布局</span></span><br><span class="line">        <span class="keyword">switch</span> (viewType) &#123;</span><br><span class="line">            <span class="keyword">case</span> NOTIFICATION_TYPE:</span><br><span class="line">                <span class="keyword">return</span> R.layout.item_notification;</span><br><span class="line">            <span class="keyword">case</span> BLANK_TYPE:</span><br><span class="line">                <span class="keyword">return</span> R.layout.item_blank;</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">setVariable</span><span class="params">(ViewDataBinding binding, Object o)</span> &#123;</span><br><span class="line">        <span class="comment">// 将 NotificationBean 的数据绑定到视图</span></span><br><span class="line">        <span class="keyword">if</span> (o <span class="keyword">instanceof</span> NotificationBean) &#123;</span><br><span class="line">            binding.setVariable(BR.notification, o);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="type">int</span> <span class="title function_">getItemType</span><span class="params">(<span class="type">int</span> position)</span> &#123;</span><br><span class="line">        <span class="comment">// 根据数据类型判断是否为消息分组还是空的占位 View</span></span><br><span class="line">        <span class="keyword">if</span> (mData.get(position) <span class="keyword">instanceof</span> NotificationBean) &#123;</span><br><span class="line">            <span class="keyword">return</span> NOTIFICATION_TYPE;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (mData.get(position) <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">            <span class="keyword">return</span> BLANK_TYPE;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> OTHER_TYPE;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Ok，我们的正餐就要来了。</p>
+<p>我们先定义几个需要用到的属性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 占位 View 的属性</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> FrameLayout.LayoutParams blankLp;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 占位 View 的初始高度</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> blankViewHeight;</span><br><span class="line"><span class="keyword">private</span> LinearLayoutManager mListManager;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 刚进入时能见的最后一个 itemPosition</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> initLastItemPosition;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用于记录 RecyclerView 滑动</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">int</span> lastVerticalOffset, currentVerticalOffset, verticalDelta;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 判断是否往上滑</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="type">boolean</span> isDragUp;</span><br></pre></td></tr></table></figure>
+
+<p>首先我们需要获取刚进入界面时，最后一个 item 是什么，这个值关系到我们占位 View 需要设置多少高度，有个坑，我们获取这个值的时候不能立刻在 onCreate 里面直接就获取到正确值，这边我做了一个延时去取值。然后我们根据取到的值去判断当前的 View 是一个怎么样的 View，我们只需要判断两种情况：</p>
+<ol>
+<li> 如果最后一个可见的 View 是新的消息通知，那我们就不需要去设置占位 View 了</li>
+<li> 如果最后一个可见的 View 是旧的消息通知，那我们就把屏幕的高度的 5/6 - 整个头部的高度 - 新通知消息的高度，但是存在负值的情况，所以我们就设置一个最小的高度值，我这边设置的 100，然后取两个值的最大值即可</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">Observable.timer(<span class="number">100</span>, TimeUnit.MILLISECONDS)</span><br><span class="line">                .subscribeOn(Schedulers.newThread())</span><br><span class="line">                .observeOn(AndroidSchedulers.mainThread())</span><br><span class="line">                .subscribe(<span class="keyword">new</span> <span class="title class_">Consumer</span>&lt;Long&gt;() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">accept</span><span class="params">(Long aLong)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                        initLastItemPosition = mListManager.findLastVisibleItemPosition();</span><br><span class="line">                        <span class="comment">// 获取 View 类型的方法</span></span><br><span class="line">                        <span class="type">int</span> <span class="variable">lastViewType</span> <span class="operator">=</span> lastPositionItemType();</span><br><span class="line"></span><br><span class="line">                        <span class="keyword">switch</span> (lastViewType) &#123;</span><br><span class="line">                            <span class="comment">/**</span></span><br><span class="line"><span class="comment">                             * 最后一个可见为新通知，取消占位 View</span></span><br><span class="line"><span class="comment">                             */</span></span><br><span class="line">                            <span class="keyword">case</span> NEW_NOTIFICATION_VIEW:</span><br><span class="line">                                blankLp.height = <span class="number">0</span>;</span><br><span class="line">                                <span class="keyword">break</span>;</span><br><span class="line">                            <span class="comment">/**</span></span><br><span class="line"><span class="comment">                             * 最后一个可见为旧通知，(高度为 5/6 屏幕高度 - </span></span><br><span class="line"><span class="comment">                             * 新通知区域高度 - 头部高度) 和 100 之间的最大值</span></span><br><span class="line"><span class="comment">                             */</span></span><br><span class="line">                            <span class="keyword">case</span> OLD_NOTIFICATION_VIEW:</span><br><span class="line">                                blankLp.height = </span><br><span class="line">                                    Math.max(mScreenHeight * <span class="number">5</span> / <span class="number">6</span> - mHeadHeight - getNewNotificationAreaHeight(), <span class="number">100</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">// 这里需要把我们取得的高度复制给占位 View</span></span><br><span class="line">                        blankViewHeight = blankLp.height;</span><br><span class="line">                        <span class="type">View</span> <span class="variable">blankView</span> <span class="operator">=</span> getBlankView();</span><br><span class="line">                        <span class="keyword">if</span> (blankView != <span class="literal">null</span>) &#123;</span><br><span class="line">                            blankView.findViewById(R.id.blank_content).setLayoutParams(blankLp);</span><br><span class="line">                            <span class="comment">/**</span></span><br><span class="line"><span class="comment">                             * 延时设置透明度，需要先把 占位 view 的高度设置完成以后再设置</span></span><br><span class="line"><span class="comment">                             * 不做延时会出现数量多于实际数量</span></span><br><span class="line"><span class="comment">                             */</span></span><br><span class="line">                            <span class="keyword">new</span> <span class="title class_">Handler</span>().postDelayed(<span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line">                                <span class="meta">@Override</span></span><br><span class="line">                                <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                                    initOldNotificationArea();</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;, <span class="number">50</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>获取到必要的值后，我们需要通过 RecyclerView 的 OnScrollListener 来设置 View 的高度的变化</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">mViewBinding.notificationList.addOnScrollListener(<span class="keyword">new</span> <span class="title class_">RecyclerView</span>.OnScrollListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onScrolled</span><span class="params">(RecyclerView recyclerView, <span class="type">int</span> dx, <span class="type">int</span> dy)</span> &#123;</span><br><span class="line">                <span class="built_in">super</span>.onScrolled(recyclerView, dx, dy);</span><br><span class="line">                <span class="comment">// 判断手势上滑还是下滑</span></span><br><span class="line">                isDragUp = dy &gt; <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">                currentVerticalOffset = recyclerView.computeVerticalScrollOffset();</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 滑动距离</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                verticalDelta = currentVerticalOffset - lastVerticalOffset;</span><br><span class="line">                <span class="keyword">final</span> <span class="type">View</span> <span class="variable">blankView</span> <span class="operator">=</span> getBlankView();</span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 动态设置 BlankView 高度</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                <span class="keyword">if</span> (blankView != <span class="literal">null</span> &amp;&amp; blankView.getHeight() &gt; blankViewHeight / <span class="number">5</span> &amp;&amp; blankView.getHeight() &lt;= blankViewHeight) &#123;</span><br><span class="line">                    blankLp.height -= <span class="number">4</span> * verticalDelta;</span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * 当前屏的 OldNotification</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    <span class="keyword">final</span> List&lt;View&gt; oldNotifications = getOldNotificationItemsCurrentPage();</span><br><span class="line">                    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">range</span> <span class="operator">=</span> oldNotifications.size();</span><br><span class="line"></span><br><span class="line">                    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; range; i++) &#123;</span><br><span class="line">                        oldNotifications.get(i).setAlpha(<span class="number">1</span> - (blankLp.height * <span class="number">1.0f</span> * (i + <span class="number">1</span>)) / (<span class="number">3</span> * blankViewHeight));</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * 最小范围，小于最小值的时候，我们添加一个动画，可以缓慢变化，否则太快了</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    <span class="keyword">if</span> (blankLp.height &lt;= blankViewHeight / <span class="number">5</span>) &#123;</span><br><span class="line">                        <span class="type">ValueAnimator</span> <span class="variable">scrollAnim</span> <span class="operator">=</span> ValueAnimator.ofInt(blankLp.height, <span class="number">0</span>);</span><br><span class="line">                        scrollAnim.setDuration(<span class="number">100</span>);</span><br><span class="line">                        scrollAnim.addUpdateListener(<span class="keyword">new</span> <span class="title class_">ValueAnimator</span>.AnimatorUpdateListener() &#123;</span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">onAnimationUpdate</span><span class="params">(ValueAnimator animation)</span> &#123;</span><br><span class="line">                                <span class="type">int</span> <span class="variable">animValue</span> <span class="operator">=</span> (<span class="type">int</span>) animation.getAnimatedValue();</span><br><span class="line">                                blankLp.height = animValue;</span><br><span class="line">                                blankView.findViewById(R.id.blank_content).setLayoutParams(blankLp);</span><br><span class="line"></span><br><span class="line">                                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; range; i++) &#123;</span><br><span class="line">                                    oldNotifications.get(i).setAlpha(<span class="number">1</span> - (animValue * <span class="number">1.0f</span> * ((i + <span class="number">1</span>))) / (<span class="number">3</span> * blankViewHeight));</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;);</span><br><span class="line">                        scrollAnim.start();</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    <span class="comment">/**</span></span><br><span class="line"><span class="comment">                     * 最大值的时候，就是反弹的时候，我们将旧通知的部分 Item 透明度设置 0 不可见</span></span><br><span class="line"><span class="comment">                     */</span></span><br><span class="line">                    <span class="keyword">if</span> (blankLp.height &gt;= blankViewHeight) &#123;</span><br><span class="line">                        blankLp.height = blankViewHeight;</span><br><span class="line">                        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; range; i++) &#123;</span><br><span class="line">                            oldNotifications.get(i).setAlpha(<span class="number">0</span>);</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                    blankView.findViewById(R.id.blank_content).setLayoutParams(blankLp);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="comment">/**</span></span><br><span class="line"><span class="comment">                 * 前一个值赋给上一个值，用于计算滑动的距离</span></span><br><span class="line"><span class="comment">                 */</span></span><br><span class="line">                lastVerticalOffset = currentVerticalOffset;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>最后我们还需要监听 RecyclerView 的手势，判断是否到达了底部，做相应的处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mViewBinding.notificationList.setOnTouchListener(<span class="keyword">new</span> <span class="title class_">View</span>.OnTouchListener() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">onTouch</span><span class="params">(View v, MotionEvent event)</span> &#123;</span><br><span class="line">                <span class="keyword">if</span> (event.getAction() == MotionEvent.ACTION_UP) &#123;</span><br><span class="line">                    <span class="keyword">final</span> <span class="type">View</span> <span class="variable">blankView</span> <span class="operator">=</span> getBlankView();</span><br><span class="line">                    <span class="keyword">if</span> (blankView != <span class="literal">null</span> &amp;&amp; blankLp.height &gt; <span class="number">0</span> &amp;&amp; blankLp.height &lt; blankViewHeight) &#123;</span><br><span class="line">                        blankLp.height = blankViewHeight;</span><br><span class="line">                        blankView.findViewById(R.id.blank_content).setLayoutParams(blankLp);</span><br><span class="line"></span><br><span class="line">                        <span class="comment">/**</span></span><br><span class="line"><span class="comment">                         * 获取头部距离顶部的高度</span></span><br><span class="line"><span class="comment">                         */</span></span><br><span class="line">                        <span class="type">int</span> <span class="variable">topOffset</span> <span class="operator">=</span> mViewBinding.notificationList.getChildAt(<span class="number">0</span>).getTop();</span><br><span class="line">                        <span class="comment">/**</span></span><br><span class="line"><span class="comment">                         * 头部回弹</span></span><br><span class="line"><span class="comment">                         */</span></span><br><span class="line">                        mViewBinding.notificationList.scrollBy(<span class="number">0</span>, topOffset);</span><br><span class="line">                    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (blankView != <span class="literal">null</span> &amp;&amp; !isBottom()) &#123;</span><br><span class="line">                        <span class="comment">/**</span></span><br><span class="line"><span class="comment">                         * 占位 view 高度为 0，释放手指回弹头部</span></span><br><span class="line"><span class="comment">                         */</span></span><br><span class="line">                        <span class="type">int</span> <span class="variable">topOffset</span> <span class="operator">=</span> mViewBinding.notificationList.getChildAt(<span class="number">0</span>).getTop();</span><br><span class="line">                        <span class="type">int</span> <span class="variable">bottomOffset</span> <span class="operator">=</span> mViewBinding.notificationList.getChildAt(<span class="number">0</span>).getBottom();</span><br><span class="line">                        mViewBinding.notificationList.scrollBy(<span class="number">0</span>, Math.abs(topOffset) &gt; Math.abs(bottomOffset) ? bottomOffset : topOffset);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+<p>最后可以查看我们的效果 (粉红色部分就是占位的 View 实际开发的时候和背景色一致)</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/2888797-dbe5d3fa6ae24ad8.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/240/format/webp" alt="实现效果"></p>
+<p>最后附上源码地址<a target="_blank" rel="noopener" href="https://github.com/kukyxs/IosNotificationList">仿 iOS 解锁时通知列表</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2018/05/10/Android-%E5%AE%9E%E7%8E%B0-iOS-%E4%B8%8A%E9%94%81%E6%97%B6%E9%80%9A%E7%9F%A5%E5%88%97%E8%A1%A8%E6%95%88%E6%9E%9C/" data-id="cl0ufhd080000wx1gdalxe0dn" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/05/17/Android-%E5%AE%9E%E7%8E%B0%E5%8F%AF%E6%8B%96%E5%8A%A8%E6%82%AC%E6%B5%AE%E7%AA%97/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Android 实现可拖动悬浮窗
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Android/">Android</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/FFmpeg/">FFmpeg</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/JNI/">JNI</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%88%AC%E8%99%AB-Spider/">爬虫 Spider</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%B7%A8%E5%B9%B3%E5%8F%B0/">跨平台</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dart/" rel="tag">Dart</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/FFmpeg/" rel="tag">FFmpeg</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetpack/" rel="tag">Jetpack</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/SDL/" rel="tag">SDL</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/fish-redux/" rel="tag">fish_redux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%BF-iOS/" rel="tag">仿 iOS</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" rel="tag">源码分析</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/C/" style="font-size: 15px;">C++</a> <a href="/tags/Dart/" style="font-size: 12.5px;">Dart</a> <a href="/tags/FFmpeg/" style="font-size: 12.5px;">FFmpeg</a> <a href="/tags/Flutter/" style="font-size: 17.5px;">Flutter</a> <a href="/tags/JNI/" style="font-size: 10px;">JNI</a> <a href="/tags/Jetpack/" style="font-size: 10px;">Jetpack</a> <a href="/tags/Kotlin/" style="font-size: 10px;">Kotlin</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/SDL/" style="font-size: 10px;">SDL</a> <a href="/tags/Scrapy/" style="font-size: 10px;">Scrapy</a> <a href="/tags/fish-redux/" style="font-size: 10px;">fish_redux</a> <a href="/tags/%E4%BB%BF-iOS/" style="font-size: 12.5px;">仿 iOS</a> <a href="/tags/%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" style="font-size: 10px;">源码分析</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/02/">February 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/10/">October 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">September 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">March 2019</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">June 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/02/19/fish-redux-%E9%A3%9F%E7%94%A8%E6%8C%87%E5%8D%97/">fish_redux 「食用指南」</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/22/FFmpeg-002/">初识 SDL2</a>
+          </li>
+        
+          <li>
+            <a href="/2019/10/16/FFmpeg-001/">FFmpeg 配置</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/09/%E5%88%9D%E8%AF%86-JNI/">初识 JNI</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/01/Jetpack-Navigation-%E5%88%86%E6%9E%90/">Jetpack Navigation 分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2022 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
