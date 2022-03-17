@@ -230,16 +230,16 @@
 <td>[</td>
 </tr>
 <tr>
-<td>String/Object</td>
-<td>Ljava/lang/String;  Ljava/lang/Object;</td>
+<td>String&#x2F;Object</td>
+<td>Ljava&#x2F;lang&#x2F;String;  Ljava&#x2F;lang&#x2F;Object;</td>
 </tr>
 <tr>
 <td>普通类(com.example.className)</td>
-<td><strong>Lcom/example/className;</strong></td>
+<td><strong>Lcom&#x2F;example&#x2F;className;</strong></td>
 </tr>
 <tr>
 <td>嵌套类(com.example.className.Inner)</td>
-<td><strong>Lcom/example/className$Inner;</strong></td>
+<td><strong>Lcom&#x2F;example&#x2F;className$Inner;</strong></td>
 </tr>
 </tbody></table>
 <p>所以方法的签名的规则就是根据传入的参数类型和返回的类型，替换成相应的签名即可，例如：<code>call(Student s, int a): String</code> 方法的签名为 <code>(Lcom/xxx/Student;I)Ljava/lang/String;</code> 如果是内部类则使用 <strong>$</strong> 表示嵌套</p>
@@ -274,10 +274,14 @@
 <li>需要手动释放(引用类型，数组家族)：jstring，jobject ，jobjectArray，jintArray ，jclass ，jmethodID</li>
 </ul>
 <h5 id="释放方法（该部分参考自《JNI手动释放内存》）"><a href="#释放方法（该部分参考自《JNI手动释放内存》）" class="headerlink" title="释放方法（该部分参考自《JNI手动释放内存》）"></a>释放方法（该部分参考自《<a target="_blank" rel="noopener" href="https://blog.csdn.net/c1481118216/article/details/77727573">JNI手动释放内存</a>》）</h5><ul>
-<li><h6 id="jstring-amp-char"><a href="#jstring-amp-char" class="headerlink" title="jstring &amp; char *"></a>jstring &amp; char *</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 jstring 和 char*</span></span><br><span class="line">jstring jstr = (jstring)(jniEnv-&gt;<span class="built_in">CallObjectMethod</span>(jniEnv, mPerson, getName));</span><br><span class="line"><span class="type">char</span>* cstr = (<span class="type">char</span>*) jniEnv-&gt;<span class="built_in">GetStringUTFChars</span>(jniEnv,jstr, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseStringUTFChars</span>(jniEnv, jstr, cstr);</span><br><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, jstr);jbyteArray audioArray = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line"> </span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(audioArray)</span><br></pre></td></tr></table></figure></li>
-<li><h6 id="jobject，jobjectArray，jclass-，jmethodID-等引用类型"><a href="#jobject，jobjectArray，jclass-，jmethodID-等引用类型" class="headerlink" title="jobject，jobjectArray，jclass ，jmethodID 等引用类型"></a>jobject，jobjectArray，jclass ，jmethodID 等引用类型</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, XXX);</span><br></pre></td></tr></table></figure></li>
-<li><h6 id="jbyteArray"><a href="#jbyteArray" class="headerlink" title="jbyteArray"></a>jbyteArray</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyteArray arr = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(arr);</span><br></pre></td></tr></table></figure></li>
-<li><h6 id="GetByteArrayElements"><a href="#GetByteArrayElements" class="headerlink" title="GetByteArrayElements"></a>GetByteArrayElements</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyte* array= jniEnv-&gt;<span class="built_in">GetByteArrayElements</span>(env,jarray,&amp;isCopy);</span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseByteArrayElements</span>(env,jarray,array,<span class="number">0</span>);</span><br></pre></td></tr></table></figure></li>
+<li><h6 id="jstring-amp-char"><a href="#jstring-amp-char" class="headerlink" title="jstring &amp; char *"></a>jstring &amp; char *</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建 jstring 和 char*</span></span><br><span class="line">jstring jstr = (jstring)(jniEnv-&gt;<span class="built_in">CallObjectMethod</span>(jniEnv, mPerson, getName));</span><br><span class="line"><span class="type">char</span>* cstr = (<span class="type">char</span>*) jniEnv-&gt;<span class="built_in">GetStringUTFChars</span>(jniEnv,jstr, <span class="number">0</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 释放</span></span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseStringUTFChars</span>(jniEnv, jstr, cstr);</span><br><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, jstr);jbyteArray audioArray = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line"> </span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(audioArray)</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="jobject，jobjectArray，jclass-，jmethodID-等引用类型"><a href="#jobject，jobjectArray，jclass-，jmethodID-等引用类型" class="headerlink" title="jobject，jobjectArray，jclass ，jmethodID 等引用类型"></a>jobject，jobjectArray，jclass ，jmethodID 等引用类型</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jniEnv-&gt;<span class="built_in">DeleteLocalRef</span>(jniEnv, XXX);</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="jbyteArray"><a href="#jbyteArray" class="headerlink" title="jbyteArray"></a>jbyteArray</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyteArray arr = jnienv-&gt;<span class="built_in">NewByteArray</span>(frameSize);</span><br><span class="line">jnienv-&gt;<span class="built_in">DeleteLocalRef</span>(arr);</span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="GetByteArrayElements"><a href="#GetByteArrayElements" class="headerlink" title="GetByteArrayElements"></a>GetByteArrayElements</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jbyte* array= jniEnv-&gt;<span class="built_in">GetByteArrayElements</span>(env,jarray,&amp;isCopy);</span><br><span class="line">jniEnv-&gt;<span class="built_in">ReleaseByteArrayElements</span>(env,jarray,array,<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+</li>
 <li><h6 id="NewGlobalRef"><a href="#NewGlobalRef" class="headerlink" title="NewGlobalRef"></a>NewGlobalRef</h6><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jobject ref= env-&gt;<span class="built_in">NewGlobalRef</span>(customObj);</span><br><span class="line">env-&gt;<span class="built_in">DeleteGlobalRef</span>(customObj);</span><br></pre></td></tr></table></figure></li>
 </ul>
 <h4 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h4><p>在 <code>Android</code> 中，经常需要用到 <code>Context</code> 获取一些相关的信息，这边举个获取屏幕信息的例子</p>
@@ -288,7 +292,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" data-id="cl0ufhd0p0031wx1g3e9hhuqb" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/09/09/%E5%88%9D%E8%AF%86-JNI/" data-id="cl0ukmc2s001ppn1g49mqfhw0" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/" rel="tag">C++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JNI/" rel="tag">JNI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kotlin/" rel="tag">Kotlin</a></li></ul>

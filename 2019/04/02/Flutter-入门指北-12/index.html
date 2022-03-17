@@ -7,12 +7,12 @@
   
   <title>Flutter Guide(12) -- Flutter 数据如何持久化 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.0+1，小">
+  <meta name="description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Flutter Guide(12) -- Flutter 数据如何持久化">
 <meta property="og:url" content="http://example.com/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.0+1，小">
+<meta property="og:description" content="上节讲了状态管理，但是当 App 重启后，数据就都丢失了，这样就比较尴尬了，什么都要重来，所以这节我们来讲下数据持久化。数据持久化主要有如下方式  文件读写 shared_preferences 存储 数据库存储  持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式 文件读写&#x2F; IO 操作文件读写需要 path_provider 插件，写这篇文章的时候，最新版本是 0.5.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-7a9977c10ad33aff.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
 <meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2888797-6cbe9d19584b96b4.gif?imageMogr2/auto-orient/strip|imageView2/2/w/338/format/webp">
@@ -104,7 +104,7 @@
 <li>数据库存储</li>
 </ul>
 <p>持久化的实现都需要通过三方插件来实现，接着会慢慢介绍三种实现方式</p>
-<h4 id="文件读写-IO-操作"><a href="#文件读写-IO-操作" class="headerlink" title="文件读写/ IO 操作"></a>文件读写/ IO 操作</h4><p>文件读写需要 <code>path_provider</code> 插件，写这篇文章的时候，最新版本是 <code>0.5.0+1</code>，小伙伴们可以根据官网最新的版本进行替换，导入后我们就可以来看下如何实现文件的读写了。<code>path_provider</code> 的源码比较简单，这边就不单独拎出来说了，可以自行查看。<code>path_provider</code> 用于获取手机的存储文件位置，一共有三个方法</p>
+<h4 id="文件读写-x2F-IO-操作"><a href="#文件读写-x2F-IO-操作" class="headerlink" title="文件读写&#x2F; IO 操作"></a>文件读写&#x2F; IO 操作</h4><p>文件读写需要 <code>path_provider</code> 插件，写这篇文章的时候，最新版本是 <code>0.5.0+1</code>，小伙伴们可以根据官网最新的版本进行替换，导入后我们就可以来看下如何实现文件的读写了。<code>path_provider</code> 的源码比较简单，这边就不单独拎出来说了，可以自行查看。<code>path_provider</code> 用于获取手机的存储文件位置，一共有三个方法</p>
 <ul>
 <li><code>getTemporaryDirectory</code> 临时目录，在 Android 中对应的方法为 <code>getCacheDir</code>，而在 iOS 中对应为 <code>NSCachesDirectory</code>，可以通过系统检测并清除</li>
 <li><code>getApplicationDocumentsDirectory</code> 缓存目录，在 Android 中对应为 <code>AppData</code> 文件夹，在 iOS 中对应为  <code>NSDocumentsDirectory</code>，只有当 App 被删除才能被删除</li>
@@ -151,7 +151,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/" data-id="cl0ufhd0i0015wx1g8jnp44dl" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2019/04/02/Flutter-%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97-12/" data-id="cl0ukmc2q000zpn1g855a4bwe" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Flutter/" rel="tag">Flutter</a></li></ul>

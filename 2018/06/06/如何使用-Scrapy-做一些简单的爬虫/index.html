@@ -116,7 +116,7 @@
 <li><strong>爬虫必须继承 scrapy.Spider 类，实现 parse 方法，这是一个爬虫的基础类</strong></li>
 <li><strong>爬虫名在整个项目中都是不可重复的，再定义一个爬虫文件，就不可再用 ‘blog’ 作为爬虫名了</strong></li>
 <li><strong>其中 name 属性和 start_urls 属性是必须要有的，allowed_domains 可以省略，start_urls 还可以放到 start_requests 方法中，这个方法后面会提到</strong></li>
-<li><strong>检查下网址，可能会多 ‘/‘ 或者别的什么问题</strong></li>
+<li><strong>检查下网址，可能会多 ‘&#x2F;‘ 或者别的什么问题</strong></li>
 </ol>
 <p>接着我们先来编写一个简单的爬虫(这边我借助 pycharm 来写，相对比较友好)，然后一步步分析实现的过程，再编写前，先解决下编码的问题，打开 settings.py 文件加入如下代码，防止爬取的汉字会乱码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 解决编码 unicode 问题</span></span><br><span class="line">FEED_EXPORT_ENCODING = <span class="string">&#x27;utf-8&#x27;</span></span><br></pre></td></tr></table></figure>
@@ -191,7 +191,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/" data-id="cl0ufhd0q0033wx1g3dw7f1ey" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2018/06/06/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8-Scrapy-%E5%81%9A%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E7%9A%84%E7%88%AC%E8%99%AB/" data-id="cl0ukmc2t001tpn1ga8k65c09" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/" rel="tag">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Scrapy/" rel="tag">Scrapy</a></li></ul>
